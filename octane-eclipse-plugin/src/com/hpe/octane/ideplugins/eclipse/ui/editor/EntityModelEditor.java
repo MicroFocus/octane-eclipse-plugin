@@ -185,7 +185,12 @@ public class EntityModelEditor extends EditorPart {
     private void createEntityDetailsView(Composite parent) {
         headerAndEntityDetailsScrollComposite = new ScrolledComposite(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
         headerAndEntityDetailsParent = new Composite(headerAndEntityDetailsScrollComposite, SWT.NONE);
-        headerAndEntityDetailsParent.setBackground(backgroundColor);
+        headerAndEntityDetailsParent.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+    			headerAndEntityDetailsParent.setBackground(backgroundColor);        	    
+    	    }
+        });  
         headerAndEntityDetailsParent.setLayout(new FillLayout(SWT.HORIZONTAL));
         headerAndEntityDetailsParent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
         createHeaderPanel(headerAndEntityDetailsParent);    
@@ -195,23 +200,46 @@ public class EntityModelEditor extends EditorPart {
         Composite entityDetailsAndCommentsComposite = new Composite(headerAndEntityDetailsParent, SWT.NONE);
         entityDetailsAndCommentsComposite.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));        
         entityDetailsAndCommentsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+        entityDetailsAndCommentsComposite.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+    			entityDetailsAndCommentsComposite.setBackground(backgroundColor);        	    
+    	    }
+        });  
         formGenerator.adapt(entityDetailsAndCommentsComposite);
         formGenerator.paintBordersFor(entityDetailsAndCommentsComposite);
         entityDetailsAndCommentsComposite.setLayout(new GridLayout(3, false));
         entityDetailsParentComposite = new Composite(entityDetailsAndCommentsComposite, SWT.NONE);
         entityDetailsParentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         entityDetailsParentComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
+        entityDetailsParentComposite.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+    			entityDetailsParentComposite.setBackground(backgroundColor);        	    
+    	    }
+        }); 
         formGenerator.adapt(entityDetailsParentComposite);
         formGenerator.paintBordersFor(entityDetailsParentComposite);
         sectionsParentForm = formGenerator.createForm(entityDetailsParentComposite);
-        sectionsParentForm.getBody().setLayout(new GridLayout(1, false));
-        
+        sectionsParentForm.getBody().setLayout(new GridLayout(1, false)); 
+        sectionsParentForm.getBody().addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+    			sectionsParentForm.getBody().setBackground(backgroundColor);        	    
+    	    }
+        });
         if (shouldCommentsBeShown) {
             Label commentsSeparator = new Label(entityDetailsAndCommentsComposite, SWT.SEPARATOR | SWT.SHADOW_IN);
             commentsSeparator.setForeground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
             commentsSeparator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
             formGenerator.adapt(commentsSeparator, true, true);
             Composite commentsParentComposite = new Composite(entityDetailsAndCommentsComposite, SWT.NONE);
+            commentsParentComposite.addPaintListener(new PaintListener() {
+        		@Override
+        	    public void paintControl(PaintEvent paintEvent) {        
+        			commentsParentComposite.setBackground(backgroundColor);        	    
+        	    }
+            }); 
             GridData gd_commentsParentComposite = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1);
             gd_commentsParentComposite.widthHint = 300;
             gd_commentsParentComposite.minimumWidth = 300;
@@ -224,10 +252,21 @@ public class EntityModelEditor extends EditorPart {
             commentsTitleLabel.setText("Comments");
             commentsTitleLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
             //commentsTitleLabel.setMargins(5, 0, 0, 0);
-            commentsTitleLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
+            commentsTitleLabel.addPaintListener(new PaintListener() {
+        		@Override
+        	    public void paintControl(PaintEvent paintEvent) {        
+        			commentsTitleLabel.setBackground(backgroundColor);        	    
+        	    }
+            }); 
             commentsTitleLabel.setForeground(foregroundColor);          
             Composite inputCommentAndSendButtonComposite = new Composite(commentsParentComposite, SWT.NONE);
             inputCommentAndSendButtonComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));       
+            inputCommentAndSendButtonComposite.addPaintListener(new PaintListener() {
+        		@Override
+        	    public void paintControl(PaintEvent paintEvent) {        
+        			inputCommentAndSendButtonComposite.setBackground(backgroundColor);        	    
+        	    }
+            }); 
             formGenerator.adapt(inputCommentAndSendButtonComposite);
             formGenerator.paintBordersFor(inputCommentAndSendButtonComposite);
             inputCommentAndSendButtonComposite.setLayout(new GridLayout(2, false));         
@@ -282,7 +321,12 @@ public class EntityModelEditor extends EditorPart {
     private void createHeaderPanel(Composite parent) {
         headerAndEntityDetailsParent.setLayout(new GridLayout(1, false));
         Composite headerComposite = new Composite(parent, SWT.NONE);
-        headerComposite.setBackground(backgroundColor);   
+        headerComposite.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+    			headerComposite.setBackground(backgroundColor);        	    
+    	    }
+        });    
         headerComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
         headerComposite.setLayout(new GridLayout(6, false));
         Label entityIcon = new Label(headerComposite, SWT.NONE);
@@ -290,8 +334,14 @@ public class EntityModelEditor extends EditorPart {
         entityIcon.setImage(entityIconFactory.getImageIcon(Entity.getEntityType(entityModel)));
         Link linkEntityName = new Link(headerComposite, SWT.NONE);
         linkEntityName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+        linkEntityName.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+    			linkEntityName.setBackground(backgroundColor);        	    
+    	    }
+        });  
         Font boldFont = new Font(linkEntityName.getDisplay(), new FontData(JFaceResources.DEFAULT_FONT, 12, SWT.BOLD ));
-        linkEntityName.setForeground(foregroundColor);
+        //linkEntityName.setForeground(foregroundColor);
         linkEntityName.setFont(boldFont);
         try {
 			linkEntityName.setText("<A>" + entityService.findEntity(Entity.getEntityType(entityModel),Long.parseLong((String) entityModel.getValue(EntityFieldsConstants.FIELD_ID).getValue())).getValue(EntityFieldsConstants.FIELD_NAME).getValue() + "</A>");
@@ -308,6 +358,12 @@ public class EntityModelEditor extends EditorPart {
         if (shouldShowPhase) {
             Label lblCurrentPhase = new Label(headerComposite, SWT.NONE);
             lblCurrentPhase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+            lblCurrentPhase.addPaintListener(new PaintListener() {
+        		@Override
+        	    public void paintControl(PaintEvent paintEvent) {        
+        			lblCurrentPhase.setBackground(backgroundColor);        	    
+        	    }
+            });  
             lblCurrentPhase.setText(Util.getUiDataFromModel(currentPhase, EntityFieldsConstants.FIELD_NAME));
             CustomEntityComboBox<EntityModel> nextPhasesComboBox = new CustomEntityComboBox<EntityModel>(headerComposite);
             nextPhasesComboBox.addSelectionListener((phaseEntityModel, newSelection) -> {
@@ -375,16 +431,28 @@ public class EntityModelEditor extends EditorPart {
         section.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
         section.setText(formSection.getSectionTitle());
         section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-        section.setExpanded(true);       
+        section.setExpanded(true);              
         formGenerator.createCompositeSeparator(section);
         Composite sectionClient = new Composite(section, SWT.NONE);
         sectionClient.setLayout(new FillLayout(SWT.HORIZONTAL));     
         Composite sectionClientLeft = new Composite(sectionClient, SWT.NONE);
         sectionClientLeft.setLayout(new GridLayout(2, false));
-        sectionClientLeft.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
+        sectionClientLeft.setForeground(foregroundColor);
+        sectionClientLeft.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+    			sectionClientLeft.setBackground(backgroundColor);
+    	    }
+        });  
         Composite sectionClientRight = new Composite(sectionClient, SWT.NONE);
         sectionClientRight.setLayout(new GridLayout(2, false));
-        sectionClientRight.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
+        sectionClientRight.setForeground(foregroundColor);
+        sectionClientRight.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+    			sectionClientRight.setBackground(backgroundColor);        	    
+    	    }
+        });  
         List<FormField> formFields = formSection.getFields();
 
         for (int i = 0; i < formFields.size(); i++) {

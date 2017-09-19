@@ -18,13 +18,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 
 import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
 import com.hpe.octane.ideplugins.eclipse.util.EntityIconFactory;
@@ -36,6 +42,9 @@ public class EntityTypeSelectorComposite extends Composite {
     private List<Button> checkBoxes = new ArrayList<>();
     private List<Runnable> selectionListeners = new ArrayList<>();
     private Label totalCountLbl;
+    
+    private Color backgroundColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
+    private Color foregroundColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR);
 
     /**
      * Create the composite.
@@ -51,7 +60,13 @@ public class EntityTypeSelectorComposite extends Composite {
         setLayout(rowLayout);
 
         for (Entity entity : supportedEntityTypes) {
-            Button btnCheckButton = new Button(this, SWT.CHECK);
+            Button btnCheckButton = new Button(this, SWT.CHECK);          
+            btnCheckButton.addPaintListener(new PaintListener() {
+        		@Override
+        	    public void paintControl(PaintEvent paintEvent) {        
+        			btnCheckButton.setBackground(backgroundColor);
+        	    }
+            });  
 
             btnCheckButton.addSelectionListener(new SelectionAdapter() {
                 @Override
@@ -68,6 +83,12 @@ public class EntityTypeSelectorComposite extends Composite {
 
         totalCountLbl = new Label(this, SWT.NONE);
         totalCountLbl.setFont(SWTResourceManager.getBoldFont(totalCountLbl.getFont()));
+        totalCountLbl.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+    			totalCountLbl.setBackground(backgroundColor);
+    	    }
+        }); 
     }
 
     public void setEntityTypeCount(Map<Entity, Integer> entityTypeCount) {

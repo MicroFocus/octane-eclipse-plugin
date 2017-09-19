@@ -12,11 +12,16 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.util;
 
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 
 import com.hpe.octane.ideplugins.eclipse.util.resource.SWTResourceManager;
 
@@ -26,7 +31,7 @@ import com.hpe.octane.ideplugins.eclipse.util.resource.SWTResourceManager;
 public class ErrorComposite extends Composite {
 
     private Label lblError;
-
+    private Color backgroundColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);;
     /**
      * Create the composite.
      * 
@@ -36,10 +41,22 @@ public class ErrorComposite extends Composite {
     public ErrorComposite(Composite parent, int style) {
         super(parent, style);
         setLayout(new GridLayout(1, false));
+        addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    setBackground(backgroundColor);        	    
+    	    }
+        });
         lblError = new Label(this, SWT.NONE);
         lblError.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
         lblError.setAlignment(SWT.CENTER);
         lblError.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+        lblError.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    lblError.setBackground(backgroundColor);        	    
+    	    }
+        });
     }
 
     @Override

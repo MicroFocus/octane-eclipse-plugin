@@ -23,9 +23,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -63,7 +67,7 @@ public class MyWorkView extends OctaneViewPart {
 
     public static final String ID = "com.hpe.octane.ideplugins.eclipse.ui.mywork.MyWorkView";
     private static final String LOADING_MESSAGE = "Loading \"My Work\"";
-
+    private Color backgroundColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
     private MyWorkService myWorkService = Activator.getInstance(MyWorkService.class);
     private UserItemArrayEntityListData entityData = new UserItemArrayEntityListData();
     private EntityListComposite entityListComposite;
@@ -130,7 +134,9 @@ public class MyWorkView extends OctaneViewPart {
     @Override
     public Control createOctanePartControl(Composite parent) {
 
-        entityListComposite = new EntityListComposite(
+        parent.setBackground(backgroundColor);  
+       
+    	entityListComposite = new EntityListComposite(
                 parent,
                 SWT.NONE,
                 entityData,
@@ -153,7 +159,6 @@ public class MyWorkView extends OctaneViewPart {
                         .stream()
                         .flatMap(col -> col.stream())
                         .collect(Collectors.toSet()));
-        entityListComposite.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
         
         noWorkComposite = new NoWorkComposite(parent, SWT.NONE, new Runnable() {
             @Override

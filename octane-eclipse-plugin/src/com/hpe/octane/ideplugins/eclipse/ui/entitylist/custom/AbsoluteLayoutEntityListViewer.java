@@ -25,6 +25,8 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -51,7 +53,7 @@ public class AbsoluteLayoutEntityListViewer extends ScrolledComposite implements
     private static final Color selectionBackgroundColor = SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION);
     private static final Color selectionForegroundColor = SWTResourceManager.getColor(255, 255, 255);
 
-    private static final Color backgroundColor =  SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT);
+    private static final Color backgroundColor =  PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
     private static final Color foregroundColor =  PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR);
    
     private interface RowProvider {
@@ -92,9 +94,8 @@ public class AbsoluteLayoutEntityListViewer extends ScrolledComposite implements
             EntityModelMenuFactory entityModelMenuFactory) {
 
         super(parent, SWT.H_SCROLL | SWT.V_SCROLL);
-
-        this.entityModelMenuFactory = entityModelMenuFactory;
-
+        
+        this.entityModelMenuFactory = entityModelMenuFactory;               
         this.rowProvider = new RowProvider() {
             @Override
             public int getRowCount() {
@@ -119,7 +120,12 @@ public class AbsoluteLayoutEntityListViewer extends ScrolledComposite implements
 
         setExpandVertical(false);
         setExpandHorizontal(false);
-
+        addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    setBackground(backgroundColor);        	    
+    	    }
+        });
         rowComposite = new Composite(this, SWT.NO_MERGE_PAINTS);
         setContent(rowComposite);
         setMinSize(rowComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));

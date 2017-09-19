@@ -26,6 +26,8 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -98,11 +100,14 @@ public class SearchEditor extends EditorPart {
 
     @Override
     public void createPartControl(Composite parent) {
-
-        container = new StackLayoutComposite(parent, SWT.NONE);
-        container.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
-        container.setForeground(foregroundColor);
-
+    	
+        container = new StackLayoutComposite(parent, SWT.NONE);        
+        container.addPaintListener(new PaintListener() {
+     		@Override
+     	    public void paintControl(PaintEvent paintEvent) {        
+     			container.setBackground(backgroundColor);        	    
+     	    }
+         });
         entityListComposite = new EntityListComposite(
                 container,
                 SWT.NONE,
@@ -115,12 +120,19 @@ public class SearchEditor extends EditorPart {
                 },
                 searchEntityTypes,
                 searchEntityFilterFields);
+        
+        entityListComposite.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+    			entityListComposite.setBackground(backgroundColor);        	    
+    	    }
+        });
 
         noSearchResultsComposite = new NoSearchResultsComposite(container, SWT.NONE);
         loadingComposite = new LoadingComposite(container, SWT.NONE);
 
         entityListComposite.addEntityMouseListener(new OpenDetailTabEntityMouseListener());
-        entityListComposite.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
+        
         searchJob = new SearchJob(
                 "Searching Octane for: \"" + searchEditorInput.getQuery() + "\"",
                 searchEditorInput.getQuery(),

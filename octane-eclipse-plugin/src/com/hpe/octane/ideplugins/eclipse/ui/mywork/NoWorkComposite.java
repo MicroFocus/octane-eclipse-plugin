@@ -12,9 +12,12 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.mywork;
 
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -23,6 +26,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.PlatformUI;
 
 import com.hpe.octane.ideplugins.eclipse.util.resource.ImageResources;
 import com.hpe.octane.ideplugins.eclipse.util.resource.SWTResourceManager;
@@ -33,8 +37,8 @@ public class NoWorkComposite extends Composite {
     private static final String NO_WORK_LINK_TEXT = "You may want to talk with your team leader... or have some fun!";
     private static final Image unidragonImage = ImageResources.UNIDRAG_SMALL.getImage();
     private static final Color hotPink = SWTResourceManager.getColor(255, 105, 180);
-    private static final Color defaultColor = SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND);
-
+    private static final Color defaultColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR);
+    private Color backgroundColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
     /**
      * Create the composite.
      * 
@@ -44,15 +48,32 @@ public class NoWorkComposite extends Composite {
     public NoWorkComposite(Composite parent, int style, Runnable linkClickedRunnable) {
         super(parent, style);
         setLayout(new GridLayout(1, false));
-
+        addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    setBackground(backgroundColor);        	    
+    	    }
+        });
+        
         Label lblUnidragon = new Label(this, SWT.NONE);
         lblUnidragon.setImage(unidragonImage);
         lblUnidragon.setLayoutData(new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 1, 1));
+        lblUnidragon.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    lblUnidragon.setBackground(backgroundColor);        	    
+    	    }
+        });
 
         Label lblMessage = new Label(this, SWT.NONE);
         lblMessage.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, false, 1, 1));
         lblMessage.setText(NO_WORK_TEXT);
-
+        lblMessage.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    lblMessage.setBackground(backgroundColor);        	    
+    	    }
+        });
         Label lblLink = new Label(this, SWT.NONE);
         lblLink.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, true, 1, 1));
         lblLink.setText(NO_WORK_LINK_TEXT);
@@ -73,6 +94,12 @@ public class NoWorkComposite extends Composite {
             public void handleEvent(Event event) {
                 lblLink.setForeground(defaultColor);
             }
+        });
+        lblLink.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    lblLink.setBackground(backgroundColor);        	    
+    	    }
         });
 
     }

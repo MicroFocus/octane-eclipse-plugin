@@ -16,6 +16,8 @@ import static com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants.FIELD
 
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -42,7 +44,12 @@ public class SearchResultRowRenderer implements EntityModelRenderer {
         Entity entityType = Entity.getEntityType(entityModel);
 
         EntityModelRow row = new EntityModelRow(parent, SWT.NONE);
-        row.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
+        row.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    row.setBackground(backgroundColor);        	    
+    	    }
+        });  
         row.setForeground(foregroundColor);
         
         row.setEntityIcon(entityIconFactory.getImageIcon(entityType));

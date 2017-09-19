@@ -19,9 +19,12 @@ import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -45,13 +48,17 @@ public class EntityModelRow extends Composite {
     private static StyleRange[] emptyRange;
     private StyledText lblEntityTitle;
     private StyledText lblEntitySubtitle;
-
+    
+    private Composite compositeDetails;
+    private Composite compositeTitles;
+    
     private Composite compositeTopDetails;
     private Composite compositeBottomDetails;
     private Label lblEntityIcon;
-
+    private Color backgroundColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
+    private Color foregroundColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR);
     private ToolTip tip;
-
+   
     private static final Font font = SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL);
 
     public EntityModelRow(Composite parent, int style) {
@@ -61,15 +68,28 @@ public class EntityModelRow extends Composite {
         BorderLayout layout = new BorderLayout(0, 0);
         layout.setMargins(0, 5, 0, 5);
         setLayout(layout);
-        
+        setBackground(backgroundColor);
+ 
         
         lblEntityIcon = new Label(this, SWT.NONE);
         lblEntityIcon.setAlignment(SWT.CENTER);
         lblEntityIcon.setLayoutData(BorderLayout.WEST);
+        lblEntityIcon.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    lblEntityIcon.setBackground(backgroundColor);        	    
+    	    }
+        });  
 
-        Composite compositeTitles = new Composite(this, SWT.NONE);
+        compositeTitles = new Composite(this, SWT.NONE);
         compositeTitles.setLayoutData(BorderLayout.CENTER);
-       
+        compositeTitles.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    compositeTitles.setBackground(backgroundColor);
+        	}
+        });  
+        
         GridLayout gl_compositeTitles = new GridLayout(1, false);
         gl_compositeTitles.marginTop = 2;
         compositeTitles.setLayout(gl_compositeTitles);
@@ -81,6 +101,7 @@ public class EntityModelRow extends Composite {
         lblEntityTitle.setAlwaysShowScrollBars(false);
         lblEntityTitle.setDoubleClickEnabled(false);
         lblEntityTitle.setEditable(false);
+        lblEntityTitle.setBackground(backgroundColor);
 
         lblEntitySubtitle = new TruncatingStyledText(compositeTitles, SWT.READ_ONLY | SWT.WRAP | SWT.SINGLE, tip);
         lblEntitySubtitle.setFont(font);
@@ -89,9 +110,17 @@ public class EntityModelRow extends Composite {
         lblEntitySubtitle.setAlwaysShowScrollBars(false);
         lblEntitySubtitle.setDoubleClickEnabled(false);
         lblEntitySubtitle.setEditable(false);
+        lblEntitySubtitle.setBackground(backgroundColor);
+        
 
-        Composite compositeDetails = new Composite(this, SWT.NONE);
+        compositeDetails = new Composite(this, SWT.NONE);
         compositeDetails.setLayoutData(BorderLayout.EAST);
+        compositeDetails.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    compositeDetails.setBackground(backgroundColor);        	    
+    	    }
+        });  
         GridLayout gl_compositeDetails = new GridLayout(1, false);
         gl_compositeDetails.marginTop = 5;
         gl_compositeDetails.marginHeight = 0;
@@ -99,12 +128,24 @@ public class EntityModelRow extends Composite {
         
         compositeTopDetails = new Composite(compositeDetails, SWT.NONE);
         compositeTopDetails.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
-        compositeTopDetails.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        compositeTopDetails.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));        
+        compositeTopDetails.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    compositeTopDetails.setBackground(backgroundColor);        	   
+    	    }
+        });  
 
         compositeBottomDetails = new Composite(compositeDetails, SWT.NONE);
         compositeBottomDetails.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
         compositeBottomDetails.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-
+        compositeBottomDetails.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    compositeBottomDetails.setBackground(backgroundColor);        	   
+    	    }
+        });  
+        
         Label label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
         label.setLayoutData(BorderLayout.SOUTH);
         
@@ -112,8 +153,28 @@ public class EntityModelRow extends Composite {
     
     public void setBackgroundColor(Color color) {
         this.setBackground(color);
+        backgroundColor = color;
+        lblEntityIcon.setBackground(color);        
+        compositeTitles.setBackground(color);        
+        lblEntityTitle.setBackground(color);
+        lblEntitySubtitle.setBackground(color);
+        compositeDetails.setBackground(color);
+        compositeTopDetails.setBackground(color);  
+        compositeBottomDetails.setBackground(color);   
+        applyColor();
     }
-
+    
+    private void applyColor() {
+    	lblEntityIcon.redraw();        
+        compositeTitles.redraw();        
+        lblEntityTitle.redraw();        
+        lblEntitySubtitle.redraw();        
+        compositeDetails.redraw();        
+        compositeTopDetails.redraw();        
+        compositeBottomDetails.redraw();      
+        update();
+    }
+    
     public void setEntityIcon(Image entityIconImage) {
         lblEntityIcon.setImage(entityIconImage);
     }

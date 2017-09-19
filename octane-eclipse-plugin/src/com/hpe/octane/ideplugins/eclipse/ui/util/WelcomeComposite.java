@@ -14,6 +14,9 @@ package com.hpe.octane.ideplugins.eclipse.ui.util;
 
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -30,7 +33,7 @@ public class WelcomeComposite extends Composite {
 
     private static final String OCTANE_SETTINGS_TEXT = "To start, go to Settings and connect.";
     private static final String WELCOME_TEXT = "Welcome to the ALM Octane plugin";
-
+    private Color backgroundColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);;
     /**
      * Create the composite.
      * 
@@ -48,15 +51,35 @@ public class WelcomeComposite extends Composite {
         Label lblCompanyLogo = new Label(this, SWT.NONE);
         lblCompanyLogo.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true, 1, 1));
         lblCompanyLogo.setImage(ImageResources.HPE_LOGO.getImage());
+        lblCompanyLogo.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    lblCompanyLogo.setBackground(backgroundColor);        	    
+    	    }
+        });  
         
 
         Label lblProductLogo = new Label(this, SWT.NONE);
         lblProductLogo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
         lblProductLogo.setImage(ImageResources.OCTANE_LOGO.getImage());
+        lblProductLogo.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    lblProductLogo.setBackground(backgroundColor);        	    
+    	    }
+        });  
+        
     
         Label lblWelcome = new Label(this, SWT.NONE);
         lblWelcome.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 3, 1));
         lblWelcome.setText(WELCOME_TEXT);
+        lblWelcome.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    lblWelcome.setBackground(backgroundColor);        	    
+    	    }
+        });  
+        
 
         Link link = new Link(this, SWT.NONE);
         link.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 3, 1));
@@ -67,6 +90,13 @@ public class WelcomeComposite extends Composite {
                 settingsLinkClicked.run();
             }
         });
+        link.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    link.setBackground(backgroundColor);        	    
+    	    }
+        });  
+        
     }
 
     @Override

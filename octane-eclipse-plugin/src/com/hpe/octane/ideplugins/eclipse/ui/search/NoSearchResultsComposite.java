@@ -29,12 +29,17 @@ import com.hpe.octane.ideplugins.eclipse.util.resource.SWTResourceManager;
 
 public class NoSearchResultsComposite extends Composite {
 	
-	private Color backgroundColor = SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT);
+	private Color backgroundColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);;
 	
     public NoSearchResultsComposite(Composite parent, int style) {
         super(parent, style);
         setLayout(new GridLayout(1, false));
-
+        addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+        	    setBackground(backgroundColor);        	    
+    	    }
+        });  
         Label lblPlaceholder = new Label(this, SWT.NONE);
         lblPlaceholder.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
 
@@ -44,10 +49,7 @@ public class NoSearchResultsComposite extends Composite {
         lblUnidragon.addPaintListener(new PaintListener() {
     		@Override
     	    public void paintControl(PaintEvent paintEvent) {        
-        	    lblUnidragon.setBackground(backgroundColor);
-        	    Pattern pattern;
-        	    pattern = new Pattern(paintEvent.gc.getDevice(), 0,0,0,100, paintEvent.gc.getDevice().getSystemColor(SWT.COLOR_TRANSPARENT),230, paintEvent.gc.getDevice().getSystemColor(SWT.COLOR_TRANSPARENT),230);
-        	    paintEvent.gc.setBackgroundPattern(pattern);
+        	    lblUnidragon.setBackground(backgroundColor);        	    
     	    }
         });  
         Label lblNoResults = new Label(this, SWT.NONE);
@@ -57,10 +59,7 @@ public class NoSearchResultsComposite extends Composite {
     		@Override
     	    public void paintControl(PaintEvent paintEvent) {        
         	    lblNoResults.setBackground(backgroundColor);
-        	    Pattern pattern;
-        	    pattern = new Pattern(paintEvent.gc.getDevice(), 0,0,0,100, paintEvent.gc.getDevice().getSystemColor(SWT.COLOR_TRANSPARENT),230, paintEvent.gc.getDevice().getSystemColor(SWT.COLOR_TRANSPARENT),230);
-        	    paintEvent.gc.setBackgroundPattern(pattern);
-    	    }
+        	}
         });  
     }
 
