@@ -410,6 +410,13 @@ public class EntityModelEditor extends EditorPart {
         section.setLayoutData(gd);
         section.setLayout(new FillLayout(SWT.HORIZONTAL));
         section.setText("Description");       
+        section.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {            			  	  
+    			section.setTitleBarForeground(foregroundColor);
+    		}
+        }); 
+        
         PropagateScrollBrowserFactory factory = new PropagateScrollBrowserFactory();
         Browser descriptionPanel = factory.createBrowser(section, SWT.NONE);       
         String backgroundColorString = "rgb(" + backgroundColor.getRed() + "," + backgroundColor.getGreen() + "," + backgroundColor.getBlue() + ")" ;       
@@ -432,6 +439,12 @@ public class EntityModelEditor extends EditorPart {
         section.setText(formSection.getSectionTitle());
         section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
         section.setExpanded(true);              
+        section.addPaintListener(new PaintListener() {
+    		@Override
+    	    public void paintControl(PaintEvent paintEvent) {        
+    			section.setTitleBarForeground(foregroundColor);       	    
+    	    }
+        });  
         formGenerator.createCompositeSeparator(section);
         Composite sectionClient = new Composite(section, SWT.NONE);
         sectionClient.setLayout(new FillLayout(SWT.HORIZONTAL));     
