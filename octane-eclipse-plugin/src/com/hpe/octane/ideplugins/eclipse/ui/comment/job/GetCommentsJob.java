@@ -33,17 +33,22 @@ public class GetCommentsJob extends Job {
 
     private CommentService commentService = Activator.getInstance(CommentService.class);
     private Collection<EntityModel> comments = new ArrayList<>();
-    private EntityModel parentEntiy;
+    private EntityModel parentEntity;
+    private Exception exception;
 
     public GetCommentsJob(String name, EntityModel parentEntiy) {
         super(name);
-        this.parentEntiy = parentEntiy;
+        this.parentEntity = parentEntiy;
     }
 
     @Override
     protected IStatus run(IProgressMonitor monitor) {
         monitor.beginTask(getName(), IProgressMonitor.UNKNOWN);
-        comments = commentService.getComments(parentEntiy);
+        try {
+            comments = commentService.getComments(parentEntity);
+        } catch (Exception exception) {
+            this.exception = exception;
+        }
         monitor.done();
         return Status.OK_STATUS;
     }
@@ -54,5 +59,9 @@ public class GetCommentsJob extends Job {
 
     public static boolean hasCommentSupport(Entity entity) {
         return !noCommentsEntites.contains(entity);
+    }
+
+    public Exception getException() {
+        return exception;
     }
 }

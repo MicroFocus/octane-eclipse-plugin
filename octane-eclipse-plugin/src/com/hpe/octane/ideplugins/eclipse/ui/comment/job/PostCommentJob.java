@@ -26,6 +26,7 @@ public class PostCommentJob extends Job {
     private String commentText;
     private CommentService commentService = Activator.getInstance(CommentService.class);
     private boolean isCommentSaved = false;
+    private Exception exception;
 
     public PostCommentJob(String name, EntityModel entityModel, String commentText) {
         super(name);
@@ -39,8 +40,9 @@ public class PostCommentJob extends Job {
         try {
             commentService.postComment(commentParentEntity, commentText);
             isCommentSaved = true;
-        } catch (Exception e) {
+        } catch (Exception exception) {
             isCommentSaved = false;
+            this.exception = exception;
         }
         monitor.done();
         return Status.OK_STATUS;
@@ -48,5 +50,9 @@ public class PostCommentJob extends Job {
 
     public boolean isCommentsSaved() {
         return isCommentSaved;
+    }
+
+    public Exception getException() {
+        return exception;
     }
 }

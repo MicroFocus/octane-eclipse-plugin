@@ -204,7 +204,7 @@ public class MyWorkView extends OctaneViewPart {
                 }
             }
         });
-        errorComposite = new ErrorComposite(parent, SWT.NONE);
+        errorComposite = new ErrorComposite(parent, SWT.BORDER);
 
         IActionBars viewToolbar = getViewSite().getActionBars();
 

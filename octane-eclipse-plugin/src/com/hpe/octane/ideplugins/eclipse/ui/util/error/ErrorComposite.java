@@ -62,7 +62,7 @@ public class ErrorComposite extends Composite {
         
         compositeExceptionData = new Composite(this, SWT.NONE);
         compositeExceptionData.setLayout(new GridLayout(1, false));
-        compositeExceptionData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+        compositeExceptionData.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, false, 1, 1));
         
         lblSeparator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
         lblSeparator.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, true, 1, 1)); 

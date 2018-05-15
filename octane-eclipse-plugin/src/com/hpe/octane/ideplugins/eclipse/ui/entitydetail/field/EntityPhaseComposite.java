@@ -33,11 +33,15 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+import com.hpe.adm.nga.sdk.exception.OctaneException;
 import com.hpe.adm.nga.sdk.model.EntityModel;
 import com.hpe.adm.nga.sdk.model.ReferenceFieldModel;
+import com.hpe.adm.octane.ideplugins.services.EntityService;
 import com.hpe.adm.octane.ideplugins.services.util.Util;
+import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.job.GetPossiblePhasesJob;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
+import com.hpe.octane.ideplugins.eclipse.ui.util.error.ErrorDialog;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.ImageResources;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
@@ -48,6 +52,8 @@ public class EntityPhaseComposite extends Composite {
     private static final String NEXT_PHASE_PLACE_HOLDER = "Move to: NEXT_PHASE";
     private static final String TOOLTIP_BLOCKED_PHASE = "You must save first before doing any more changes to phase";
     private static final String TOOLTIP_CLICKABLE_PHASE = "Click here to choose you desired next phase";
+
+    private static EntityService entityService = Activator.getInstance(EntityService.class);
 
     private Label lblPhase;
     private Label lblCurrentPhase;
@@ -144,7 +150,8 @@ public class EntityPhaseComposite extends Composite {
             lblCurrentPhase.setText(currentPhaseName);
 
             // load possible phases
-            GetPossiblePhasesJob getPossiblePhasesJob = new GetPossiblePhasesJob("Loading possible phases", entityModelWrapper.getReadOnlyEntityModel());
+            GetPossiblePhasesJob getPossiblePhasesJob = new GetPossiblePhasesJob("Loading possible phases",
+                    entityModelWrapper.getReadOnlyEntityModel());
             getPossiblePhasesJob.addJobChangeListener(new JobChangeAdapter() {
                 @Override
                 public void scheduled(IJobChangeEvent event) {
@@ -160,51 +167,62 @@ public class EntityPhaseComposite extends Composite {
                 @Override
                 public void done(IJobChangeEvent event) {
                     Display.getDefault().asyncExec(() -> {
-                        Collection<EntityModel> possibleTransitions = getPossiblePhasesJob.getPossibleTransitions();
-                        
-                        if(lblNextPhase.isDisposed()) {
-                            return;
-                        }
-                        
-                        if (possibleTransitions.isEmpty()) {
-                            lblNextPhase.setText("No transition");
-                            lblNextPhase.setEnabled(false);
-                            btnSelectPhase.setEnabled(false);
-                        } else {
-                            List<EntityModel> possiblePhasesList = new ArrayList<>(getPossiblePhasesJob.getPossibleTransitions());
-
-                            // initialize the label next-phase with the first
-                            // items
-                            String initialValueNextPhase = "Move to: "
-                                    + Util.getUiDataFromModel((possiblePhasesList.get(0)).getValue("target_phase"));
-                            lblNextPhase.setText(initialValueNextPhase);
-                            newSelection = possiblePhasesList.get(0);
-                            if (possiblePhasesList.size() < 2) {
-                                btnSelectPhase.setVisible(false);
-                                gdBtnSelectPhase.exclude = true;
+                        try {
+                            Exception exception = getPossiblePhasesJob.getException();
+                            if (exception != null) {
+                                throw exception;
                             } else {
-                                btnSelectPhase.setVisible(true);
-                                gdBtnSelectPhase.exclude = false;
-                                for (int i = 1; i < possiblePhasesList.size(); i++) {
-                                    EntityModel nextTargetPhase = possiblePhasesList.get(i);
-                                    String nextTargetPhaseName = Util.getUiDataFromModel(nextTargetPhase.getValue("target_phase"));
+                                Collection<EntityModel> possibleTransitions = getPossiblePhasesJob.getPossibleTransitions();
 
-                                    MenuItem menuItemPhase = new MenuItem(phaseSelectionMenu, SWT.NONE);
-                                    menuItemPhase.setText(nextTargetPhaseName);
-                                    menuItemPhase.addListener(SWT.Selection, new Listener() {
-                                        @Override
-                                        public void handleEvent(Event e) {
-                                            String newString = "Move to: " + menuItemPhase.getText();
-                                            lblNextPhase.setText(newString);
-                                            newSelection = nextTargetPhase;
-                                            updateCurrentEntity();
-                                            disableDisplayButtons();
+                                if (possibleTransitions.isEmpty()) {
+                                    lblNextPhase.setText("No transition");
+                                    lblNextPhase.setEnabled(false);
+                                    btnSelectPhase.setEnabled(false);
+                                } else {
+                                    List<EntityModel> possiblePhasesList = new ArrayList<>(getPossiblePhasesJob.getPossibleTransitions());
+
+                                    // initialize the label next-phase with the first items
+                                    String initialValueNextPhase = "Move to: "
+                                            + Util.getUiDataFromModel((possiblePhasesList.get(0)).getValue("target_phase"));
+                                    lblNextPhase.setText(initialValueNextPhase);
+                                    newSelection = possiblePhasesList.get(0);
+                                    if (possiblePhasesList.size() < 2) {
+                                        btnSelectPhase.setVisible(false);
+                                        gdBtnSelectPhase.exclude = true;
+                                    } else {
+                                        btnSelectPhase.setVisible(true);
+                                        gdBtnSelectPhase.exclude = false;
+                                        for (int i = 1; i < possiblePhasesList.size(); i++) {
+                                            EntityModel nextTargetPhase = possiblePhasesList.get(i);
+                                            String nextTargetPhaseName = Util.getUiDataFromModel(nextTargetPhase.getValue("target_phase"));
+
+                                            MenuItem menuItemPhase = new MenuItem(phaseSelectionMenu, SWT.NONE);
+                                            menuItemPhase.setText(nextTargetPhaseName);
+                                            menuItemPhase.addListener(SWT.Selection, new Listener() {
+                                                @Override
+                                                public void handleEvent(Event e) {
+                                                    String newString = "Move to: " + menuItemPhase.getText();
+                                                    lblNextPhase.setText(newString);
+                                                    newSelection = nextTargetPhase;
+                                                    updateCurrentEntity();
+                                                    disableDisplayButtons();
+                                                }
+                                            });
                                         }
-                                    });
+                                    }
                                 }
                             }
+                        } catch (Exception e) {
+                            ErrorDialog errorDialog = new ErrorDialog(getParent().getShell());
+                            errorDialog.addButton("Back", () -> errorDialog.close());
+                            errorDialog.addButton("Open in browser", () -> {
+                                entityService.openInBrowser(entityModelWrapper.getReadOnlyEntityModel());
+                                errorDialog.close();
+                            });
+                            errorDialog.displayException(getPossiblePhasesJob.getException(), "Failed to change phase");
                         }
                     });
+
                 }
             });
             getPossiblePhasesJob.schedule();

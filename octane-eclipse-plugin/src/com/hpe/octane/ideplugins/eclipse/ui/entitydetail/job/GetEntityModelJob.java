@@ -47,12 +47,17 @@ public class GetEntityModelJob extends Job {
     @Override
     protected IStatus run(IProgressMonitor monitor) {
         monitor.beginTask(getName(), IProgressMonitor.UNKNOWN);
-        try {
+        try {      
             Set<String> fields = metadataService
                         .getVisibleFields(this.entityType)
                         .stream()
                         .map(fieldMetadata -> fieldMetadata.getName())
                         .collect(Collectors.toSet());
+            
+            //Explicitly ask for client lock stamp
+            if(metadataService.hasClientLockStampSupport(this.entityType)) {
+                fields.add(MetadataService.FIELD_CLIENT_LOCK_STAMP);
+            }
             
             retrivedEntity = entityService.findEntity(this.entityType, this.entityId, fields);
             

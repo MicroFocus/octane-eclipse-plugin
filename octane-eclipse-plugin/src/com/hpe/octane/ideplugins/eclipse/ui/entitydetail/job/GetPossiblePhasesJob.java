@@ -36,6 +36,8 @@ public class GetPossiblePhasesJob extends Job {
     private EntityService entityService = Activator.getInstance(EntityService.class);
     private EntityModel entityModel;
     private Collection<EntityModel> possibleTransitions;
+    
+    private Exception exception;
 
     public GetPossiblePhasesJob(String name, EntityModel entityModel) {
         super(name);
@@ -45,11 +47,14 @@ public class GetPossiblePhasesJob extends Job {
     @Override
     protected IStatus run(IProgressMonitor monitor) {
         monitor.beginTask(getName(), IProgressMonitor.UNKNOWN);
-        
-        @SuppressWarnings("rawtypes")
-		FieldModel currentPhase = entityModel.getValue(EntityFieldsConstants.FIELD_PHASE);
-        String currentPhaseId = Util.getUiDataFromModel(currentPhase, EntityFieldsConstants.FIELD_ID);
-        possibleTransitions = entityService.findPossibleTransitionFromCurrentPhase(Entity.getEntityType(entityModel), currentPhaseId);
+        try {
+            @SuppressWarnings("rawtypes")
+            FieldModel currentPhase = entityModel.getValue(EntityFieldsConstants.FIELD_PHASE);
+            String currentPhaseId = Util.getUiDataFromModel(currentPhase, EntityFieldsConstants.FIELD_ID);
+            possibleTransitions = entityService.findPossibleTransitionFromCurrentPhase(Entity.getEntityType(entityModel), currentPhaseId);
+        } catch (Exception octaneException) {
+            this.exception = octaneException;
+        }
         monitor.done();
         return Status.OK_STATUS;
     }
@@ -68,6 +73,10 @@ public class GetPossiblePhasesJob extends Job {
 	
 	public static boolean hasPhases(Entity entity) {
 		return !noPhaseEntites.contains(entity);
+	}
+	
+	public Exception getException() {
+	    return exception;
 	}
 
 }

@@ -16,7 +16,6 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -32,6 +31,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hpe.adm.nga.sdk.exception.OctaneException;
 import com.hpe.adm.nga.sdk.model.EntityModel;
 import com.hpe.adm.octane.ideplugins.services.util.Util;
 import com.hpe.octane.ideplugins.eclipse.ui.comment.job.GetCommentsJob;
@@ -41,6 +41,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.LoadingComposite;
 import com.hpe.octane.ideplugins.eclipse.ui.util.LoadingComposite.LoadingPosition;
 import com.hpe.octane.ideplugins.eclipse.ui.util.PropagateScrollBrowserFactory;
 import com.hpe.octane.ideplugins.eclipse.ui.util.StackLayoutComposite;
+import com.hpe.octane.ideplugins.eclipse.ui.util.error.ErrorComposite;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.PlatformResourcesManager;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
@@ -132,13 +133,22 @@ public class EntityCommentComposite extends StackLayoutComposite {
             @Override
             public void done(IJobChangeEvent event) {
                 Display.getDefault().asyncExec(() -> {
-                    if (sendCommentJob.isCommentsSaved()) {
-                        displayComments();
+                    try {
+                        Exception exception = sendCommentJob.getException();
+                        if (exception != null) {
+                            throw exception;
+                        } else {
+                            displayComments();
+                            commentText.setText("");
+                            commentText.setEnabled(true);
+                        }
+                    } catch (Exception e) {
+                        ErrorComposite errorComposite = new ErrorComposite(commentsComposite.getParent(), SWT.NONE);
+                        errorComposite.addButton("Refresh comments", () -> displayComments());
+                        errorComposite.displayException(e);
                         commentText.setText("");
                         commentText.setEnabled(true);
-                    } else {
-                        MessageDialog.openError(Display.getCurrent().getActiveShell(), "ERROR",
-                                "Comments could not be posted \n ");
+                        showControl(errorComposite);
                     }
                 });
             }
@@ -156,8 +166,23 @@ public class EntityCommentComposite extends StackLayoutComposite {
                 Display.getDefault().asyncExec(() -> {
                     String html = getCommentHtmlString(getCommentsJob.getComents());
                     if (!commentsBrowser.isDisposed()) {
-                        commentsBrowser.setText(html);
-                        showControl(commentsComposite);
+                        try {
+                            Exception exception = getCommentsJob.getException();
+                            if (exception != null) {
+                                throw exception;
+                            } else {
+                                commentsBrowser.setText(html);
+                                showControl(commentsComposite);
+                            }
+                        } catch (Exception e) {
+                            ErrorComposite errorComposite = new ErrorComposite(commentsComposite.getParent(), SWT.NONE);
+                            errorComposite.addButton("Refresh comments", () -> displayComments());
+                            errorComposite.displayException(e);
+                            commentText.setText("");
+                            commentText.setEnabled(true);
+                            showControl(errorComposite);
+                        }
+
                     }
                 });
             }
