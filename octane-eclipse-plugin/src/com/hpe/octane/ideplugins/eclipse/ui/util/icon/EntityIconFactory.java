@@ -63,24 +63,24 @@ public class EntityIconFactory {
     }
 
     private void init() {
-        iconDetailMap.put(Entity.USER_STORY, new IconDetail(218, 199, 120, "US"));
-        iconDetailMap.put(Entity.QUALITY_STORY, new IconDetail(95, 112, 118, "QS"));
-        iconDetailMap.put(Entity.DEFECT, new IconDetail(190, 102, 92, "D"));
-        iconDetailMap.put(Entity.EPIC, new IconDetail(202, 170, 209, "E"));
-        iconDetailMap.put(Entity.FEATURE, new IconDetail(226, 132, 90, "F"));
-        iconDetailMap.put(Entity.REQUIREMENT, new IconDetail(215, 194, 56, "R"));
+        iconDetailMap.put(Entity.USER_STORY, new IconDetail(255, 176, 0, "US"));
+        iconDetailMap.put(Entity.QUALITY_STORY, new IconDetail(51, 193, 128, "QS"));
+        iconDetailMap.put(Entity.DEFECT, new IconDetail(178, 22, 70, "D"));
+        iconDetailMap.put(Entity.EPIC, new IconDetail(116, 37, 173, "E"));
+        iconDetailMap.put(Entity.FEATURE, new IconDetail(229, 120, 40, "F"));
+        iconDetailMap.put(Entity.REQUIREMENT, new IconDetail(11, 142, 172, "R"));
 
-        iconDetailMap.put(Entity.TASK, new IconDetail(137, 204, 174, "T"));
+        iconDetailMap.put(Entity.TASK, new IconDetail(22, 104, 193, "T"));
 
-        iconDetailMap.put(Entity.TEST_SUITE, new IconDetail(133, 114, 147, "TS"));
-        iconDetailMap.put(Entity.MANUAL_TEST, new IconDetail(96, 121, 141, "MT"));
-        iconDetailMap.put(Entity.GHERKIN_TEST, new IconDetail(120, 196, 192, "GT"));
-        iconDetailMap.put(Entity.AUTOMATED_TEST, new IconDetail(135, 123, 117, "AT"));
+        iconDetailMap.put(Entity.TEST_SUITE, new IconDetail(0, 171, 243, "TS"));
+        iconDetailMap.put(Entity.MANUAL_TEST, new IconDetail(0, 171, 243, "MT"));
+        iconDetailMap.put(Entity.GHERKIN_TEST, new IconDetail(0, 169, 137, "GT"));
+        iconDetailMap.put(Entity.AUTOMATED_TEST, new IconDetail(91, 186, 54, "AT"));
 
-        iconDetailMap.put(Entity.MANUAL_TEST_RUN, new IconDetail(133, 169, 188, "MR"));
-        iconDetailMap.put(Entity.TEST_SUITE_RUN, new IconDetail(133, 169, 188, "SR"));
+        iconDetailMap.put(Entity.MANUAL_TEST_RUN, new IconDetail(0, 171, 243, "MR"));
+        iconDetailMap.put(Entity.TEST_SUITE_RUN, new IconDetail(0, 171, 243, "SR"));
 
-        iconDetailMap.put(Entity.COMMENT, new IconDetail(234, 179, 124, "C"));
+        iconDetailMap.put(Entity.COMMENT, new IconDetail(253, 225, 89, "C"));
     }
 
     private void loadImageData(Entity entity) {
