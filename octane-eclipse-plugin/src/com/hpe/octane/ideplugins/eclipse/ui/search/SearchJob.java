@@ -43,10 +43,10 @@ public class SearchJob extends Job {
     protected IStatus run(IProgressMonitor monitor) {
         isCancelled = false;
 
-        monitor.beginTask(getName(), IProgressMonitor.UNKNOWN);
         if (query.isEmpty()) {
             return Status.OK_STATUS;
         }
+        monitor.beginTask(getName(), IProgressMonitor.UNKNOWN);
         Collection<EntityModel> searchResults = searchService.searchGlobal(
                 query,
                 20,
