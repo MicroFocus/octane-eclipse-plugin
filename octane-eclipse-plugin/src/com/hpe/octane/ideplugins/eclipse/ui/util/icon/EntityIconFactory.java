@@ -75,7 +75,7 @@ public class EntityIconFactory {
         iconDetailMap.put(Entity.TEST_SUITE, new IconDetail(0, 171, 243, "TS"));
         iconDetailMap.put(Entity.MANUAL_TEST, new IconDetail(0, 171, 243, "MT"));
         iconDetailMap.put(Entity.GHERKIN_TEST, new IconDetail(0, 169, 137, "GT"));
-        iconDetailMap.put(Entity.AUTOMATED_TEST, new IconDetail(91, 186, 54, "AT"));
+        iconDetailMap.put(Entity.AUTOMATED_TEST, new IconDetail(186, 71, 226, "AT"));
 
         iconDetailMap.put(Entity.MANUAL_TEST_RUN, new IconDetail(0, 171, 243, "MR"));
         iconDetailMap.put(Entity.TEST_SUITE_RUN, new IconDetail(0, 171, 243, "SR"));
