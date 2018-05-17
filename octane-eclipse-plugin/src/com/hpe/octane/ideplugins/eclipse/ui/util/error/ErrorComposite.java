@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+
 import com.hpe.adm.nga.sdk.exception.OctaneException;
 import com.hpe.adm.nga.sdk.model.ErrorModel;
 import com.hpe.adm.nga.sdk.model.FieldModel;
@@ -117,13 +118,7 @@ public class ErrorComposite extends Composite {
         compositeExceptionData.setLayout(new GridLayout(2, false));
         
         ErrorModel errorModel = ex.getError();
-        String description;
-        
-        description = getFieldModelValueIfPresentAndNotEmpty(errorModel, ERORR_MODEL_FIELD_DESCRIPTION);
-        //If null try the alternative
-        if(description == null) {
-            description = getFieldModelValueIfPresentAndNotEmpty(errorModel, ERORR_MODEL_FIELD_DESCRIPTION_TRANSLATED);
-        }
+        String description = getDescriptionFromOctaneException(errorModel);
         
         if(description != null) {
             TruncatingStyledText txtErrorField = new TruncatingStyledText(compositeExceptionData, SWT.NONE);
@@ -162,6 +157,17 @@ public class ErrorComposite extends Composite {
         FieldModel fieldModel = errorModel.getValue(fieldName);
         String value = Util.getUiDataFromModel(fieldModel);
         return value.isEmpty() ? null : value;
+    }
+    
+    public static String getDescriptionFromOctaneException(ErrorModel errorModel) {
+        String description = getFieldModelValueIfPresentAndNotEmpty(errorModel, ERORR_MODEL_FIELD_DESCRIPTION);
+        
+        //If null try the alternative
+        if(description == null) {
+            description = getFieldModelValueIfPresentAndNotEmpty(errorModel, ERORR_MODEL_FIELD_DESCRIPTION_TRANSLATED);
+        }
+        
+        return description;
     }
     
     private static String convertFieldNameToLabel(String fieldname) {
