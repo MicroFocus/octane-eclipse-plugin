@@ -13,6 +13,7 @@
 package com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
@@ -78,7 +79,7 @@ public class ReferenceFieldEditor extends Composite implements FieldEditor {
             @Override
             public void mouseDown(MouseEvent e) {
                 if (entityComboBox.getSelectionMode() == SWT.MULTI) {
-                    entityModelWrapper.setValue(new MultiReferenceFieldModel(fieldName, null));
+                    entityModelWrapper.setValue(new MultiReferenceFieldModel(fieldName, Collections.emptyList()));
                 } else {
                     entityModelWrapper.setValue(new ReferenceFieldModel(fieldName, null));
                 }
