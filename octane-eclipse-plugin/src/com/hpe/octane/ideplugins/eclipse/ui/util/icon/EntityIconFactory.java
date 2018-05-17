@@ -72,7 +72,7 @@ public class EntityIconFactory {
 
         iconDetailMap.put(Entity.TASK, new IconDetail(22, 104, 193, "T"));
 
-        iconDetailMap.put(Entity.TEST_SUITE, new IconDetail(0, 171, 243, "TS"));
+        iconDetailMap.put(Entity.TEST_SUITE, new IconDetail(39, 23, 130, "TS"));
         iconDetailMap.put(Entity.MANUAL_TEST, new IconDetail(0, 171, 243, "MT"));
         iconDetailMap.put(Entity.GHERKIN_TEST, new IconDetail(0, 169, 137, "GT"));
         iconDetailMap.put(Entity.AUTOMATED_TEST, new IconDetail(186, 71, 226, "AT"));
