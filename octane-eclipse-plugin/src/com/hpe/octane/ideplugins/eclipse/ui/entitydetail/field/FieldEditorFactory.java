@@ -12,7 +12,9 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.ILog;
@@ -25,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.hpe.adm.nga.sdk.metadata.FieldMetadata;
 import com.hpe.adm.nga.sdk.metadata.FieldMetadata.Target;
 import com.hpe.adm.nga.sdk.model.EntityModel;
+import com.hpe.adm.nga.sdk.model.ReferenceFieldModel;
 import com.hpe.adm.nga.sdk.query.Query;
 import com.hpe.adm.nga.sdk.query.Query.QueryBuilder;
 import com.hpe.adm.nga.sdk.query.QueryMethod;
@@ -41,21 +44,24 @@ public class FieldEditorFactory {
 
     private static final int COMBO_BOX_ENTITY_LIMIT = 100;
 
-    private static final LabelProvider DEFAULT_ENTITY_LABEL_PROVIDER = new LabelProvider() {
+    private static final class DefaultEntityLabelProvider extends LabelProvider{
         @Override
         public String getText(Object element) {
             EntityModel entityModel = (EntityModel) element;
-            String fieldName;
-            
-            if (Entity.getEntityType(entityModel) == Entity.WORKSPACE_USER) {
-                fieldName =  EntityFieldsConstants.FIELD_FULL_NAME;
-            } else {
-                fieldName = EntityFieldsConstants.FIELD_NAME;
-            }
-            
+            String fieldName = getLabelFieldName(Entity.getEntityType(entityModel));
             return Util.getUiDataFromModel(entityModel.getValue(fieldName));
         }
+        
+        public String getLabelFieldName(Entity entity) {
+            if (entity == Entity.WORKSPACE_USER) {
+                return EntityFieldsConstants.FIELD_FULL_NAME; 
+            } else {
+                return EntityFieldsConstants.FIELD_NAME;
+            }
+        }
     };
+    
+    private static final DefaultEntityLabelProvider DEFAULT_ENTITY_LABEL_PROVIDER = new DefaultEntityLabelProvider();
 
     private MetadataService metadataService = Activator.getInstance(MetadataService.class);
     private EntityService entityService = Activator.getInstance(EntityService.class);
@@ -106,7 +112,6 @@ public class FieldEditorFactory {
         }
 
         try {
-
             fieldEditor.setField(entityModelWrapper, fieldName);
 
         } catch (Exception ex) {
@@ -129,43 +134,25 @@ public class FieldEditorFactory {
     private FieldEditor createReferenceFieldEditor(Composite parent, EntityModelWrapper entityModelWrapper, FieldMetadata fieldMetadata) {
 
         Target[] targets = fieldMetadata.getFieldTypedata().getTargets();
-        if (targets.length != 1) {
-            throw new RuntimeException("Multiple target refrence fields not supported");
+        if (targets.length != 1) {        
+            throw new RuntimeException("Multiple target refrence fields not supported, fieldname: " + fieldMetadata.getName());
         }
 
         Target target = targets[0];
         String logicalName = target.logicalName();
+        Entity targetEntity = getEntityType(target.getType());
 
         // List node loader
         EntityLoader entityLoader;
         
-        if (Entity.LIST_NODE.getEntityName().equals(target.getType())) {
-            entityLoader = (searchQuery) -> {
-                QueryBuilder qb = Query.statement("list_root", QueryMethod.EqualTo,
-                        Query.statement("logical_name", QueryMethod.EqualTo, logicalName));
-                                
-                Collection<EntityModel> entities = entityService.findEntities(Entity.LIST_NODE, qb, null);
-                
-                //for some reason list nodes are not server side filterable, so you have to do it client side   
-                if(!searchQuery.isEmpty()) {
-                    String sanitizedSearchQuery = searchQuery.trim().toLowerCase();
-                    
-                    entities =
-                        entities
-                        .stream()
-                        .filter(entityModel -> {
-                            String listNodeName = Util.getUiDataFromModel(entityModel.getValue(EntityFieldsConstants.FIELD_NAME));
-                            listNodeName = listNodeName.trim();
-                            listNodeName = listNodeName.toLowerCase();
-                            return stringLike(listNodeName, sanitizedSearchQuery);
-                        })
-                        .collect(Collectors.toList());
-                }
-                
-                return entities;
-            };
-        } else {
-            throw new RuntimeException("Refrence entity type not supported: " + target.getType());
+        if (Entity.LIST_NODE == targetEntity) {
+            entityLoader = createListNodeEntityLoader(logicalName);
+        }
+        else if(targetEntity != null) { //known entity, other than LIST_NODE
+            entityLoader = createGenericEntityLoader(getEntityType(target.getType()), entityModelWrapper);
+        }
+        else {
+            throw new RuntimeException("Refrence entity type not supported: " + target.getType() + ", fieldname: "  + fieldMetadata.getName());
         }
         
         ReferenceFieldEditor fieldEditor = new ReferenceFieldEditor(parent, SWT.NONE);
@@ -179,6 +166,71 @@ public class FieldEditorFactory {
         fieldEditor.setEntityLoader(entityLoader);
         fieldEditor.setLabelProvider(DEFAULT_ENTITY_LABEL_PROVIDER);
         return fieldEditor;
+    }
+    
+    private EntityLoader createListNodeEntityLoader(String targetLogicalName) {
+        return (searchQuery) -> {
+            QueryBuilder qb = Query.statement("list_root", QueryMethod.EqualTo,
+                    Query.statement("logical_name", QueryMethod.EqualTo, targetLogicalName));
+                            
+            Collection<EntityModel> entities = entityService.findEntities(Entity.LIST_NODE, qb, null);
+            
+            //for some reason list nodes are not server side filterable, so you have to do it client side   
+            if(!searchQuery.isEmpty()) {
+                String sanitizedSearchQuery = searchQuery.trim().toLowerCase();
+                
+                entities =
+                    entities
+                    .stream()
+                    .filter(entityModel -> {
+                        String listNodeName = Util.getUiDataFromModel(entityModel.getValue(EntityFieldsConstants.FIELD_NAME));
+                        listNodeName = listNodeName.trim();
+                        listNodeName = listNodeName.toLowerCase();
+                        return stringLike(listNodeName, sanitizedSearchQuery);
+                    })
+                    .collect(Collectors.toList());
+            }
+            
+            return entities;
+        };
+    }
+    
+    private EntityLoader createGenericEntityLoader(Entity entity, EntityModelWrapper entityModelWrapper) {        
+        return (searchQuery) -> {
+            QueryBuilder qb = null;
+            
+            if(!searchQuery.isEmpty()) {    
+                qb = Query.statement(DEFAULT_ENTITY_LABEL_PROVIDER.getLabelFieldName(entity), 
+                     QueryMethod.EqualTo, 
+                     "*" + searchQuery + "*");
+            }
+           
+            //Restrict sprint dropdown to current release, if there's no current release, display no
+            if(Entity.SPRINT == entity) {
+                if(entityModelWrapper.hasValue(EntityFieldsConstants.FIELD_RELEASE)) {
+                    ReferenceFieldModel releaseFieldModel = (ReferenceFieldModel) entityModelWrapper.getValue(EntityFieldsConstants.FIELD_RELEASE);
+                    String releaseId = releaseFieldModel.getValue().getId();
+                    
+                    QueryBuilder releaseQb = 
+                            Query.statement(EntityFieldsConstants.FIELD_RELEASE, QueryMethod.EqualTo, 
+                                    Query.statement(EntityFieldsConstants.FIELD_ID, QueryMethod.EqualTo, releaseId));
+                    
+                    //join the two query builders
+                    qb = qb != null ? qb.and(releaseQb) : releaseQb;
+                } else {
+                    return Collections.emptyList();
+                }
+            }
+            
+            return entityService.findEntities(entity, qb, null, null, null, COMBO_BOX_ENTITY_LIMIT);
+        };  
+    }
+    
+    private Entity getEntityType(String type) {
+        return Arrays.stream(Entity.values())
+            .filter(entity -> entity.getEntityName().equals(type))
+            .findAny()
+            .orElse(null);
     }
     
     private static boolean stringLike(String str, String expr) {

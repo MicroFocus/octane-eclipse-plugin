@@ -49,6 +49,10 @@ public class EntityModelWrapper {
     public FieldModel getValue(String key) {
         return entityModel.getValue(key);
     }
+    
+    public boolean hasValue(String key) {
+        return entityModel.getValue(key) != null && entityModel.getValue(key).getValue() != null;
+    }
 
     public void setValue(FieldModel fieldModel) {
         entityModel.setValue(fieldModel);
@@ -59,6 +63,7 @@ public class EntityModelWrapper {
         entityModel.setValues(values);
         values.forEach(fieldModel -> callChangeHandlers(fieldModel));
     }
+    
     
     private void callChangeHandlers(FieldModel fieldModel) {
         changeHandlers.forEach(handler -> handler.fieldModelChanged(fieldModel));

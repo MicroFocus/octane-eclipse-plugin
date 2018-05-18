@@ -37,6 +37,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.google.api.client.http.HttpResponseException;
+import com.hpe.adm.nga.sdk.exception.OctaneException;
 import com.hpe.adm.octane.ideplugins.services.TestService;
 import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettings;
 import com.hpe.adm.octane.ideplugins.services.exception.ServiceException;
@@ -46,6 +48,7 @@ import com.hpe.adm.octane.ideplugins.services.util.UrlParser;
 import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PreferenceConstants;
 import com.hpe.octane.ideplugins.eclipse.ui.util.InfoPopup;
+import com.hpe.octane.ideplugins.eclipse.ui.util.error.ErrorComposite;
 
 public class PluginPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -297,8 +300,20 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
             testService.testConnection(newConnectionSettings);
             testOctaneVersion(newConnectionSettings);
             setConnectionStatus(true, null);
-        } catch (ServiceException e) {
-            setConnectionStatus(false, e.getMessage());
+        } catch (Exception e) {
+            String description;
+            
+            if(e instanceof OctaneException) {
+                OctaneException octaneException = (OctaneException) e;
+                description = ErrorComposite.getDescriptionFromOctaneException(octaneException.getError());
+            } else if (e.getCause() != null && e.getCause() instanceof HttpResponseException) { //sdk exceptions are wrapped in Runtime exceptions
+                HttpResponseException httpResponseException = (HttpResponseException) e.getCause();
+                description = httpResponseException.getStatusCode() == 401 ? "Invalid username or password." :  httpResponseException.getMessage();
+            } else {
+                description = e.getMessage();
+            }
+            
+            setConnectionStatus(false, description);
             return null;
         }
 
@@ -350,7 +365,7 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
         ConnectionSettings connectionSettings;
         try {
             connectionSettings = UrlParser.resolveConnectionSettings(textServerUrl.getText(), textUsername.getText(),
-                    textPassword.getText());
+            textPassword.getText());
             textSharedSpace.setText(connectionSettings.getSharedSpaceId() + "");
             textWorkspace.setText(connectionSettings.getWorkspaceId() + "");
             if (setStatus) {
