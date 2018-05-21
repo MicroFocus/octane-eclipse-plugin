@@ -99,8 +99,15 @@ public class ReferenceFieldEditor extends Composite implements FieldEditor {
 
         @SuppressWarnings("rawtypes")
         FieldModel fieldModel = entityModel.getValue(fieldName);
+        
+        boolean hasValue = fieldModel != null && fieldModel.getValue() != null;
+        
+        //Additional check for MultiReferenceFieldModel
+        if(hasValue && fieldModel instanceof MultiReferenceFieldModel) {
+            hasValue = !((MultiReferenceFieldModel)fieldModel).getValue().isEmpty();
+        }
 
-        if (fieldModel != null && fieldModel.getValue() != null) {
+        if (hasValue) {
 
             if (fieldModel instanceof ReferenceFieldModel && entityComboBox.getSelectionMode() == SWT.SINGLE) {
                 entityComboBox.setSelectedEntity(((ReferenceFieldModel) fieldModel).getValue());
