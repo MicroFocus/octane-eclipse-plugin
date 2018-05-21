@@ -220,7 +220,7 @@ public class EntityFieldsComposite extends Composite {
             //and Eclipse does not know how to scale correctly
             if (i == shownFields.size() - 1 && i % 2 != 1) {
                 Composite placeholderComposite = new Composite(sectionClientRight, SWT.NONE);
-                placeholderComposite.setLayoutData(fieldEditorGridData);
+                placeholderComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
                 placeholderComposite.setForeground(foregroundColor);
             }
         }
