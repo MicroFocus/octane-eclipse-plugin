@@ -68,11 +68,11 @@ public class EntityModelRow extends Composite {
         compositeTitles.setLayoutData(BorderLayout.CENTER);
 
         GridLayout gl_compositeTitles = new GridLayout(1, false);
-        gl_compositeTitles.marginTop = 2;
+        gl_compositeTitles.marginTop = 10;
+        gl_compositeTitles.marginHeight = 0;
         compositeTitles.setLayout(gl_compositeTitles);
 
         lblEntityTitle = new TruncatingStyledText(compositeTitles, SWT.SINGLE, tip);
-        lblEntityTitle.setText("N/A");
         lblEntityTitle.setFont(font);
         lblEntityTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
         lblEntityTitle.setAlwaysShowScrollBars(false);
@@ -81,7 +81,6 @@ public class EntityModelRow extends Composite {
 
         lblEntitySubtitle = new TruncatingStyledText(compositeTitles, SWT.READ_ONLY | SWT.WRAP | SWT.SINGLE, tip);
         lblEntitySubtitle.setFont(font);
-        // lblEntitySubtitle.setText("test here too");
         lblEntitySubtitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
         lblEntitySubtitle.setAlwaysShowScrollBars(false);
         lblEntitySubtitle.setDoubleClickEnabled(false);
@@ -90,7 +89,7 @@ public class EntityModelRow extends Composite {
         Composite compositeDetails = new Composite(this, SWT.NONE);
         compositeDetails.setLayoutData(BorderLayout.EAST);
         GridLayout gl_compositeDetails = new GridLayout(1, false);
-        gl_compositeDetails.marginTop = 5;
+        gl_compositeDetails.marginTop = 10;
         gl_compositeDetails.marginHeight = 0;
         compositeDetails.setLayout(gl_compositeDetails);
 
