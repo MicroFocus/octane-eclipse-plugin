@@ -43,6 +43,7 @@ import com.hpe.adm.octane.ideplugins.services.util.EntityUtil;
 import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.filter.UserItemArrayEntityListData;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage;
+import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PrefereceChangeHandler;
 import com.hpe.octane.ideplugins.eclipse.ui.OctaneViewPart;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditorInput;
 import com.hpe.octane.ideplugins.eclipse.ui.entitylist.EntityListComposite;
@@ -156,12 +157,23 @@ public class MyWorkView extends OctaneViewPart {
                             SWT.NONE,
                             new MyWorkEntityModelRowRenderer(),
                             new MyWorkEntityModelMenuFactory(entityData));
+                    
                     // nasty workaround, will force the view to refresh all the
-                    // rows,
-                    // drawing the green thingy on the icons
-                    PluginPreferenceStorage.addPrefenceChangeHandler(PluginPreferenceStorage.PreferenceConstants.ACTIVE_ITEM_ID, (() -> {
-                        viewer.forceRedrawRows();
-                    }));
+                    // rows, drawing the green thingy on the icons
+                    PrefereceChangeHandler prefereceChangeHandler = () -> {
+                        if(!viewer.isDisposed()) {
+                            viewer.forceRedrawRows();
+                        }
+                    };
+        
+                    PluginPreferenceStorage.addPrefenceChangeHandler(PluginPreferenceStorage.PreferenceConstants.ACTIVE_ITEM_ID, prefereceChangeHandler);
+                    
+                    viewer.addDisposeListener(e -> 
+                        PluginPreferenceStorage.removePrefenceChangeHandler(
+                                    PluginPreferenceStorage.PreferenceConstants.ACTIVE_ITEM_ID, 
+                                    prefereceChangeHandler)
+                        );
+                    
                     return viewer;
                 },
                 MyWorkEntityModelRowRenderer.getRequiredFields().keySet(),
