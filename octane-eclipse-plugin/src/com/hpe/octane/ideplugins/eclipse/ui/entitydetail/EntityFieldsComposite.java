@@ -207,7 +207,7 @@ public class EntityFieldsComposite extends Composite {
             //and Eclipse does not know how to scale correctly
             if (i == shownFields.size() - 1 && i % 2 != 1) {
                 FieldEditor emptyFieldEditor = new ReadOnlyFieldEditor(sectionClientRight, SWT.NONE);
-                GridData emptyFieldEditorGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2);
+                GridData emptyFieldEditorGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
                 fieldEditorGridData.heightHint = 30;
                 Control controlForEmptyField = (Control) emptyFieldEditor;
                 controlForEmptyField.setLayoutData(emptyFieldEditorGridData);
