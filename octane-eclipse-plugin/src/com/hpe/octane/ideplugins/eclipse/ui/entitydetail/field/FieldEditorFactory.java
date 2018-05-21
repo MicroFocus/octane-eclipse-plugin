@@ -64,7 +64,7 @@ public class FieldEditorFactory {
         }
     };
     
-    private static final DefaultEntityLabelProvider DEFAULT_ENTITY_LABEL_PROVIDER = new DefaultEntityLabelProvider();
+    public static final DefaultEntityLabelProvider DEFAULT_ENTITY_LABEL_PROVIDER = new DefaultEntityLabelProvider();
 
     private MetadataService metadataService = Activator.getInstance(MetadataService.class);
     private EntityService entityService = Activator.getInstance(EntityService.class);
