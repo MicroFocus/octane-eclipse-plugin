@@ -37,6 +37,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.hpe.adm.nga.sdk.metadata.FieldMetadata;
+import com.hpe.adm.nga.sdk.model.ReferenceFieldModel;
 import com.hpe.adm.octane.ideplugins.services.MetadataService;
 import com.hpe.adm.octane.ideplugins.services.exception.ServiceRuntimeException;
 import com.hpe.octane.ideplugins.eclipse.Activator;
@@ -50,6 +51,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.ReadOnlyFieldEdit
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.PlatformResourcesManager;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
+import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
 public class EntityFieldsComposite extends Composite {
 
@@ -197,6 +199,18 @@ public class EntityFieldsComposite extends Composite {
             labelFieldName.setLayoutData(labelFieldNameGridData);
 
             FieldEditor fieldEditor = fieldEditorFactory.createFieldEditor(columnComposite, entityModelWrapper, fieldName);
+            
+            // Attach a clear handler to the sprint field editor
+            // TODO: full mvc
+            if(EntityFieldsConstants.FIELD_SPRINT.equals(fieldName)){
+                entityModelWrapper.addFieldModelChangedHandler(fieldModel -> {
+                    if(EntityFieldsConstants.FIELD_RELEASE.equals(fieldModel.getName())) {
+                        entityModelWrapper.setValue(new ReferenceFieldModel(EntityFieldsConstants.FIELD_SPRINT, null));
+                        fieldEditor.setField(entityModelWrapper, EntityFieldsConstants.FIELD_SPRINT);
+                    }
+                });
+            }
+            
             GridData fieldEditorGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
             fieldEditorGridData.heightHint = 30;
             Control fieldEditorControl = (Control) fieldEditor;
