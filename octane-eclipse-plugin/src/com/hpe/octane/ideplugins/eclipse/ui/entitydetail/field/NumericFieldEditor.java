@@ -33,7 +33,6 @@ public class NumericFieldEditor extends Composite implements FieldEditor {
     protected EntityModelWrapper entityModelWrapper;
     protected String fieldName;
     protected Text textField;
-    private FieldMessageComposite fieldMessageComposite;
 
     private long minumumValue = Long.MIN_VALUE;
     private long maximumValue = Long.MAX_VALUE;
@@ -47,9 +46,8 @@ public class NumericFieldEditor extends Composite implements FieldEditor {
 
         textField = new Text(this, SWT.BORDER);
         textField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-
-        fieldMessageComposite = new FieldMessageComposite(this, SWT.NONE);
-        fieldMessageComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
+        
+        FieldEditorFactory.createPlaceholderLabel(this);
 
         textField.addListener(SWT.Verify, new Listener() {
             @Override
@@ -127,16 +125,6 @@ public class NumericFieldEditor extends Composite implements FieldEditor {
         textField.removeModifyListener(modifyListener);
         textField.setText(Util.getUiDataFromModel(entityModel.getValue(fieldName)));
         textField.addModifyListener(modifyListener);
-    }
-
-    @Override
-    public void setFieldMessage(FieldMessage fieldMessage) {
-        fieldMessageComposite.setFieldMessage(fieldMessage);
-    }
-
-    @Override
-    public FieldMessage getFieldMessage() {
-        return fieldMessageComposite.getFieldMessage();
     }
 
 }

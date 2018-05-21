@@ -27,7 +27,6 @@ public class BooleanFieldEditor extends Composite implements FieldEditor {
     
     protected EntityModelWrapper entityModelWrapper;
     protected String fieldName;
-    private FieldMessageComposite fieldMessageComposite;
     private ModifyListener modifyListener;
     private Combo combo;
 
@@ -41,8 +40,7 @@ public class BooleanFieldEditor extends Composite implements FieldEditor {
         combo.setItems(new String[] {Boolean.TRUE.toString(), Boolean.FALSE.toString()});
         combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
         
-        fieldMessageComposite = new FieldMessageComposite(this, SWT.NONE);
-        fieldMessageComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
+        FieldEditorFactory.createPlaceholderLabel(this);
         
         modifyListener = new ModifyListener() {
             @Override
@@ -62,16 +60,6 @@ public class BooleanFieldEditor extends Composite implements FieldEditor {
         Boolean boolValue = (Boolean) entityModel.getValue(fieldName).getValue();
         combo.setText(boolValue.toString());     
         combo.addModifyListener(modifyListener);
-    }
-
-    @Override
-    public void setFieldMessage(FieldMessage fieldMessage) {
-        fieldMessageComposite.setFieldMessage(fieldMessage);
-    }
-    
-    @Override
-    public FieldMessage getFieldMessage() {
-        return fieldMessageComposite.getFieldMessage();
     }
     
 }

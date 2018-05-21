@@ -22,7 +22,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 import com.hpe.adm.nga.sdk.metadata.FieldMetadata;
 import com.hpe.adm.nga.sdk.metadata.FieldMetadata.Target;
@@ -42,6 +44,7 @@ import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
 public class FieldEditorFactory {
 
+    public static final int PLACEHOLDER_LBL_WIDTH = 20;
     private static final int COMBO_BOX_ENTITY_LIMIT = 100;
 
     private static final class DefaultEntityLabelProvider extends LabelProvider{
@@ -238,6 +241,13 @@ public class FieldEditorFactory {
             return false;
         }
         return str.contains(expr) || expr.contains(str);
+    }
+    
+    public static void createPlaceholderLabel(Composite parent) {
+        Label lblPlaceholder = new Label(parent, SWT.NONE);
+        GridData gd = new GridData(SWT.BEGINNING, SWT.BEGINNING, false, false, 1, 1);
+        gd.widthHint = PLACEHOLDER_LBL_WIDTH;
+        lblPlaceholder.setLayoutData(gd);
     }
 
 }

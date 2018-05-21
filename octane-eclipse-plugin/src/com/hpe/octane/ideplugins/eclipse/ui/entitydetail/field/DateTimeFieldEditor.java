@@ -44,8 +44,6 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
     private DateTime dtDate;
     private DateTime dtTime;
     private Label btnSetNull;
-
-    private FieldMessageComposite fieldMessageComposite;
     private Link linkSetDate;
 
     public DateTimeFieldEditor(Composite parent, int style) {
@@ -91,9 +89,6 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
                 entityModelWrapper.setValue(new DateFieldModel(fieldName, now));
             }
         });
-
-        fieldMessageComposite = new FieldMessageComposite(this, SWT.NONE);
-        fieldMessageComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
 
         SelectionAdapter selectionListener = new SelectionAdapter() {
             @Override
@@ -179,16 +174,6 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
         } else {
             setZonedDateTime(null);
         }
-    }
-
-    @Override
-    public void setFieldMessage(FieldMessage fieldMessage) {
-        fieldMessageComposite.setFieldMessage(fieldMessage);
-    }
-
-    @Override
-    public FieldMessage getFieldMessage() {
-        return fieldMessageComposite.getFieldMessage();
     }
 
 }

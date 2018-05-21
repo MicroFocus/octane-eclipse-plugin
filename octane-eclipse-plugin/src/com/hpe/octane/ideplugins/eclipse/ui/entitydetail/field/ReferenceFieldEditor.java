@@ -70,7 +70,9 @@ public class ReferenceFieldEditor extends Composite implements FieldEditor {
         });
         
         btnSetNull = new Label(this, SWT.NONE);
-        btnSetNull.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+        GridData gd_btnSetNull = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+        gd_btnSetNull.widthHint = FieldEditorFactory.PLACEHOLDER_LBL_WIDTH;
+        btnSetNull.setLayoutData(gd_btnSetNull);
         btnSetNull.setImage(ImageResources.OCTANE_REMOVE.getImage());
         btnSetNull.setCursor(Display.getCurrent().getSystemCursor(SWT.CURSOR_HAND));
         
@@ -132,15 +134,6 @@ public class ReferenceFieldEditor extends Composite implements FieldEditor {
 
     public void setSelectedEntities(Collection<EntityModel> entityModel) {
         entityComboBox.setSelectedEntities(entityModel);
-    }
-
-    @Override
-    public void setFieldMessage(FieldMessage fieldMessage) {
-    }
-
-    @Override
-    public FieldMessage getFieldMessage() {
-        return null;
     }
 
 }
