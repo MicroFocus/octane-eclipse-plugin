@@ -56,9 +56,8 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 
 public class EntityComboBox extends Composite {
 
-    private static final int MAX_HEIGHT = 400;
-    private static final int MIN_HEIGHT = 200;
-    private static final int MIN_WIDTH = 200;
+    private Point maxSize = new Point(600, 400);
+    private Point minSize = new Point(200, 50);
 
     private static final MouseTrackAdapter focusMouseTrackAdapter = new MouseTrackAdapter() {
         @Override
@@ -462,12 +461,13 @@ public class EntityComboBox extends Composite {
     private Point limitContentSize(Control control) {
         Point contentSize = control.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 
-        // limit height
-        int shellHeight = contentSize.y > MAX_HEIGHT ? MAX_HEIGHT : contentSize.y;
-        shellHeight = shellHeight < MIN_HEIGHT ? MIN_HEIGHT : shellHeight;
-
+        // max limit
+        int shellHeight = maxSize.y > 0 && contentSize.y > maxSize.y ? maxSize.y : contentSize.y;
+        shellHeight = shellHeight < minSize.y ? minSize.y : shellHeight;
+        
         // limit width
-        int shellWidth = contentSize.x < MIN_WIDTH ? MIN_WIDTH : contentSize.x;
+        int shellWidth = maxSize.x > 0 && contentSize.x > maxSize.x ? maxSize.x : contentSize.x;
+        shellWidth = contentSize.x < minSize.x ? minSize.x : contentSize.x;
 
         contentSize.y = shellHeight;
         contentSize.x = shellWidth;
@@ -501,6 +501,22 @@ public class EntityComboBox extends Composite {
 
     public void setFilteringEnabled(boolean isFilteringEnabled) {
         this.isFilteringEnabled = isFilteringEnabled;
+    }
+
+    public Point getMaxSize() {
+        return maxSize;
+    }
+
+    public void setMaxSize(Point maxSize) {
+        this.maxSize = maxSize;
+    }
+
+    public Point getMinSize() {
+        return minSize;
+    }
+
+    public void setMinSize(Point minSize) {
+        this.minSize = minSize;
     }
 
 }
