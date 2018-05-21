@@ -79,7 +79,7 @@ public class FieldEditorFactory {
 
         FieldEditor fieldEditor = null;
 
-        if (!fieldMetadata.isEditable()) {
+        if (!fieldMetadata.isEditable() || fieldMetadata.isFinal()) {
             fieldEditor = new ReadOnlyFieldEditor(parent, SWT.NONE);
 
         } else {
