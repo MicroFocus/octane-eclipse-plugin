@@ -89,7 +89,10 @@ public class EntityComboBox extends Composite {
     private List<EntityModel> selectedEntities = new ArrayList<>();
 
     private int selectionMode;
-
+    
+    private boolean isLoadingIndicatorEnabled = true;
+    private boolean isFilteringEnabled = true;
+    
     /**
      * Floating window that appears
      */
@@ -133,6 +136,7 @@ public class EntityComboBox extends Composite {
         textSelection.setAlwaysShowScrollBars(false);
         textSelection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
         textSelection.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
+        
         textSelection.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseDown(MouseEvent e) {
@@ -210,7 +214,7 @@ public class EntityComboBox extends Composite {
         getEntitiesJob.addJobChangeListener(new JobChangeAdapter() {
             @Override
             public void scheduled(IJobChangeEvent event) {
-                if (!rootComposite.isDisposed()) {
+                if (!rootComposite.isDisposed() && isLoadingIndicatorEnabled) {
                     showLoading();
                 }
             }
@@ -394,6 +398,13 @@ public class EntityComboBox extends Composite {
                 displayEntities(textSearch.getText());
             }
         }));
+        
+        //just hide the textSearch ui control in case the loader doens't need to support it 
+        if(!isFilteringEnabled) {
+            GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+            gd.exclude = true;
+            textSearch.setLayoutData(gd);
+        }
 
         ScrolledComposite scrolledComposite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
         scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -474,6 +485,22 @@ public class EntityComboBox extends Composite {
 
     public boolean removeSelectionListener(SelectionListener selectionListener) {
         return selectionListeners.remove(selectionListener);
+    }
+
+    public boolean isLoadingIndicatorEnabled() {
+        return isLoadingIndicatorEnabled;
+    }
+
+    public void setLoadingIndicatorEnabled(boolean isLoadingIndicatorEnabled) {
+        this.isLoadingIndicatorEnabled = isLoadingIndicatorEnabled;
+    }
+    
+    public boolean isFilteringEnabled() {
+        return isFilteringEnabled;
+    }
+
+    public void setFilteringEnabled(boolean isFilteringEnabled) {
+        this.isFilteringEnabled = isFilteringEnabled;
     }
 
 }
