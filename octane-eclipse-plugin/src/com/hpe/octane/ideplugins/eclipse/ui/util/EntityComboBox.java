@@ -118,7 +118,7 @@ public class EntityComboBox extends Composite {
     public EntityComboBox(Composite parent, int style) {
         super(parent, SWT.BORDER);
         selectionMode = (style & SWT.MULTI) != 0 ? SWT.MULTI : SWT.SINGLE;
-
+        
         GridLayout gridLayout = new GridLayout(2, false);
         gridLayout.horizontalSpacing = 0;
         gridLayout.marginHeight = 0;
@@ -129,6 +129,7 @@ public class EntityComboBox extends Composite {
         textSelection = new TruncatingStyledText(this, SWT.READ_ONLY | SWT.SINGLE);
         textSelection.setAlwaysShowScrollBars(false);
         textSelection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+        textSelection.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
         textSelection.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseDown(MouseEvent e) {
@@ -139,6 +140,7 @@ public class EntityComboBox extends Composite {
 
         btnArrow = new Button(this, SWT.FLAT | SWT.ARROW | SWT.DOWN);
         btnArrow.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+        btnArrow.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
         btnArrow.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {

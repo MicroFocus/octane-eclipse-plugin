@@ -39,6 +39,7 @@ public class BooleanFieldEditor extends Composite implements FieldEditor {
         combo = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
         combo.setItems(new String[] {Boolean.TRUE.toString(), Boolean.FALSE.toString()});
         combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+        combo.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
         
         FieldEditorFactory.createPlaceholderLabel(this);
         

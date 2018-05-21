@@ -87,10 +87,10 @@ public class EntityModelRow extends Composite {
         lblEntitySubtitle.setEditable(false);
         
         //make selection pretty
-        lblEntityTitle.setCursor(null);
+        lblEntityTitle.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW));
         lblEntityTitle.setSelectionBackground(getBackground());
         lblEntityTitle.setSelectionForeground(getForeground());
-        lblEntitySubtitle.setCursor(null);
+        lblEntitySubtitle.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_ARROW));
         lblEntitySubtitle.setSelectionBackground(getBackground());
         lblEntitySubtitle.setSelectionForeground(getForeground());
 
