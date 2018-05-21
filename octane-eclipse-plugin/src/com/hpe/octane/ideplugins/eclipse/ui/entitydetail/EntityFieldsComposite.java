@@ -47,7 +47,6 @@ import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.Pre
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.DescriptionComposite;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditorFactory;
-import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.ReadOnlyFieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.PlatformResourcesManager;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
@@ -212,7 +211,7 @@ public class EntityFieldsComposite extends Composite {
             }
             
             GridData fieldEditorGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-            fieldEditorGridData.heightHint = 30;
+            fieldEditorGridData.heightHint = 40;
             Control fieldEditorControl = (Control) fieldEditor;
             fieldEditorControl.setLayoutData(fieldEditorGridData);
             fieldEditorControl.setForeground(foregroundColor);
@@ -220,12 +219,9 @@ public class EntityFieldsComposite extends Composite {
             //In case of uneven number of fields, the row heights would be inconsistent
             //and Eclipse does not know how to scale correctly
             if (i == shownFields.size() - 1 && i % 2 != 1) {
-                FieldEditor emptyFieldEditor = new ReadOnlyFieldEditor(sectionClientRight, SWT.NONE);
-                GridData emptyFieldEditorGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
-                fieldEditorGridData.heightHint = 30;
-                Control controlForEmptyField = (Control) emptyFieldEditor;
-                controlForEmptyField.setLayoutData(emptyFieldEditorGridData);
-                controlForEmptyField.setForeground(foregroundColor);
+                Composite placeholderComposite = new Composite(sectionClientRight, SWT.NONE);
+                placeholderComposite.setLayoutData(fieldEditorGridData);
+                placeholderComposite.setForeground(foregroundColor);
             }
         }
 
