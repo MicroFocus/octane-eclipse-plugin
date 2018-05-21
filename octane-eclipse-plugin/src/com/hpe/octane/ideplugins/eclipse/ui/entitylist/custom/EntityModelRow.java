@@ -85,6 +85,14 @@ public class EntityModelRow extends Composite {
         lblEntitySubtitle.setAlwaysShowScrollBars(false);
         lblEntitySubtitle.setDoubleClickEnabled(false);
         lblEntitySubtitle.setEditable(false);
+        
+        //make selection pretty
+        lblEntityTitle.setCursor(null);
+        lblEntityTitle.setSelectionBackground(getBackground());
+        lblEntityTitle.setSelectionForeground(getForeground());
+        lblEntitySubtitle.setCursor(null);
+        lblEntitySubtitle.setSelectionBackground(getBackground());
+        lblEntitySubtitle.setSelectionForeground(getForeground());
 
         Composite compositeDetails = new Composite(this, SWT.NONE);
         compositeDetails.setLayoutData(BorderLayout.EAST);
