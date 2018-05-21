@@ -118,6 +118,8 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
         linkSetDate.setVisible(!isDateTimeVisible);
         ((GridData) linkSetDate.getLayoutData()).exclude = isDateTimeVisible;
 
+        dtDate.setSize(dtDate.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        dtTime.setSize(dtTime.computeSize(SWT.DEFAULT, SWT.DEFAULT));
         layout(true);
         getParent().layout();
     }
@@ -127,11 +129,12 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
     }
 
     private void setZonedDateTime(ZonedDateTime zonedDateTime) {
-        // Convert to local time for UI
-        Instant timeStamp = zonedDateTime.toInstant();
-        zonedDateTime = timeStamp.atZone(ZoneId.systemDefault());
-
+        
         if (zonedDateTime != null) {
+            // Convert to local time for UI
+            Instant timeStamp = zonedDateTime.toInstant();
+            zonedDateTime = timeStamp.atZone(ZoneId.systemDefault());
+            
             dtDate.setYear(zonedDateTime.getYear());
             dtDate.setMonth(zonedDateTime.getMonthValue());
             dtDate.setDay(zonedDateTime.getDayOfMonth());
