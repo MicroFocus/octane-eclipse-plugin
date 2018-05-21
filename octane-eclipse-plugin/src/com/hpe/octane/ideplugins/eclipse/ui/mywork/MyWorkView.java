@@ -169,17 +169,7 @@ public class MyWorkView extends OctaneViewPart {
                         .values()
                         .stream()
                         .flatMap(col -> col.stream())
-                        .filter(field -> !field.equals(EntityFieldsConstants.FIELD_TYPE) && !field.equals(EntityFieldsConstants.FIELD_SUBTYPE)) // type
-                                                                                                                                                // filter
-                                                                                                                                                // should
-                                                                                                                                                // be
-                                                                                                                                                // done
-                                                                                                                                                // by
-                                                                                                                                                // the
-                                                                                                                                                // checkboxes,
-                                                                                                                                                // not
-                                                                                                                                                // by
-                                                                                                                                                // this
+                        .filter(field -> !field.equals(EntityFieldsConstants.FIELD_TYPE) && !field.equals(EntityFieldsConstants.FIELD_SUBTYPE))
                         .collect(Collectors.toSet()));
 
         String backgroundColorString = "rgb(" + backgroundColor.getRed() + "," + backgroundColor.getGreen() + "," + backgroundColor.getBlue() + ")";
