@@ -37,10 +37,9 @@ public class ReadOnlyFieldEditor extends Composite implements FieldEditor {
         setLayout(gridLayout);
         
         lblFieldValue = new TruncatingStyledText(this, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER, toolTip);
-        lblFieldValue.setTopMargin(0);
-        lblFieldValue.setBottomMargin(0);
-        lblFieldValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+        lblFieldValue.setMargins(3, 2, 0, 3);
         lblFieldValue.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        lblFieldValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
         
         FieldEditorFactory.createPlaceholderLabel(this);
     }

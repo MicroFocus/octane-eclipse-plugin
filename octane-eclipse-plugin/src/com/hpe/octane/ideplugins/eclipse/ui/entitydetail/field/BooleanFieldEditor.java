@@ -56,7 +56,10 @@ public class BooleanFieldEditor extends Composite implements FieldEditor {
         booleanEntityComboBox.setFilteringEnabled(false);
         booleanEntityComboBox.setMinSize(new Point(-1, -1));
         
-        booleanEntityComboBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+        GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1);
+        gd.heightHint = booleanEntityComboBox.computeSize(SWT.DEFAULT, SWT.DEFAULT).y - 2;
+        booleanEntityComboBox.setLayoutData(gd);
+        
         booleanEntityComboBox.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
         
         FieldEditorFactory.createPlaceholderLabel(this);

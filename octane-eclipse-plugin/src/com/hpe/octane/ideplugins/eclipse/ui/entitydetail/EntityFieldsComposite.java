@@ -194,7 +194,8 @@ public class EntityFieldsComposite extends Composite {
             CLabel labelFieldName = new CLabel(columnComposite, SWT.NONE);
             labelFieldName.setText(fieldLabelMap.get(fieldName));
             labelFieldName.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
-            GridData labelFieldNameGridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+            GridData labelFieldNameGridData = new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1);
+            labelFieldNameGridData.heightHint = 35;
             labelFieldName.setLayoutData(labelFieldNameGridData);
 
             FieldEditor fieldEditor = fieldEditorFactory.createFieldEditor(columnComposite, entityModelWrapper, fieldName);
@@ -211,7 +212,7 @@ public class EntityFieldsComposite extends Composite {
             }
             
             GridData fieldEditorGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-            fieldEditorGridData.heightHint = 40;
+            fieldEditorGridData.heightHint = 35;
             Control fieldEditorControl = (Control) fieldEditor;
             fieldEditorControl.setLayoutData(fieldEditorGridData);
             fieldEditorControl.setForeground(foregroundColor);
@@ -220,7 +221,7 @@ public class EntityFieldsComposite extends Composite {
             //and Eclipse does not know how to scale correctly
             if (i == shownFields.size() - 1 && i % 2 != 1) {
                 Composite placeholderComposite = new Composite(sectionClientRight, SWT.NONE);
-                placeholderComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+                placeholderComposite.setLayoutData(fieldEditorGridData);
                 placeholderComposite.setForeground(foregroundColor);
             }
         }

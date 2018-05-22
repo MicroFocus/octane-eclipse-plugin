@@ -131,8 +131,7 @@ public class EntityComboBox extends Composite {
         setLayout(gridLayout);
 
         textSelection = new TruncatingStyledText(this, SWT.READ_ONLY | SWT.SINGLE);
-        textSelection.setRightMargin(5);
-        textSelection.setLeftMargin(5);
+        textSelection.setMargins(3, 2, 0, 3);
         textSelection.setAlwaysShowScrollBars(false);
         textSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
         textSelection.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));

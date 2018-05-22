@@ -50,7 +50,8 @@ public class ReferenceFieldEditor extends Composite implements FieldEditor {
         setLayout(gridLayout);
 
         entityComboBox = new EntityComboBox(this, SWT.NONE);
-        entityComboBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+        GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1);
+        entityComboBox.setLayoutData(gd);
 
         entityComboBox.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -108,15 +109,11 @@ public class ReferenceFieldEditor extends Composite implements FieldEditor {
         }
 
         if (hasValue) {
-
             if (fieldModel instanceof ReferenceFieldModel && entityComboBox.getSelectionMode() == SWT.SINGLE) {
                 entityComboBox.setSelectedEntity(((ReferenceFieldModel) fieldModel).getValue());
-
             } else if (fieldModel instanceof MultiReferenceFieldModel && entityComboBox.getSelectionMode() == SWT.MULTI) {
                 entityComboBox.setSelectedEntities(((MultiReferenceFieldModel) fieldModel).getValue());
-
             } else {
-
                 throw new RuntimeException("Failed to set value of the Reference field model, field value and metadata not compatible");
             }
 

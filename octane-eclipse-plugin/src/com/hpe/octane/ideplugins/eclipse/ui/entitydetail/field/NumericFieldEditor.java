@@ -44,7 +44,7 @@ public class NumericFieldEditor extends Composite implements FieldEditor {
         gridLayout.marginWidth = 0;
         setLayout(gridLayout);
 
-        textField = new Text(this, SWT.BORDER);
+        textField = new Text(this, SWT.BORDER);        
         textField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
         
         FieldEditorFactory.createPlaceholderLabel(this);
