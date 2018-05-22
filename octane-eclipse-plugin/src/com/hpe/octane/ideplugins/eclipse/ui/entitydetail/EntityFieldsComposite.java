@@ -99,11 +99,13 @@ public class EntityFieldsComposite extends Composite {
         formGenerator.createCompositeSeparator(sectionDescription);
         formGenerator.createCompositeSeparator(sectionFields);
 
-        //Expand listeners
+        // Expand listeners
 
         sectionDescription.addExpansionListener(new IExpansionListener() {
             @Override
-            public void expansionStateChanging(ExpansionEvent e) {}
+            public void expansionStateChanging(ExpansionEvent e) {
+            }
+
             @Override
             public void expansionStateChanged(ExpansionEvent e) {
                 GridData gdSectionDescription = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
@@ -120,7 +122,9 @@ public class EntityFieldsComposite extends Composite {
 
         sectionFields.addExpansionListener(new IExpansionListener() {
             @Override
-            public void expansionStateChanging(ExpansionEvent expansionEvent) {}
+            public void expansionStateChanging(ExpansionEvent expansionEvent) {
+            }
+
             @Override
             public void expansionStateChanged(ExpansionEvent expansionEvent) {
                 layout(true, true);
@@ -161,24 +165,25 @@ public class EntityFieldsComposite extends Composite {
         for (int i = 0; i < shownFields.size(); i++) {
             String fieldName = iterator.next();
 
-            //Check if the field is valid (exists) before trying to show it
-            //If the field name for the given type doesn't return any metadata, we ignore it
-            //Default field might be out-dated, and cause detail tab to crash
+            // Check if the field is valid (exists) before trying to show it
+            // If the field name for the given type doesn't return any metadata,
+            // we ignore it
+            // Default field might be out-dated, and cause detail tab to crash
             try {
                 metadataService.getMetadata(entityModelWrapper.getEntityType(), fieldName);
             } catch (ServiceRuntimeException ex) {
                 ILog log = Activator.getDefault().getLog();
                 StringBuilder sbMessage = new StringBuilder();
                 sbMessage.append("Faied to create fieldEditor for field ")
-                .append(fieldName)
-                .append(" for type ")
-                .append(entityModelWrapper.getEntityType())
-                .append(": ")
-                .append(ex.getMessage());
+                        .append(fieldName)
+                        .append(" for type ")
+                        .append(entityModelWrapper.getEntityType())
+                        .append(": ")
+                        .append(ex.getMessage());
 
                 log.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, sbMessage.toString()));
 
-                //Do not show field in detail tab
+                // Do not show field in detail tab
                 continue;
             }
 
@@ -199,29 +204,32 @@ public class EntityFieldsComposite extends Composite {
             labelFieldName.setLayoutData(labelFieldNameGridData);
 
             FieldEditor fieldEditor = fieldEditorFactory.createFieldEditor(columnComposite, entityModelWrapper, fieldName);
-            
+
             // Attach a clear handler to the sprint field editor
             // TODO: full mvc
-            if(EntityFieldsConstants.FIELD_SPRINT.equals(fieldName)){
+            if (EntityFieldsConstants.FIELD_SPRINT.equals(fieldName)) {
                 entityModelWrapper.addFieldModelChangedHandler(fieldModel -> {
-                    if(EntityFieldsConstants.FIELD_RELEASE.equals(fieldModel.getName())) {
+                    if (EntityFieldsConstants.FIELD_RELEASE.equals(fieldModel.getName())) {
                         entityModelWrapper.setValue(new ReferenceFieldModel(EntityFieldsConstants.FIELD_SPRINT, null));
                         fieldEditor.setField(entityModelWrapper, EntityFieldsConstants.FIELD_SPRINT);
                     }
                 });
             }
-            
+
             GridData fieldEditorGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
             fieldEditorGridData.heightHint = 35;
             Control fieldEditorControl = (Control) fieldEditor;
             fieldEditorControl.setLayoutData(fieldEditorGridData);
             fieldEditorControl.setForeground(foregroundColor);
 
-            //In case of uneven number of fields, the row heights would be inconsistent
-            //and Eclipse does not know how to scale correctly
+            // In case of uneven number of fields, the row heights would be
+            // inconsistent
+            // and Eclipse does not know how to scale correctly
             if (i == shownFields.size() - 1 && i % 2 != 1) {
                 Composite placeholderComposite = new Composite(sectionClientRight, SWT.NONE);
-                placeholderComposite.setLayoutData(fieldEditorGridData);
+                GridData placeholderCompositeGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+                placeholderCompositeGridData.heightHint = 35;
+                placeholderComposite.setLayoutData(placeholderCompositeGridData);
                 placeholderComposite.setForeground(foregroundColor);
             }
         }
