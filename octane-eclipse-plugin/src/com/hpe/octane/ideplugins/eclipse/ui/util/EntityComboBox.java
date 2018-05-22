@@ -56,6 +56,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 
 public class EntityComboBox extends Composite {
 
+    private static final int BORDER_WIDTH = 2;
     private Point maxSize = new Point(600, 400);
     private Point minSize = new Point(200, 200);
 
@@ -118,7 +119,7 @@ public class EntityComboBox extends Composite {
      * @see SWT.MULTI
      */
     public EntityComboBox(Composite parent, int style) {
-        super(parent, SWT.BORDER);
+        super(parent, SWT.BORDER | SWT.BORDER_SOLID);
         selectionMode = (style & SWT.MULTI) != 0 ? SWT.MULTI : SWT.SINGLE;
         
         GridLayout gridLayout = new GridLayout(2, false);
@@ -450,10 +451,11 @@ public class EntityComboBox extends Composite {
     private void poistionShell() {
         Point shellSize = shell.getSize();
         Point btnLocation = this.toDisplay(btnArrow.getLocation());
+        
         Rectangle shellRect = new Rectangle(
                 btnLocation.x + btnArrow.getSize().x - shellSize.x,
-                btnLocation.y + btnArrow.getSize().y,
-                shellSize.x,
+                btnLocation.y + btnArrow.getSize().y + BORDER_WIDTH,
+                shellSize.x + BORDER_WIDTH,
                 shellSize.y);
         shell.setBounds(shellRect);
     }
