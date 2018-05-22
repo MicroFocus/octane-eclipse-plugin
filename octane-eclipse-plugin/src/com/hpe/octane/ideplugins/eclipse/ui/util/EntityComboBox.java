@@ -57,7 +57,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 public class EntityComboBox extends Composite {
 
     private Point maxSize = new Point(600, 400);
-    private Point minSize = new Point(200, 50);
+    private Point minSize = new Point(200, 200);
 
     private static final MouseTrackAdapter focusMouseTrackAdapter = new MouseTrackAdapter() {
         @Override
@@ -133,7 +133,7 @@ public class EntityComboBox extends Composite {
         textSelection.setRightMargin(5);
         textSelection.setLeftMargin(5);
         textSelection.setAlwaysShowScrollBars(false);
-        textSelection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+        textSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
         textSelection.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
         
         textSelection.addMouseListener(new MouseAdapter() {
