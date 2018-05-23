@@ -152,8 +152,9 @@ public class ErrorComposite extends Composite {
                 stackTraceText.setSize(stackTraceText.computeSize(SWT.DEFAULT, SWT.DEFAULT));
             } else {
                 TruncatingStyledText txtErrorFieldValue = new TruncatingStyledText(compositeExceptionData, SWT.NONE);
+                txtErrorFieldValue.setLeftMargin(6);
                 txtErrorFieldValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-                txtErrorFieldValue.setText("  " + fieldValueTxt);
+                txtErrorFieldValue.setText(fieldValueTxt);
             }
         });
     }
