@@ -66,10 +66,10 @@ public class ErrorComposite extends Composite {
 
         compositeExceptionData = new Composite(this, SWT.NONE);
         compositeExceptionData.setLayout(new GridLayout(1, false));
-        compositeExceptionData.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, false, 1, 1));
+        compositeExceptionData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
         lblSeparator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
-        lblSeparator.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, true, 1, 1));
+        lblSeparator.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false, 1, 1));
         lblSeparator.setVisible(false);
 
         compositeBtns = new Composite(this, SWT.NONE);
@@ -141,15 +141,12 @@ public class ErrorComposite extends Composite {
             }
 
             Label lblErrorField = new Label(compositeExceptionData, SWT.NONE);
-            if (fieldModel.getName().equals(ERROR_MODEL_FIELD_STACK_TRACE)) {
-                lblErrorField.setLayoutData(new GridData(SWT.BEGINNING, SWT.BEGINNING, false, false));
-            }
+            lblErrorField.setLayoutData(new GridData(SWT.BEGINNING, SWT.BEGINNING, false, false));
             lblErrorField.setText(convertFieldNameToLabel(fieldModel.getName()));
+            
             if (fieldModel.getName().equals(ERROR_MODEL_FIELD_STACK_TRACE)) {
                 Text stackTraceText = new Text(compositeExceptionData, SWT.BORDER | SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
-                GridData gdStackTraceText = new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1);
-                gdStackTraceText.widthHint = 800;
-                gdStackTraceText.heightHint = 300;
+                GridData gdStackTraceText = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
                 stackTraceText.setLayoutData(gdStackTraceText);
                 stackTraceText.setText(fieldValueTxt);
                 stackTraceText.setSize(stackTraceText.computeSize(SWT.DEFAULT, SWT.DEFAULT));
