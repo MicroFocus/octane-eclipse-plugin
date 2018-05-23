@@ -135,18 +135,19 @@ public class ErrorComposite extends Composite {
 
         // Rest of values displayed generically
         ex.getError().getValues().forEach(fieldModel -> {
-
             String fieldValueTxt = getFieldModelValueIfPresentAndNotEmpty(errorModel, fieldModel.getName());
-
             if (fieldValueTxt == null) {
                 return;
             }
 
             Label lblErrorField = new Label(compositeExceptionData, SWT.NONE);
+            if (fieldModel.getName().equals(ERROR_MODEL_FIELD_STACK_TRACE)) {
+                lblErrorField.setLayoutData(new GridData(SWT.BEGINNING, SWT.BEGINNING, false, false));
+            }
             lblErrorField.setText(convertFieldNameToLabel(fieldModel.getName()));
             if (fieldModel.getName().equals(ERROR_MODEL_FIELD_STACK_TRACE)) {
-                Text stackTraceText = new Text(compositeExceptionData, SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
-                GridData gdStackTraceText = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+                Text stackTraceText = new Text(compositeExceptionData, SWT.BORDER | SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
+                GridData gdStackTraceText = new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1);
                 gdStackTraceText.widthHint = 800;
                 gdStackTraceText.heightHint = 300;
                 stackTraceText.setLayoutData(gdStackTraceText);
@@ -155,7 +156,7 @@ public class ErrorComposite extends Composite {
             } else {
                 TruncatingStyledText txtErrorFieldValue = new TruncatingStyledText(compositeExceptionData, SWT.NONE);
                 txtErrorFieldValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-                txtErrorFieldValue.setText(fieldValueTxt);
+                txtErrorFieldValue.setText("  " + fieldValueTxt);
             }
         });
     }
