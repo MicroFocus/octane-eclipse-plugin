@@ -79,7 +79,8 @@ public class FieldEditorFactory {
 
         FieldEditor fieldEditor = null;
 
-        if (!fieldMetadata.isEditable() || fieldMetadata.isFinal()) {
+        //EntityFieldsConstants.FIELD_APPMODULE is a wannabe tree, need to make special ui for it
+        if (!fieldMetadata.isEditable() || fieldMetadata.isFinal() || fieldName.equals(EntityFieldsConstants.FIELD_APPMODULE)) {
             fieldEditor = new ReadOnlyFieldEditor(parent, SWT.NONE);
 
         } else {
