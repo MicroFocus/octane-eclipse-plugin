@@ -76,7 +76,7 @@ public class ErrorDialog extends Dialog {
         //pack to child size
         shell.pack();
 
-        //max size 800x600
+        //max size 1000x600
         if(shell.getSize().x > MAX_WIDTH) {
             shell.setSize(new Point(MAX_WIDTH, shell.getSize().y));
         }
