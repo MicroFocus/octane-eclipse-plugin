@@ -67,12 +67,7 @@ public class BooleanFieldEditor extends Composite implements FieldEditor {
         booleanEntityComboBox.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                boolean newValue;
-                if(booleanEntityComboBox.getSelectedEntity() == ENTITY_TRUE) {
-                    newValue = true;
-                } else {
-                    newValue = false;
-                }
+                boolean newValue = booleanEntityComboBox.getSelectedEntity() == ENTITY_TRUE ? true : false;
                 entityModelWrapper.setValue(new BooleanFieldModel(fieldName, newValue)); 
             }
         });
