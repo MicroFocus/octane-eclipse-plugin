@@ -27,7 +27,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.resource.PlatformResourcesManag
 
 public class ErrorDialog extends Dialog {
 
-    private static final int MAX_WIDTH = 800;
+    private static final int MAX_WIDTH = 1000;
     private static final int MAX_HEIGHT = 600;
 
     private Shell shell;

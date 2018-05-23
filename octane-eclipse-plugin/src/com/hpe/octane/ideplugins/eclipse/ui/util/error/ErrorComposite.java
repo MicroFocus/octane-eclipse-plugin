@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -27,6 +28,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 import com.hpe.adm.nga.sdk.exception.OctaneException;
 import com.hpe.adm.nga.sdk.model.ErrorModel;
@@ -43,6 +45,7 @@ public class ErrorComposite extends Composite {
     public static final String ERORR_MODEL_FIELD_ERROR_CODE = "error_code";
     public static final String ERORR_MODEL_FIELD_HTTP_STATUS_CODE = "httpStatusCode";
     public static final String ERORR_MODEL_FIELD_CORRELATION_ID = "correlation_id";
+    public static final String ERROR_MODEL_FIELD_STACK_TRACE = "stack_trace";
     
     private Composite compositeExceptionData;
     private Composite compositeBtns;
@@ -121,7 +124,7 @@ public class ErrorComposite extends Composite {
         String description = getDescriptionFromOctaneException(errorModel);
         
         if(description != null) {
-            TruncatingStyledText txtErrorField = new TruncatingStyledText(compositeExceptionData, SWT.NONE);
+            TruncatingStyledText txtErrorField = new TruncatingStyledText(compositeExceptionData, SWT.WRAP| SWT.MULTI | SWT.READ_ONLY);
             txtErrorField.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
             txtErrorField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
             txtErrorField.setText(description);
@@ -141,10 +144,19 @@ public class ErrorComposite extends Composite {
             
             Label lblErrorField = new Label(compositeExceptionData, SWT.NONE);
             lblErrorField.setText(convertFieldNameToLabel(fieldModel.getName()));
-            
-            TruncatingStyledText txtErrorFieldValue = new TruncatingStyledText(compositeExceptionData, SWT.NONE);
-            txtErrorFieldValue.setLayoutData( new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-            txtErrorFieldValue.setText(fieldValueTxt);
+            if (fieldModel.getName().equals(ERROR_MODEL_FIELD_STACK_TRACE)) {
+                Text stackTraceText = new Text(compositeExceptionData, SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
+                GridData gdStackTraceText = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+                gdStackTraceText.widthHint = 800;
+                gdStackTraceText.heightHint = 300;
+                stackTraceText.setLayoutData(gdStackTraceText);
+                stackTraceText.setText(fieldValueTxt);
+                stackTraceText.setSize(stackTraceText.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+            } else {
+                TruncatingStyledText txtErrorFieldValue = new TruncatingStyledText(compositeExceptionData, SWT.NONE);
+                txtErrorFieldValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+                txtErrorFieldValue.setText(fieldValueTxt);
+            }
         });
     }
     
