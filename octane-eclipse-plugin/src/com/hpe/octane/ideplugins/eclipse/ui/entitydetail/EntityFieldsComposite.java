@@ -161,6 +161,9 @@ public class EntityFieldsComposite extends Composite {
         // Skip the description field because it's in another UI component
         // (below other fields)
         Iterator<String> iterator = shownFields.iterator();
+        
+        //Number of fields that failed to be displayed
+        int skippedFields = 0;
 
         for (int i = 0; i < shownFields.size(); i++) {
             String fieldName = iterator.next();
@@ -184,6 +187,7 @@ public class EntityFieldsComposite extends Composite {
                 log.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, sbMessage.toString()));
 
                 // Do not show field in detail tab
+                skippedFields++;
                 continue;
             }
 
@@ -222,10 +226,9 @@ public class EntityFieldsComposite extends Composite {
             fieldEditorControl.setLayoutData(fieldEditorGridData);
             fieldEditorControl.setForeground(foregroundColor);
 
-            // In case of uneven number of fields, the row heights would be
-            // inconsistent
+            // In case of uneven number of fields, the row heights would be inconsistent
             // and Eclipse does not know how to scale correctly
-            if (i == shownFields.size() - 1 && i % 2 != 1) {
+            if (i == shownFields.size() - 1 && (shownFields.size() - skippedFields) % 2 != 0) {
                 Composite placeholderComposite = new Composite(sectionClientRight, SWT.NONE);
                 GridData placeholderCompositeGridData = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
                 placeholderCompositeGridData.heightHint = 35;
