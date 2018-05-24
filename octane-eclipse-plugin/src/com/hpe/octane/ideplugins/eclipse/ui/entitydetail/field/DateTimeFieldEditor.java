@@ -44,8 +44,6 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
     private DateTime dtDate;
     private DateTime dtTime;
     private Label btnSetNull;
-
-    private FieldMessageComposite fieldMessageComposite;
     private Link linkSetDate;
 
     public DateTimeFieldEditor(Composite parent, int style) {
@@ -92,9 +90,6 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
             }
         });
 
-        fieldMessageComposite = new FieldMessageComposite(this, SWT.NONE);
-        fieldMessageComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
-
         SelectionAdapter selectionListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -123,6 +118,8 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
         linkSetDate.setVisible(!isDateTimeVisible);
         ((GridData) linkSetDate.getLayoutData()).exclude = isDateTimeVisible;
 
+        dtDate.setSize(dtDate.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        dtTime.setSize(dtTime.computeSize(SWT.DEFAULT, SWT.DEFAULT));
         layout(true);
         getParent().layout();
     }
@@ -132,11 +129,12 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
     }
 
     private void setZonedDateTime(ZonedDateTime zonedDateTime) {
-        // Convert to local time for UI
-        Instant timeStamp = zonedDateTime.toInstant();
-        zonedDateTime = timeStamp.atZone(ZoneId.systemDefault());
-
+        
         if (zonedDateTime != null) {
+            // Convert to local time for UI
+            Instant timeStamp = zonedDateTime.toInstant();
+            zonedDateTime = timeStamp.atZone(ZoneId.systemDefault());
+            
             dtDate.setYear(zonedDateTime.getYear());
             dtDate.setMonth(zonedDateTime.getMonthValue());
             dtDate.setDay(zonedDateTime.getDayOfMonth());
@@ -179,16 +177,6 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
         } else {
             setZonedDateTime(null);
         }
-    }
-
-    @Override
-    public void setFieldMessage(FieldMessage fieldMessage) {
-        fieldMessageComposite.setFieldMessage(fieldMessage);
-    }
-
-    @Override
-    public FieldMessage getFieldMessage() {
-        return fieldMessageComposite.getFieldMessage();
     }
 
 }

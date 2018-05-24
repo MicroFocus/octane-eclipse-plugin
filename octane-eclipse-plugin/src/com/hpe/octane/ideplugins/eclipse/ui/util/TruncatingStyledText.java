@@ -20,7 +20,6 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -120,13 +119,6 @@ public class TruncatingStyledText extends StyledText {
     public void setText(String text) {
         this.originalText = text;
         super.setText(text);
-    }
-
-    @Override
-    public void setCursor(Cursor cursor) {
-        checkWidget();
-        Display display = getDisplay();
-        super.setCursor(display.getSystemCursor(SWT.CURSOR_ARROW));
     }
 
     @Override

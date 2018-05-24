@@ -14,6 +14,7 @@ package com.hpe.octane.ideplugins.eclipse.ui.entitydetail;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -51,6 +52,7 @@ public class EntityComposite extends Composite {
 
         scrolledComposite = new ScrolledComposite(this, SWT.H_SCROLL |
                 SWT.V_SCROLL);
+        scrolledComposite.setMinSize(new Point(800, 600));
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
                 true, true, 1, 1));

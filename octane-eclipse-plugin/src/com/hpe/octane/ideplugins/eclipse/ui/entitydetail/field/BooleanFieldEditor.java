@@ -12,24 +12,36 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field;
 
+import java.util.Arrays;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hpe.adm.nga.sdk.model.BooleanFieldModel;
+import com.hpe.adm.nga.sdk.model.EntityModel;
+import com.hpe.adm.nga.sdk.model.StringFieldModel;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
+import com.hpe.octane.ideplugins.eclipse.ui.util.EntityComboBox;
+import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
 public class BooleanFieldEditor extends Composite implements FieldEditor {
     
     protected EntityModelWrapper entityModelWrapper;
     protected String fieldName;
-    private FieldMessageComposite fieldMessageComposite;
-    private ModifyListener modifyListener;
-    private Combo combo;
+    
+    private EntityComboBox booleanEntityComboBox;
+    
+    private static final EntityModel ENTITY_TRUE = new EntityModel();
+    private static final EntityModel ENTITY_FALSE = new EntityModel();
+    static {
+        ENTITY_TRUE.setValue(new StringFieldModel(EntityFieldsConstants.FIELD_NAME, Boolean.TRUE.toString()));
+        ENTITY_FALSE.setValue(new StringFieldModel(EntityFieldsConstants.FIELD_NAME, Boolean.FALSE.toString()));
+    }
 
     public BooleanFieldEditor(Composite parent, int style) {
         super(parent, style);
@@ -37,41 +49,41 @@ public class BooleanFieldEditor extends Composite implements FieldEditor {
         gridLayout.marginWidth = 0;
         setLayout(gridLayout);
         
-        combo = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
-        combo.setItems(new String[] {Boolean.TRUE.toString(), Boolean.FALSE.toString()});
-        combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+        booleanEntityComboBox = new EntityComboBox(this, SWT.NONE);
+        booleanEntityComboBox.setEntityLoader(searchQuery -> Arrays.asList(ENTITY_TRUE, ENTITY_FALSE));
+        booleanEntityComboBox.setLabelProvider(FieldEditorFactory.DEFAULT_ENTITY_LABEL_PROVIDER);
+        booleanEntityComboBox.setLoadingIndicatorEnabled(false);
+        booleanEntityComboBox.setFilteringEnabled(false);
+        booleanEntityComboBox.setMinSize(new Point(-1, -1));
         
-        fieldMessageComposite = new FieldMessageComposite(this, SWT.NONE);
-        fieldMessageComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
+        GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1);
+        gd.heightHint = booleanEntityComboBox.computeSize(SWT.DEFAULT, SWT.DEFAULT).y - 2;
+        booleanEntityComboBox.setLayoutData(gd);
         
-        modifyListener = new ModifyListener() {
+        booleanEntityComboBox.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
+        
+        FieldEditorFactory.createPlaceholderLabel(this);
+        
+        booleanEntityComboBox.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void modifyText(ModifyEvent e) {
-                String text = combo.getText();
-                Boolean bool = Boolean.parseBoolean(text);
-                entityModelWrapper.setValue(new BooleanFieldModel(fieldName, bool)); 
+            public void widgetSelected(SelectionEvent e) {
+                boolean newValue = booleanEntityComboBox.getSelectedEntity() == ENTITY_TRUE ? true : false;
+                entityModelWrapper.setValue(new BooleanFieldModel(fieldName, newValue)); 
             }
-        };
+        });
     }
 
     @Override
     public void setField(EntityModelWrapper entityModel, String fieldName) {
         this.entityModelWrapper = entityModel;
         this.fieldName = fieldName;
-        combo.removeModifyListener(modifyListener);
-        Boolean boolValue = (Boolean) entityModel.getValue(fieldName).getValue();
-        combo.setText(boolValue.toString());     
-        combo.addModifyListener(modifyListener);
-    }
 
-    @Override
-    public void setFieldMessage(FieldMessage fieldMessage) {
-        fieldMessageComposite.setFieldMessage(fieldMessage);
-    }
-    
-    @Override
-    public FieldMessage getFieldMessage() {
-        return fieldMessageComposite.getFieldMessage();
+        Boolean boolValue = (Boolean) entityModel.getValue(fieldName).getValue();
+        if(boolValue) {
+            booleanEntityComboBox.setSelectedEntity(ENTITY_TRUE);
+        } else {
+            booleanEntityComboBox.setSelectedEntity(ENTITY_FALSE);
+        }
     }
     
 }

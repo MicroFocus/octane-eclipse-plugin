@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.ISharedImages;
 
 import com.hpe.adm.nga.sdk.metadata.FieldMetadata;
+import com.hpe.adm.nga.sdk.metadata.FieldMetadata.FieldType;
 import com.hpe.adm.nga.sdk.model.EntityModel;
 import com.hpe.adm.octane.ideplugins.services.EntityService;
 import com.hpe.adm.octane.ideplugins.services.MetadataService;
@@ -258,10 +259,14 @@ public class EntityHeaderComposite extends Composite {
 
         // make a map of the field names and labels
         Collection<FieldMetadata> fieldMetadata = metadataService.getVisibleFields(Entity.getEntityType(entityModel));
-        fieldLabelMap = fieldMetadata.stream().collect(Collectors.toMap(FieldMetadata::getName, FieldMetadata::getLabel));
+        
+        // do not include memo fields as they are not supported, for the EntityFieldsComposite ui
+        fieldLabelMap = fieldMetadata
+                .stream()
+                .filter(metadata -> metadata.getFieldType() != FieldType.Memo)
+                .collect(Collectors.toMap(FieldMetadata::getName, FieldMetadata::getLabel));
         
         //Hidden fields, plugin UI restriction
-        fieldLabelMap.remove(EntityFieldsConstants.FIELD_DESCRIPTION);
         fieldLabelMap.remove(EntityFieldsConstants.FIELD_PHASE);
         fieldLabelMap.remove(EntityFieldsConstants.FIELD_NAME);
         fieldLabelMap.remove(EntityFieldsConstants.FIELD_RANK);

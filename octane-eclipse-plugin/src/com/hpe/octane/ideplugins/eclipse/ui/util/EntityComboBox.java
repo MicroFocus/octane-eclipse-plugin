@@ -56,9 +56,9 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 
 public class EntityComboBox extends Composite {
 
-    private static final int MAX_HEIGHT = 400;
-    private static final int MIN_HEIGHT = 200;
-    private static final int MIN_WIDTH = 200;
+    private static final int BORDER_WIDTH = 2;
+    private Point maxSize = new Point(600, 400);
+    private Point minSize = new Point(200, 200);
 
     private static final MouseTrackAdapter focusMouseTrackAdapter = new MouseTrackAdapter() {
         @Override
@@ -89,7 +89,10 @@ public class EntityComboBox extends Composite {
     private List<EntityModel> selectedEntities = new ArrayList<>();
 
     private int selectionMode;
-
+    
+    private boolean isLoadingIndicatorEnabled = true;
+    private boolean isFilteringEnabled = true;
+    
     /**
      * Floating window that appears
      */
@@ -116,19 +119,23 @@ public class EntityComboBox extends Composite {
      * @see SWT.MULTI
      */
     public EntityComboBox(Composite parent, int style) {
-        super(parent, SWT.BORDER);
+        super(parent, SWT.BORDER | SWT.BORDER_SOLID);
         selectionMode = (style & SWT.MULTI) != 0 ? SWT.MULTI : SWT.SINGLE;
-
+        
         GridLayout gridLayout = new GridLayout(2, false);
         gridLayout.horizontalSpacing = 0;
         gridLayout.marginHeight = 0;
         gridLayout.verticalSpacing = 0;
         gridLayout.marginWidth = 0;
+        gridLayout.marginHeight = 0;
         setLayout(gridLayout);
 
         textSelection = new TruncatingStyledText(this, SWT.READ_ONLY | SWT.SINGLE);
+        textSelection.setMargins(3, 2, 0, 3);
         textSelection.setAlwaysShowScrollBars(false);
-        textSelection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+        textSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+        textSelection.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
+        
         textSelection.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseDown(MouseEvent e) {
@@ -139,6 +146,7 @@ public class EntityComboBox extends Composite {
 
         btnArrow = new Button(this, SWT.FLAT | SWT.ARROW | SWT.DOWN);
         btnArrow.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+        btnArrow.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
         btnArrow.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -205,7 +213,7 @@ public class EntityComboBox extends Composite {
         getEntitiesJob.addJobChangeListener(new JobChangeAdapter() {
             @Override
             public void scheduled(IJobChangeEvent event) {
-                if (!rootComposite.isDisposed()) {
+                if (!rootComposite.isDisposed() && isLoadingIndicatorEnabled) {
                     showLoading();
                 }
             }
@@ -389,6 +397,13 @@ public class EntityComboBox extends Composite {
                 displayEntities(textSearch.getText());
             }
         }));
+        
+        //just hide the textSearch ui control in case the loader doens't need to support it 
+        if(!isFilteringEnabled) {
+            GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+            gd.exclude = true;
+            textSearch.setLayoutData(gd);
+        }
 
         ScrolledComposite scrolledComposite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
         scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -435,10 +450,11 @@ public class EntityComboBox extends Composite {
     private void poistionShell() {
         Point shellSize = shell.getSize();
         Point btnLocation = this.toDisplay(btnArrow.getLocation());
+        
         Rectangle shellRect = new Rectangle(
                 btnLocation.x + btnArrow.getSize().x - shellSize.x,
-                btnLocation.y + btnArrow.getSize().y,
-                shellSize.x,
+                btnLocation.y + btnArrow.getSize().y + BORDER_WIDTH,
+                shellSize.x + BORDER_WIDTH,
                 shellSize.y);
         shell.setBounds(shellRect);
     }
@@ -446,12 +462,13 @@ public class EntityComboBox extends Composite {
     private Point limitContentSize(Control control) {
         Point contentSize = control.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 
-        // limit height
-        int shellHeight = contentSize.y > MAX_HEIGHT ? MAX_HEIGHT : contentSize.y;
-        shellHeight = shellHeight < MIN_HEIGHT ? MIN_HEIGHT : shellHeight;
-
+        // max limit
+        int shellHeight = maxSize.y > 0 && contentSize.y > maxSize.y ? maxSize.y : contentSize.y;
+        shellHeight = shellHeight < minSize.y ? minSize.y : shellHeight;
+        
         // limit width
-        int shellWidth = contentSize.x < MIN_WIDTH ? MIN_WIDTH : contentSize.x;
+        int shellWidth = maxSize.x > 0 && contentSize.x > maxSize.x ? maxSize.x : contentSize.x;
+        shellWidth = contentSize.x < minSize.x ? minSize.x : contentSize.x;
 
         contentSize.y = shellHeight;
         contentSize.x = shellWidth;
@@ -469,6 +486,38 @@ public class EntityComboBox extends Composite {
 
     public boolean removeSelectionListener(SelectionListener selectionListener) {
         return selectionListeners.remove(selectionListener);
+    }
+
+    public boolean isLoadingIndicatorEnabled() {
+        return isLoadingIndicatorEnabled;
+    }
+
+    public void setLoadingIndicatorEnabled(boolean isLoadingIndicatorEnabled) {
+        this.isLoadingIndicatorEnabled = isLoadingIndicatorEnabled;
+    }
+    
+    public boolean isFilteringEnabled() {
+        return isFilteringEnabled;
+    }
+
+    public void setFilteringEnabled(boolean isFilteringEnabled) {
+        this.isFilteringEnabled = isFilteringEnabled;
+    }
+
+    public Point getMaxSize() {
+        return maxSize;
+    }
+
+    public void setMaxSize(Point maxSize) {
+        this.maxSize = maxSize;
+    }
+
+    public Point getMinSize() {
+        return minSize;
+    }
+
+    public void setMinSize(Point minSize) {
+        this.minSize = minSize;
     }
 
 }

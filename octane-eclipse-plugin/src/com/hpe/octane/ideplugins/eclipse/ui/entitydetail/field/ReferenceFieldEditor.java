@@ -50,7 +50,8 @@ public class ReferenceFieldEditor extends Composite implements FieldEditor {
         setLayout(gridLayout);
 
         entityComboBox = new EntityComboBox(this, SWT.NONE);
-        entityComboBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+        GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1);
+        entityComboBox.setLayoutData(gd);
 
         entityComboBox.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -70,7 +71,9 @@ public class ReferenceFieldEditor extends Composite implements FieldEditor {
         });
         
         btnSetNull = new Label(this, SWT.NONE);
-        btnSetNull.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+        GridData gd_btnSetNull = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+        gd_btnSetNull.widthHint = FieldEditorFactory.PLACEHOLDER_LBL_WIDTH;
+        btnSetNull.setLayoutData(gd_btnSetNull);
         btnSetNull.setImage(ImageResources.OCTANE_REMOVE.getImage());
         btnSetNull.setCursor(Display.getCurrent().getSystemCursor(SWT.CURSOR_HAND));
         
@@ -97,17 +100,20 @@ public class ReferenceFieldEditor extends Composite implements FieldEditor {
 
         @SuppressWarnings("rawtypes")
         FieldModel fieldModel = entityModel.getValue(fieldName);
+        
+        boolean hasValue = fieldModel != null && fieldModel.getValue() != null;
+        
+        //Additional check for MultiReferenceFieldModel
+        if(hasValue && fieldModel instanceof MultiReferenceFieldModel) {
+            hasValue = !((MultiReferenceFieldModel)fieldModel).getValue().isEmpty();
+        }
 
-        if (fieldModel != null && fieldModel.getValue() != null) {
-
+        if (hasValue) {
             if (fieldModel instanceof ReferenceFieldModel && entityComboBox.getSelectionMode() == SWT.SINGLE) {
                 entityComboBox.setSelectedEntity(((ReferenceFieldModel) fieldModel).getValue());
-
             } else if (fieldModel instanceof MultiReferenceFieldModel && entityComboBox.getSelectionMode() == SWT.MULTI) {
                 entityComboBox.setSelectedEntities(((MultiReferenceFieldModel) fieldModel).getValue());
-
             } else {
-
                 throw new RuntimeException("Failed to set value of the Reference field model, field value and metadata not compatible");
             }
 
@@ -132,15 +138,6 @@ public class ReferenceFieldEditor extends Composite implements FieldEditor {
 
     public void setSelectedEntities(Collection<EntityModel> entityModel) {
         entityComboBox.setSelectedEntities(entityModel);
-    }
-
-    @Override
-    public void setFieldMessage(FieldMessage fieldMessage) {
-    }
-
-    @Override
-    public FieldMessage getFieldMessage() {
-        return null;
     }
 
 }

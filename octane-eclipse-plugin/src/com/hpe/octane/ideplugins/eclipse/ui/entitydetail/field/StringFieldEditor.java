@@ -30,7 +30,6 @@ public class StringFieldEditor extends Composite implements FieldEditor {
     protected EntityModelWrapper entityModelWrapper;
     protected String fieldName;
     protected Text textField;
-    private FieldMessageComposite fieldMessageComposite;
     private ModifyListener modifyListener;
 
     public StringFieldEditor(Composite parent, int style) {
@@ -42,9 +41,8 @@ public class StringFieldEditor extends Composite implements FieldEditor {
 
         textField = new Text(this, style);
         textField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-
-        fieldMessageComposite = new FieldMessageComposite(this, SWT.NONE);
-        fieldMessageComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
+        
+        FieldEditorFactory.createPlaceholderLabel(this);
 
         modifyListener = new ModifyListener() {
             @Override
@@ -67,16 +65,6 @@ public class StringFieldEditor extends Composite implements FieldEditor {
         textField.removeModifyListener(modifyListener);
         textField.setText(Util.getUiDataFromModel(entityModel.getValue(fieldName)));
         textField.addModifyListener(modifyListener);
-    }
-
-    @Override
-    public void setFieldMessage(FieldMessage fieldMessage) {
-        fieldMessageComposite.setFieldMessage(fieldMessage);
-    }
-
-    @Override
-    public FieldMessage getFieldMessage() {
-        return fieldMessageComposite.getFieldMessage();
     }
 
 }
