@@ -49,9 +49,6 @@ public class ErrorComposite extends Composite {
     private Composite compositeExceptionData;
     private Composite compositeBtns;
     private Label lblSeparator;
-
-    FieldModel<?> fieldModelStackTrace = null;
-
     /**
      * Create the composite.
      * 
@@ -154,13 +151,15 @@ public class ErrorComposite extends Composite {
             txtErrorFieldValue.setText(fieldValueTxt);
         });
 
+        if (fieldValueStackTrace == null) {
+            return;
+        }
         Label lblStackTrace = new Label(compositeExceptionData, SWT.NONE);
         lblStackTrace.setLayoutData(new GridData(SWT.BEGINNING, SWT.BEGINNING, false, false, 1, 1));
         lblStackTrace.setText(convertFieldNameToLabel(ERROR_MODEL_FIELD_STACK_TRACE));
 
         Text stackTraceText = new Text(compositeExceptionData, SWT.BORDER | SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL);
-        GridData gdStackTraceText = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-        stackTraceText.setLayoutData(gdStackTraceText);
+        stackTraceText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         stackTraceText.setText(fieldValueStackTrace);
         stackTraceText.setSize(stackTraceText.computeSize(SWT.DEFAULT, SWT.DEFAULT));
     }
