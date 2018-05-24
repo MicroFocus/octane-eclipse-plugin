@@ -93,7 +93,7 @@ public class CommitMessageUtil {
                         Clipboard cp = new Clipboard(Display.getDefault());
                         TextTransfer textTransfer = TextTransfer.getInstance();
                         cp.setContents(new Object[] { commitMessage }, new Transfer[] { textTransfer });
-                        new InfoPopup("Commit message copied to clipboard", commitMessage, 550, 100).open();
+                        new InfoPopup("Commit message copied to clipboard", commitMessage, 300, 100).open();
                     });
 
                 } else {
@@ -126,7 +126,7 @@ public class CommitMessageUtil {
                     }
 
                     Display.getDefault().asyncExec(() -> {
-                        new InfoPopup("Failed to generate commit message", messageBuilder.toString(), 550, 100).open();
+                        new InfoPopup("Failed to generate commit message", messageBuilder.toString(), 300, 100).open();
                     });
                 }
 

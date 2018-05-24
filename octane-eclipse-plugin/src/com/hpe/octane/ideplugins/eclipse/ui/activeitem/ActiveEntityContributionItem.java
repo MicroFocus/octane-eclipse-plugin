@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -34,6 +35,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditorInput;
 import com.hpe.octane.ideplugins.eclipse.ui.util.icon.EntityIconFactory;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.ImageResources;
+import com.hpe.octane.ideplugins.eclipse.util.CommitMessageUtil;
 
 public class ActiveEntityContributionItem extends WorkbenchWindowControlContribution {
 
@@ -52,6 +54,13 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
                 page.openEditor(entityModelEditorInput, EntityModelEditor.ID);
             } catch (PartInitException ex) {
             }
+        }
+    };
+    
+    private static Action commitMessageAction = new Action() {
+        @Override
+        public void run() {
+            CommitMessageUtil.copyMessageIfValid();
         }
     };
 
@@ -99,6 +108,10 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
             openAction.setImageDescriptor(
                     new ImageDataImageDescriptor(img.getImageData()));
             openAction.setEnabled(true);
+            
+            commitMessageAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+            commitMessageAction.setToolTipText("Generate and copy commit message to clipboard");
+            
         } else {
             openAction.setImageDescriptor(
                     new ImageDataImageDescriptor(ImageResources.DISMISS.getImage().getImageData()));
@@ -109,6 +122,11 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
         ActionContributionItem contributionItem = new ActionContributionItem(openAction);
         contributionItem.setMode(ActionContributionItem.MODE_FORCE_TEXT);
         manager.add(contributionItem);
+        
+        if (entityModelEditorInput != null) {
+            manager.add(new ActionContributionItem(commitMessageAction));
+        }
+        
         manager.update(true);
 
         // Just perfect
