@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -26,26 +27,28 @@
 						<artifactId>tycho-packaging-plugin</artifactId>
 						<version>${tycho-version}</version>
 					</plugin>
-					<!-- Has to be after exectuted after the tycho package plugin -->
 					<plugin>
-						<groupId>SignHPUtility.plugin</groupId>
-						<artifactId>signhp-maven-plugin</artifactId>
-						<version>${signhp.version}</version>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
 						<executions>
 							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>signHP</goal>
-								</goals>
+								<id>sign business-rules-extension jar</id>
+								<phase>prepare-package</phase>
 								<configuration>
-									<parameters>
-										-g ${project.build.directory}/${project.name}-${project.version}.jar -t 24 -p AGN_JAR -i -v -u jarsigner -c 1 -o ${project.build.directory}
-									</parameters>
-									<properties>
-										<krb.account_name>${hpsign.account_name}</krb.account_name>
-										<krb.password>${hpsign.krb.password}</krb.password>
-									</properties>
+									<target name="sign_bre_jar">
+										<echo message="Running jar local signature" />
+										<exec executable="/bin/bash"
+											dir="/opt/HPCSS/SignHP/SignHP_v3_1" failonerror="true">
+											<arg value="-c" />
+											<arg
+												value='java -cp "UnifiedSignHPUtility-1.0.2.jar":"./signHP_dependencies/SignHPClient-4.2.0.jar" com.hpe.yehud.sign.SignHPUtility -g "${project.build.directory}/octane.eclipse.plugin-${project.version}.jar" -t 24 -localProject myd_gpg_prokey_bp -i -c 1 -noOverrideSignHPClientFiles -o ${project.build.directory} ' />
+										</exec>
+									</target>
 								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
 							</execution>
 						</executions>
 					</plugin>
