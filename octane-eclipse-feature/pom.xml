@@ -40,8 +40,7 @@
 										<exec executable="/bin/bash"
 											dir="/opt/HPCSS/SignHP/SignHP_v3_1" failonerror="true">
 											<arg value="-c" />
-											<arg
-												value='java -cp "UnifiedSignHPUtility-1.0.2.jar":"./signHP_dependencies/SignHPClient-4.2.0.jar" com.hpe.yehud.sign.SignHPUtility -g "${project.build.directory}/octane.eclipse.feature-${project.version}.jar" -t 24 -localProject myd_gpg_prokey_bp -i -c 1 -noOverrideSignHPClientFiles -o ${project.build.directory} ' />
+											<arg value='java -cp "UnifiedSignHPUtility-1.0.2.jar":"./signHP_dependencies/SignHPClient-4.2.0.jar" com.hpe.yehud.sign.SignHPUtility -g "${project.build.directory}/octane.eclipse.feature-${project.version}.jar" -t 24 -remoteProject AGN_JAR -i -v -u jarsigner -c 1 -noOverrideSignHPClientFiles -o ${project.build.directory} '/>
 										</exec>
 									</target>
 								</configuration>
