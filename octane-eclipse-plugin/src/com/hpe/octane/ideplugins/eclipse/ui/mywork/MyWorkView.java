@@ -28,13 +28,22 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.hpe.adm.nga.sdk.model.EntityModel;
 import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkService;
@@ -42,6 +51,7 @@ import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkUtil;
 import com.hpe.adm.octane.ideplugins.services.util.EntityUtil;
 import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.filter.UserItemArrayEntityListData;
+import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferencePage;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PrefereceChangeHandler;
 import com.hpe.octane.ideplugins.eclipse.ui.OctaneViewPart;
@@ -62,6 +72,8 @@ import com.hpe.octane.ideplugins.eclipse.util.CommitMessageUtil;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
 public class MyWorkView extends OctaneViewPart {
+    public MyWorkView() {
+    }
 
     private static final ILog logger = Activator.getDefault().getLog();
 
@@ -207,6 +219,26 @@ public class MyWorkView extends OctaneViewPart {
             }
         });
         errorComposite = new ErrorComposite(parent, SWT.BORDER);
+        
+        Text badSettingsText = new Text(errorComposite, SWT.NONE);
+        badSettingsText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+        badSettingsText.setText("Something went wrong!!!");
+        badSettingsText.setFont(new Font(null, "Arial", 12, SWT.NONE));
+        badSettingsText.setForeground(new Color(Display.getCurrent(), 204, 0, 0));
+        
+        Link link = new Link(errorComposite, SWT.NONE);
+        link.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
+        link.setText("<A>" + "To check, go to settings." + "</A>");
+        link.setFont(new Font(null, "Arial", 12, SWT.NONE));
+        link.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                PreferencesUtil.createPreferenceDialogOn(parent.getShell(),
+                        PluginPreferencePage.ID,
+                        null,
+                        null).open();
+            }
+        });
 
         IActionBars viewToolbar = getViewSite().getActionBars();
 
