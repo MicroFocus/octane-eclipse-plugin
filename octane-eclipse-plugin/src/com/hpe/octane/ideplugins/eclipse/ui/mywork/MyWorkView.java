@@ -30,6 +30,7 @@ import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -123,8 +124,8 @@ public class MyWorkView extends OctaneViewPart {
                     });
                 } catch (Exception e) {
                     Display.getDefault().asyncExec(() -> {
+                        showControl(errorAndSettingsComposite);
                         errorComposite.displayException(e);
-                        showControl(errorComposite);
                         entityData.setEntityList(Collections.emptyList());
 
                         Display.getDefault().asyncExec(() -> {
@@ -156,6 +157,7 @@ public class MyWorkView extends OctaneViewPart {
     private NoWorkComposite noWorkComposite;
     private ErrorComposite errorComposite;
     private TextContributionItem textContributionItem;
+    private Composite errorAndSettingsComposite;
 
     @Override
     public Control createOctanePartControl(Composite parent) {
@@ -218,15 +220,22 @@ public class MyWorkView extends OctaneViewPart {
                 }
             }
         });
-        errorComposite = new ErrorComposite(parent, SWT.BORDER);
+        errorAndSettingsComposite = new Composite(parent, SWT.BORDER);
+        errorAndSettingsComposite.setLayout(new GridLayout(1, false));
+        errorAndSettingsComposite.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
+        errorAndSettingsComposite.setBackgroundMode(SWT.INHERIT_FORCE);
+        errorAndSettingsComposite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
+
+        errorComposite = new ErrorComposite(errorAndSettingsComposite, SWT.NONE);
+        errorComposite.setLayoutData(new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 1, 1));
         
-        Text badSettingsText = new Text(errorComposite, SWT.NONE);
+        Text badSettingsText = new Text(errorAndSettingsComposite, SWT.NONE);
         badSettingsText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
         badSettingsText.setText("Something went wrong!!!");
         badSettingsText.setFont(new Font(null, "Arial", 12, SWT.NONE));
         badSettingsText.setForeground(new Color(Display.getCurrent(), 204, 0, 0));
         
-        Link link = new Link(errorComposite, SWT.NONE);
+        Link link = new Link(errorAndSettingsComposite, SWT.NONE);
         link.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
         link.setText("<A>" + "To check, go to settings." + "</A>");
         link.setFont(new Font(null, "Arial", 12, SWT.NONE));
