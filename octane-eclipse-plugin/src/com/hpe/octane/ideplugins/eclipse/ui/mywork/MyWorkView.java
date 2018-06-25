@@ -28,13 +28,23 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.hpe.adm.nga.sdk.model.EntityModel;
 import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkService;
@@ -42,6 +52,7 @@ import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkUtil;
 import com.hpe.adm.octane.ideplugins.services.util.EntityUtil;
 import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.filter.UserItemArrayEntityListData;
+import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferencePage;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PrefereceChangeHandler;
 import com.hpe.octane.ideplugins.eclipse.ui.OctaneViewPart;
@@ -62,6 +73,8 @@ import com.hpe.octane.ideplugins.eclipse.util.CommitMessageUtil;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
 public class MyWorkView extends OctaneViewPart {
+    public MyWorkView() {
+    }
 
     private static final ILog logger = Activator.getDefault().getLog();
 
@@ -111,8 +124,8 @@ public class MyWorkView extends OctaneViewPart {
                     });
                 } catch (Exception e) {
                     Display.getDefault().asyncExec(() -> {
+                        showControl(errorAndSettingsComposite);
                         errorComposite.displayException(e);
-                        showControl(errorComposite);
                         entityData.setEntityList(Collections.emptyList());
 
                         Display.getDefault().asyncExec(() -> {
@@ -144,6 +157,7 @@ public class MyWorkView extends OctaneViewPart {
     private NoWorkComposite noWorkComposite;
     private ErrorComposite errorComposite;
     private TextContributionItem textContributionItem;
+    private Composite errorAndSettingsComposite;
 
     @Override
     public Control createOctanePartControl(Composite parent) {
@@ -206,7 +220,34 @@ public class MyWorkView extends OctaneViewPart {
                 }
             }
         });
-        errorComposite = new ErrorComposite(parent, SWT.BORDER);
+        errorAndSettingsComposite = new Composite(parent, SWT.BORDER);
+        errorAndSettingsComposite.setLayout(new GridLayout(1, false));
+        errorAndSettingsComposite.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
+        errorAndSettingsComposite.setBackgroundMode(SWT.INHERIT_FORCE);
+        errorAndSettingsComposite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
+
+        errorComposite = new ErrorComposite(errorAndSettingsComposite, SWT.NONE);
+        errorComposite.setLayoutData(new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 1, 1));
+        
+        Text badSettingsText = new Text(errorAndSettingsComposite, SWT.NONE);
+        badSettingsText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+        badSettingsText.setText("Something went wrong!!!");
+        badSettingsText.setFont(new Font(null, "Arial", 12, SWT.NONE));
+        badSettingsText.setForeground(new Color(Display.getCurrent(), 204, 0, 0));
+        
+        Link link = new Link(errorAndSettingsComposite, SWT.NONE);
+        link.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
+        link.setText("<A>" + "To check, go to settings." + "</A>");
+        link.setFont(new Font(null, "Arial", 12, SWT.NONE));
+        link.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                PreferencesUtil.createPreferenceDialogOn(parent.getShell(),
+                        PluginPreferencePage.ID,
+                        null,
+                        null).open();
+            }
+        });
 
         IActionBars viewToolbar = getViewSite().getActionBars();
 
