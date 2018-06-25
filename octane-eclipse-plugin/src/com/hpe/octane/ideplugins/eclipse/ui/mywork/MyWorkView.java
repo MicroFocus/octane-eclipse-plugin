@@ -229,16 +229,12 @@ public class MyWorkView extends OctaneViewPart {
         errorComposite = new ErrorComposite(errorAndSettingsComposite, SWT.NONE);
         errorComposite.setLayoutData(new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 1, 1));
         
-        Text badSettingsText = new Text(errorAndSettingsComposite, SWT.NONE);
-        badSettingsText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
-        badSettingsText.setText("Something went wrong!!!");
-        badSettingsText.setFont(new Font(null, "Arial", 12, SWT.NONE));
-        badSettingsText.setForeground(new Color(Display.getCurrent(), 204, 0, 0));
-        
         Link link = new Link(errorAndSettingsComposite, SWT.NONE);
-        link.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
-        link.setText("<A>" + "To check, go to settings." + "</A>");
+        link.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+        link.setText("<A>" + "Something went wrong! Click here to go to Settings." + "</A>");
         link.setFont(new Font(null, "Arial", 12, SWT.NONE));
+        link.setForeground(new Color(Display.getCurrent(), 204, 0, 0));
+
         link.addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(Event event) {
