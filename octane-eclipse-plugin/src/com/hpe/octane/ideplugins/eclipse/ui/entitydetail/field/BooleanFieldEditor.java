@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.hpe.adm.nga.sdk.model.BooleanFieldModel;
 import com.hpe.adm.nga.sdk.model.EntityModel;
 import com.hpe.adm.nga.sdk.model.StringFieldModel;
-import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
+import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.ui.util.EntityComboBox;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 

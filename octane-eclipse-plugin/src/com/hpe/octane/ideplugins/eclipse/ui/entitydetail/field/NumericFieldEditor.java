@@ -25,8 +25,9 @@ import org.eclipse.swt.widgets.Text;
 import com.hpe.adm.nga.sdk.model.FloatFieldModel;
 import com.hpe.adm.nga.sdk.model.LongFieldModel;
 import com.hpe.adm.nga.sdk.model.ReferenceFieldModel;
+import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.adm.octane.ideplugins.services.util.Util;
-import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
+
 
 public class NumericFieldEditor extends Composite implements FieldEditor {
 

@@ -31,7 +31,7 @@ import com.hpe.adm.nga.sdk.model.EntityModel;
 import com.hpe.adm.nga.sdk.model.FieldModel;
 import com.hpe.adm.nga.sdk.model.MultiReferenceFieldModel;
 import com.hpe.adm.nga.sdk.model.ReferenceFieldModel;
-import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
+import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.ui.util.EntityComboBox;
 import com.hpe.octane.ideplugins.eclipse.ui.util.EntityComboBox.EntityLoader;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.ImageResources;

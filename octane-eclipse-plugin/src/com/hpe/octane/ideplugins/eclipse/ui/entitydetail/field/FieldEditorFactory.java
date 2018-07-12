@@ -36,9 +36,9 @@ import com.hpe.adm.nga.sdk.query.QueryMethod;
 import com.hpe.adm.octane.ideplugins.services.EntityService;
 import com.hpe.adm.octane.ideplugins.services.MetadataService;
 import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
+import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.adm.octane.ideplugins.services.util.Util;
 import com.hpe.octane.ideplugins.eclipse.Activator;
-import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.ui.util.EntityComboBox.EntityLoader;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 

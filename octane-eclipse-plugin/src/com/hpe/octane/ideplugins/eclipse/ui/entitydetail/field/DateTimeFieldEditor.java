@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Link;
 import com.hpe.adm.nga.sdk.model.DateFieldModel;
 import com.hpe.adm.nga.sdk.model.FieldModel;
 import com.hpe.adm.nga.sdk.model.ReferenceFieldModel;
-import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
+import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.ImageResources;
 
 public class DateTimeFieldEditor extends Composite implements FieldEditor {

@@ -26,10 +26,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 import com.hpe.adm.nga.sdk.model.EntityModel;
+import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.adm.octane.ideplugins.services.nonentity.ImageService;
 import com.hpe.adm.octane.ideplugins.services.util.Util;
 import com.hpe.octane.ideplugins.eclipse.Activator;
-import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.ui.util.LinkInterceptListener;
 import com.hpe.octane.ideplugins.eclipse.ui.util.LoadingComposite;
 import com.hpe.octane.ideplugins.eclipse.ui.util.PropagateScrollBrowserFactory;
