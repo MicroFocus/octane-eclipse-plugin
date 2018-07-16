@@ -14,7 +14,7 @@ package com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field;
 
 import org.eclipse.swt.graphics.Drawable;
 
-import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
+import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 
 public interface FieldEditor extends Drawable {
     public void setField(EntityModelWrapper entityModel, String fieldName);

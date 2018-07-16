@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hpe.adm.nga.sdk.model.ReferenceErrorModel;
 import com.hpe.adm.nga.sdk.model.StringFieldModel;
+import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.adm.octane.ideplugins.services.util.Util;
-import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
 
 public class StringFieldEditor extends Composite implements FieldEditor {
 
