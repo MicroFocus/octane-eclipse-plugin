@@ -40,6 +40,7 @@ import com.hpe.adm.nga.sdk.metadata.FieldMetadata;
 import com.hpe.adm.nga.sdk.model.ReferenceFieldModel;
 import com.hpe.adm.octane.ideplugins.services.MetadataService;
 import com.hpe.adm.octane.ideplugins.services.exception.ServiceRuntimeException;
+import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PrefereceChangeHandler;
@@ -47,7 +48,6 @@ import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.Pre
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.DescriptionComposite;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditorFactory;
-import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.PlatformResourcesManager;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
