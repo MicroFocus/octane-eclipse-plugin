@@ -24,6 +24,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import com.hpe.adm.nga.sdk.model.EntityModel;
 import com.hpe.adm.octane.ideplugins.services.nonentity.ImageService;
@@ -34,6 +35,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.LinkInterceptListener;
 import com.hpe.octane.ideplugins.eclipse.ui.util.LoadingComposite;
 import com.hpe.octane.ideplugins.eclipse.ui.util.PropagateScrollBrowserFactory;
 import com.hpe.octane.ideplugins.eclipse.ui.util.StackLayoutComposite;
+import com.hpe.octane.ideplugins.eclipse.ui.util.error.ErrorDialog;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.PlatformResourcesManager;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
@@ -47,6 +49,7 @@ public class DescriptionComposite extends Composite {
 
     private String description;
     private StackLayoutComposite stackLayoutComposite;
+    private Exception pictureException;
 
     public DescriptionComposite(Composite parent, int style) {
         super(parent, style);
@@ -92,8 +95,13 @@ public class DescriptionComposite extends Composite {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 monitor.beginTask(getName(), IProgressMonitor.UNKNOWN);
-                description = Activator.getInstance(ImageService.class)
-                        .downloadPictures(Util.getUiDataFromModel(entityModel.getValue((EntityFieldsConstants.FIELD_DESCRIPTION))));
+                try {
+                    description = Activator.getInstance(ImageService.class)
+                            .downloadPictures(Util.getUiDataFromModel(entityModel.getValue((EntityFieldsConstants.FIELD_DESCRIPTION))));
+                } catch (Exception ex) {
+                    description = entityModel.getValue((EntityFieldsConstants.FIELD_DESCRIPTION)).getValue().toString();
+                    pictureException = ex;
+                }
                 monitor.done();
                 return Status.OK_STATUS;
             }
@@ -114,6 +122,13 @@ public class DescriptionComposite extends Composite {
                         browserDescHtml.setText(description);
                     }
                     stackLayoutComposite.showControl(browserDescHtml);
+                    if(pictureException != null) {
+                        ErrorDialog errDialog = new ErrorDialog(getParent().getShell());
+                        errDialog.addButton("Close", () -> {
+                            errDialog.close();
+                        });
+                        errDialog.displayException(pictureException, "ALM Octane exception");   
+                    }
                 });
             }
         });
