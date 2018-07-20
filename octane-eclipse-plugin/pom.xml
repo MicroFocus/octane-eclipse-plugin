@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.hpe.adm.octane.ideplugins</groupId>
 		<artifactId>octane-eclipse-parent</artifactId>
-		<version>12.60.4-SNAPSHOT</version>
+		<version>12.55.32-SNAPSHOT</version>
 	</parent>
 	<artifactId>octane.eclipse.plugin</artifactId>
 	<packaging>eclipse-plugin</packaging>
@@ -27,27 +27,25 @@
 						<artifactId>tycho-packaging-plugin</artifactId>
 						<version>${tycho-version}</version>
 					</plugin>
+					<!-- Has to be after exectuted after the tycho package plugin -->
 					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.7</version>
+						<groupId>SignHPUtility.plugin</groupId>
+						<artifactId>unified-signhp-maven-plugin</artifactId>
+						<version>1.0.5</version>
 						<executions>
 							<execution>
-								<id>sign business-rules-extension jar</id>
 								<phase>prepare-package</phase>
-								<configuration>
-									<target name="sign_bre_jar">
-										<echo message="Running jar local signature" />
-										<exec executable="/bin/bash"
-											dir="/opt/HPCSS/SignHP/SignHP_v3_1" failonerror="true">
-											<arg value="-c" />
-											<arg value='java -cp "UnifiedSignHPUtility-1.0.2.jar":"./signHP_dependencies/SignHPClient-4.2.0.jar" com.hpe.yehud.sign.SignHPUtility -g "${project.build.directory}/octane.eclipse.plugin-${project.version}.jar" -t 24 -remoteProject AGN_JAR -i -v -u jarsigner -c 1 -noOverrideSignHPClientFiles -o ${project.build.directory} '/>
-										</exec>
-									</target>
-								</configuration>
 								<goals>
-									<goal>run</goal>
+									<goal>signHP</goal>
 								</goals>
+								<configuration>
+									<parameters>-g "${project.build.directory}/octane.eclipse.plugin-${project.version}.jar" -t 24 -AUJASProject jar -log "./mfsign_jar.log" -i -c 0 -o ${project.build.directory}</parameters>
+									<properties>
+										<aujas.client_path>/opt/mfsign/CodeSign-CLI/MicroFocusClient.sh</aujas.client_path>
+										<aujas.guid.jar>22f782ea-080b-46db-b07a-ada0022be69c</aujas.guid.jar>
+										<aujas.project.extensions.jar>jar</aujas.project.extensions.jar>
+									</properties>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
