@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -90,6 +92,17 @@ public class EntityCommentComposite extends StackLayoutComposite {
                 postComment(commentText.getText());
             }
         });
+        commentText.addModifyListener(new ModifyListener() {
+            @Override
+            public void modifyText(ModifyEvent e) {
+                String currentText = ((Text) e.widget).getText();
+                if (!currentText.isEmpty() && currentText != null && currentText.trim().length() > 0) {
+                    postCommentBtn.setEnabled(true);
+                } else {
+                    postCommentBtn.setEnabled(false);
+                }
+            }
+        });
 
         postCommentBtn = new Button(inputCommentAndSendButtonComposite, SWT.NONE);
         postCommentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
@@ -118,7 +131,7 @@ public class EntityCommentComposite extends StackLayoutComposite {
     public void setEntityModel(EntityModel entityModel) {
         this.entityModel = entityModel;
         commentText.setEnabled(true);
-        postCommentBtn.setEnabled(true);
+        postCommentBtn.setEnabled(false);
         displayComments();
     }
 
