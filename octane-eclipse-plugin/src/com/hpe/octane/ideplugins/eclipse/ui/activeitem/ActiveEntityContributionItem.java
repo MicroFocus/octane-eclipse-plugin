@@ -119,7 +119,7 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
             commitMessageAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
             commitMessageAction.setToolTipText("Generate and copy commit message to clipboard");
             
-            stopWorkAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_STOP));
+            stopWorkAction.setImageDescriptor(new ImageDataImageDescriptor(ImageResources.STOP_TIMER_16X16.getImage().getImageData()));
             stopWorkAction.setToolTipText("Stop work on current entity");
             
         } else {
