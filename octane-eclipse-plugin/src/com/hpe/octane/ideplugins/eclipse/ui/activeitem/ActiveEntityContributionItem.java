@@ -63,6 +63,13 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
             CommitMessageUtil.copyMessageIfValid();
         }
     };
+    
+    private static Action stopWorkAction = new Action() {
+        @Override
+        public void run() {
+            PluginPreferenceStorage.setActiveItem(null);
+        }
+    };
 
     public ActiveEntityContributionItem() {
         PluginPreferenceStorage.addPrefenceChangeHandler(PluginPreferenceStorage.PreferenceConstants.ACTIVE_ITEM_ID, (() -> {
@@ -112,6 +119,9 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
             commitMessageAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
             commitMessageAction.setToolTipText("Generate and copy commit message to clipboard");
             
+            stopWorkAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_STOP));
+            stopWorkAction.setToolTipText("Stop work on current entity");
+            
         } else {
             openAction.setImageDescriptor(
                     new ImageDataImageDescriptor(ImageResources.DISMISS.getImage().getImageData()));
@@ -125,6 +135,7 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
         
         if (entityModelEditorInput != null) {
             manager.add(new ActionContributionItem(commitMessageAction));
+            manager.add(new ActionContributionItem(stopWorkAction));
         }
         
         manager.update(true);
