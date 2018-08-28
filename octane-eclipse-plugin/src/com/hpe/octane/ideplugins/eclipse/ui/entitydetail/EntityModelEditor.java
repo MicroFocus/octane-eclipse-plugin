@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -28,7 +27,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hpe.adm.nga.sdk.exception.OctaneException;
@@ -76,12 +74,7 @@ public class EntityModelEditor extends EditorPart {
         
         setPartName(String.valueOf(this.input.getId()));
         img = entityIconFactoryForTabInfo.getImageForEditorPart(this.input.getEntityType());
-//        Display display = Display.getCurrent();
-//        Color blue = display.getSystemColor(SWT.COLOR_BLUE);
-//        img.setBackground(blue);
-      
         setTitleImage(img);
-        
     }
     
    

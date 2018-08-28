@@ -12,12 +12,9 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.util.icon;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.ImageIcon;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -25,6 +22,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
@@ -93,7 +92,6 @@ public class EntityIconFactory {
         Display display = Display.getDefault();
         Color white = display.getSystemColor(SWT.COLOR_WHITE);
         Image img = new Image(display, iconWidth, iconHeight);
-        img.getImageData().transparentPixel = img.getImageData().getPixel(0, 0);
         GC gc = new GC(img);
  
         gc.setBackground(white);
@@ -101,7 +99,7 @@ public class EntityIconFactory {
         gc.setAntialias(SWT.ON);
         gc.setBackground(iconDetail.getColor());
         gc.fillOval(0, 0, iconWidth, iconHeight);
-            
+        
         gc.setForeground(fontColor);
         gc.setFont(new Font(display, "Arial", fontSize, SWT.BOLD));
 
@@ -109,9 +107,9 @@ public class EntityIconFactory {
         int fontY = (iconWidth - gc.textExtent(iconDetail.getDisplayLabelText()).x) / 2;
 
         gc.drawText(iconDetail.getDisplayLabelText(), fontY, fontX);
-        
+ 
         imageDataCache.put(entity, img.getImageData());
-
+        
         gc.dispose();
         img.dispose();
     }
@@ -119,41 +117,36 @@ public class EntityIconFactory {
     public Image getImageForEditorPart(Entity entity) {
         IconDetail iconDetail = iconDetailMap.containsKey(entity) ? iconDetailMap.get(entity) : undefinedIconDetail;
         
-        ImageIcon imageIcon = new ImageIcon();
-//        imageIcon.setImage(new Image());
-        
         Display display = Display.getDefault();
-        Image img = new Image(display, iconWidth, iconHeight);
-        GC gc = new GC(img);
+        Color background = iconDetail.getColor();
+        Color white = display.getSystemColor(SWT.COLOR_WHITE);
+        PaletteData palette = new PaletteData(new RGB[] {
+                background.getRGB(), // pixel 0 = black
+                white.getRGB(), // pixel 1 = white
+        });
+        ImageData imageData = new ImageData(iconWidth, iconHeight, 1, palette);
+        imageData.transparentPixel = 1; // set the transparent color to white
 
-//        Color white = display.getSystemColor(SWT.COLOR_WHITE); 
-//        gc.setBackground(white);
-//        gc.fillRectangle(0, 0, iconWidth, iconHeight); // fill the whole image with white
+        // Create an image from the image data, fill it with white
+        Image image = new Image( display, imageData);
+        GC gc = new GC(image);
         gc.setAntialias(SWT.ON);
-        gc.setBackground(iconDetail.getColor());
-        gc.fillOval(0, 0, iconWidth, iconHeight);
-            
+        gc.setBackground(white);
+        gc.fillRectangle(0, 0, iconWidth, iconHeight); // fill the whole image with white
+        gc.setBackground(background);
+        gc.fillOval(0, 0, iconWidth, iconHeight); // fill an oval in the middle of the picture with the background color
+           
         gc.setForeground(fontColor);
         gc.setFont(new Font(display, "Arial", fontSize, SWT.BOLD));
 
-        int fontX = (iconHeight - gc.textExtent(iconDetail.getDisplayLabelText()).y) / 2;
-        int fontY = (iconWidth - gc.textExtent(iconDetail.getDisplayLabelText()).x) / 2;
-
-        gc.drawText(iconDetail.getDisplayLabelText(), fontY, fontX, true);
+        int fontX = (iconHeight - gc.stringExtent(iconDetail.getDisplayLabelText()).y) / 2;
+        int fontY = (iconWidth - gc.stringExtent(iconDetail.getDisplayLabelText()).x) / 2;
+       
+        gc.drawString(iconDetail.getDisplayLabelText(), fontY, fontX);
+        gc.dispose();
         
-        
-        return ImageResources.ACTIVEITEM.getImage();
-        
-//        BufferedImage bImg = new BufferedImage(60, 60, BufferedImage.TYPE_INT_RGB);
-//        Graphics2D graphics = bImg.createGraphics();
-//        Color color = iconDetail.getColor();
-//        graphics.setBackground(new java.awt.Color(color.getRed(), color.getGreen(),
-//                color.getBlue()));
-//        graphics.fillOval(0, 0, bImg.getWidth(), bImg.getHeight());
-//
-//        ImageIcon imageIcon = new ImageIcon(bImg);
-//        
-//        return imageIcon.getImage();
+        imageData = image.getImageData();
+        return image;
     }
 
     private ImageData overlayActiveImage(ImageData imgData) {
