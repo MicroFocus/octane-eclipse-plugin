@@ -12,8 +12,12 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.util.icon;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.ImageIcon;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -36,8 +40,8 @@ public class EntityIconFactory {
     // cache
     private final Map<Entity, ImageData> imageDataCache = new HashMap<>();
 
-    private int iconHeight = 35;
-    private int iconWidth = 35;
+    private int iconHeight = 16;
+    private int iconWidth = 16;
     private Color fontColor = new Color(Display.getCurrent(), 255, 255, 255);
     private int fontSize = 11;
 
@@ -85,14 +89,19 @@ public class EntityIconFactory {
 
     private void loadImageData(Entity entity) {
         IconDetail iconDetail = iconDetailMap.containsKey(entity) ? iconDetailMap.get(entity) : undefinedIconDetail;
-
+           
         Display display = Display.getDefault();
+        Color white = display.getSystemColor(SWT.COLOR_WHITE);
         Image img = new Image(display, iconWidth, iconHeight);
+        img.getImageData().transparentPixel = img.getImageData().getPixel(0, 0);
         GC gc = new GC(img);
-
+ 
+        gc.setBackground(white);
+        gc.fillRectangle(0, 0, iconWidth, iconHeight); // fill the whole image with white
+        gc.setAntialias(SWT.ON);
         gc.setBackground(iconDetail.getColor());
-        gc.fillRectangle(0, 0, iconWidth, iconHeight);
-
+        gc.fillOval(0, 0, iconWidth, iconHeight);
+            
         gc.setForeground(fontColor);
         gc.setFont(new Font(display, "Arial", fontSize, SWT.BOLD));
 
@@ -100,10 +109,51 @@ public class EntityIconFactory {
         int fontY = (iconWidth - gc.textExtent(iconDetail.getDisplayLabelText()).x) / 2;
 
         gc.drawText(iconDetail.getDisplayLabelText(), fontY, fontX);
+        
         imageDataCache.put(entity, img.getImageData());
 
         gc.dispose();
         img.dispose();
+    }
+    
+    public Image getImageForEditorPart(Entity entity) {
+        IconDetail iconDetail = iconDetailMap.containsKey(entity) ? iconDetailMap.get(entity) : undefinedIconDetail;
+        
+        ImageIcon imageIcon = new ImageIcon();
+//        imageIcon.setImage(new Image());
+        
+        Display display = Display.getDefault();
+        Image img = new Image(display, iconWidth, iconHeight);
+        GC gc = new GC(img);
+
+//        Color white = display.getSystemColor(SWT.COLOR_WHITE); 
+//        gc.setBackground(white);
+//        gc.fillRectangle(0, 0, iconWidth, iconHeight); // fill the whole image with white
+        gc.setAntialias(SWT.ON);
+        gc.setBackground(iconDetail.getColor());
+        gc.fillOval(0, 0, iconWidth, iconHeight);
+            
+        gc.setForeground(fontColor);
+        gc.setFont(new Font(display, "Arial", fontSize, SWT.BOLD));
+
+        int fontX = (iconHeight - gc.textExtent(iconDetail.getDisplayLabelText()).y) / 2;
+        int fontY = (iconWidth - gc.textExtent(iconDetail.getDisplayLabelText()).x) / 2;
+
+        gc.drawText(iconDetail.getDisplayLabelText(), fontY, fontX, true);
+        
+        
+        return ImageResources.ACTIVEITEM.getImage();
+        
+//        BufferedImage bImg = new BufferedImage(60, 60, BufferedImage.TYPE_INT_RGB);
+//        Graphics2D graphics = bImg.createGraphics();
+//        Color color = iconDetail.getColor();
+//        graphics.setBackground(new java.awt.Color(color.getRed(), color.getGreen(),
+//                color.getBlue()));
+//        graphics.fillOval(0, 0, bImg.getWidth(), bImg.getHeight());
+//
+//        ImageIcon imageIcon = new ImageIcon(bImg);
+//        
+//        return imageIcon.getImage();
     }
 
     private ImageData overlayActiveImage(ImageData imgData) {
@@ -134,8 +184,8 @@ public class EntityIconFactory {
         if (isActive) {
             imageData = overlayActiveImage(imageData);
         }
-
-        return new Image(Display.getDefault(), imageData);
+          
+        return new Image(Display.getDefault(), imageData, imageData.getTransparencyMask());
     }
 
 }

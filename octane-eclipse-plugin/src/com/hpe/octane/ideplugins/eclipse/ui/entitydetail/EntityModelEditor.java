@@ -12,11 +12,14 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.entitydetail;
 
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -25,6 +28,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hpe.adm.nga.sdk.exception.OctaneException;
@@ -45,7 +49,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 public class EntityModelEditor extends EditorPart {
 
     public static final String ID = "com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditor"; //$NON-NLS-1$
-    private static final EntityIconFactory entityIconFactoryForTabInfo = new EntityIconFactory(20, 20, 7);
+    private static final EntityIconFactory entityIconFactoryForTabInfo = new EntityIconFactory(20, 20, 8);
     private static final String SAVE_FAILED_DIALOG_TITLE = "Saving entity failed";
 
     private static EntityService entityService = Activator.getInstance(EntityService.class);
@@ -56,7 +60,9 @@ public class EntityModelEditor extends EditorPart {
     private StackLayoutComposite rootComposite;
     private LoadingComposite loadingComposite;
     private boolean isDirty = false;
-
+    
+    private Image img;
+    
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 
@@ -67,10 +73,18 @@ public class EntityModelEditor extends EditorPart {
 
         setSite(site);
         setInput(input);
-
+        
         setPartName(String.valueOf(this.input.getId()));
-        setTitleImage(entityIconFactoryForTabInfo.getImageIcon(this.input.getEntityType()));
+        img = entityIconFactoryForTabInfo.getImageForEditorPart(this.input.getEntityType());
+//        Display display = Display.getCurrent();
+//        Color blue = display.getSystemColor(SWT.COLOR_BLUE);
+//        img.setBackground(blue);
+      
+        setTitleImage(img);
+        
     }
+    
+   
 
     @Override
     public void createPartControl(Composite parent) {
@@ -91,7 +105,6 @@ public class EntityModelEditor extends EditorPart {
                 doSave(null);
             }
         });
-
         loadEntity();
     }
 
