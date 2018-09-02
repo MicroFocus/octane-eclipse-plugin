@@ -12,12 +12,7 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.preferences;
 
-import java.awt.Desktop;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.ILog;
@@ -34,7 +29,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -42,18 +36,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import com.google.api.client.http.ByteArrayContent;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.json.JsonHttpContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.hpe.adm.nga.sdk.exception.OctaneException;
 import com.hpe.adm.octane.ideplugins.services.TestService;
 import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettings;
@@ -100,7 +84,7 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
     @Override
     protected Control createContents(Composite parent) {
 
-        GridLayout gridLayout = new GridLayout();
+        GridLayout gridLayout = new GridLayout(1, false);
         parent.setLayout(gridLayout);
 
         Label labelServerUrl = new Label(parent, SWT.NONE);
@@ -122,21 +106,36 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
         textWorkspace = new Text(parent, SWT.BORDER);
         textWorkspace.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         textWorkspace.setEnabled(false);
-
-        Label separator1 = new Label(parent, SWT.HORIZONTAL | SWT.SEPARATOR);
-        separator1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
-        Label labelAuthMethod = new Label(parent, SWT.NONE);
-        labelAuthMethod.setText("Authentication method:");
+        Composite authComposite = new Composite(parent, SWT.NONE);
+        authComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
         
-        Combo comboBoxAuthType = new Combo(parent, SWT.READ_ONLY); 
-        comboBoxAuthType.setItems(new String[] {"Username and Password", "Browser"});      
-        comboBoxAuthType.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        Label separatorAuthCompositeTop = new Label(authComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
+        separatorAuthCompositeTop.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         
-        Composite userPassComposite = new Composite(parent, SWT.NONE);
-        userPassComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        GridLayout gl_authComposite = new GridLayout();
+        gl_authComposite.marginWidth = 0;
+        authComposite.setLayout(gl_authComposite);
+        
+        Label labelAuthMethod = new Label(authComposite, SWT.NONE);
+        labelAuthMethod.setText("Authentication:");
+        labelAuthMethod.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        
+        Button buttonUserPassAuth = new Button(authComposite, SWT.CHECK);
+        GridData gd_buttonUserPassAuth = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        gd_buttonUserPassAuth.verticalIndent = 7;
+        buttonUserPassAuth.setLayoutData(gd_buttonUserPassAuth);
+        buttonUserPassAuth.setText("Login with username and password");
+        
+        Composite userPassComposite = new Composite(authComposite, SWT.NONE);
+        
+        GridData gd_userPassComposite = new GridData(SWT.FILL, SWT.FILL, true, false);
+        gd_userPassComposite.horizontalIndent = 15;
+        userPassComposite.setLayoutData(gd_userPassComposite);
+        
         GridLayout gl_userPassComposite = new GridLayout();
         gl_userPassComposite.marginWidth = 0;
+        gl_userPassComposite.marginHeight = 0;
         gl_userPassComposite.horizontalSpacing = 0;
         userPassComposite.setLayout(gl_userPassComposite);
         
@@ -151,144 +150,27 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
 
         textPassword = new Text(userPassComposite, SWT.BORDER | SWT.PASSWORD);
         textPassword.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        
+        Button buttonBrowserAuth = new Button(authComposite, SWT.CHECK);
+        buttonBrowserAuth.setText("Login using a browser");
+        GridData gd_buttonBrowserAuth = new GridData(SWT.FILL, SWT.FILL, true, false);
+        gd_buttonBrowserAuth.verticalIndent = 7;
+        buttonBrowserAuth.setLayoutData(gd_buttonBrowserAuth);
+        
+        Label separatorAuthCompositeBottom = new Label(authComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
+        separatorAuthCompositeBottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
-        Composite testConnectionContainer = new Composite(userPassComposite, SWT.NONE);
+        Composite testConnectionContainer = new Composite(authComposite, SWT.NONE);
         testConnectionContainer.setLayout(new GridLayout(2, false));
-        GridData gridData = new GridData();
-        gridData.horizontalAlignment = SWT.FILL;
-        gridData.grabExcessHorizontalSpace = true;
-        testConnectionContainer.setLayoutData(gridData);
-
+        ((GridLayout) testConnectionContainer.getLayout()).marginWidth = 0;
+        testConnectionContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        
         buttonTestConnection = new Button(testConnectionContainer, SWT.PUSH);
         buttonTestConnection.setText("Test connection");
-
+        
         labelConnectionStatus = new Label(testConnectionContainer, SWT.NONE);
-        labelConnectionStatus.setLayoutData(gridData);
+        labelConnectionStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
         
-        Button buttonOpenBrowser = new Button(parent, SWT.PUSH);
-        buttonOpenBrowser.setText("Open login page in browser");
-        
-        comboBoxAuthType.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                
-                GridData userPassCompositeData = (GridData) userPassComposite.getLayoutData();
-                GridData buttonOpenBrowserData = (GridData) buttonOpenBrowser.getLayoutData();
-                
-                if(comboBoxAuthType.getSelectionIndex() == 0) {
-                    userPassComposite.setVisible(true);
-                    userPassCompositeData.exclude = false;
-                    buttonOpenBrowser.setVisible(false);
-                    buttonOpenBrowserData.exclude = true;
-                } 
-                else if(comboBoxAuthType.getSelectionIndex() == 1){
-                    userPassComposite.setVisible(false);
-                    userPassCompositeData.exclude = true;
-                    buttonOpenBrowser.setVisible(true);
-                    buttonOpenBrowserData.exclude = false;
-                }
-                
-                parent.layout(true);
-            }
-        });
-        
-        buttonOpenBrowser.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                super.widgetSelected(e);
-                setConnectionStatus(null, null);
-                BusyIndicator.showWhile(Display.getCurrent(), () -> {
-                    
-                    //Let's go baby
-                    
-                    ConnectionSettings connectionSettings;
-                    
-                    try {
-                        connectionSettings = UrlParser.resolveConnectionSettings(textServerUrl.getText(), textUsername.getText(), textPassword.getText());
-                    } catch (ServiceException ex) {
-                        ex.printStackTrace();
-                        return;
-                    }
-                    
-                    
-                    HttpRequestFactory requestFactory  = new NetHttpTransport().createRequestFactory();
-                    HttpRequest request;
-                    String rawResponse;
-                    
-                    try {
-                        request = requestFactory.buildGetRequest(new GenericUrl(connectionSettings.getBaseUrl() + "/authentication/grant_tool_token"));
-                        rawResponse = request.execute().parseAsString();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        return;
-                    }
-                    
-                    JSONObject response = new JSONObject(rawResponse);
-                    
-                    try {
-                        
-                        Desktop.getDesktop().browse(new URI(response.getString("authentication_url")));
-                        
-                    } catch (JSONException | IOException | URISyntaxException ex) {
-                        ex.printStackTrace();
-                        return;
-                    }
-                             
-                    //Poll it baby
-                    
-                    String accessToken = null;
-                    
-                    for (int i = 0; i < 60; i++) {
-                        try {Thread.sleep(1000);} catch (InterruptedException e1) {}
-                        
-                        
-                        ByteArrayContent content = ByteArrayContent.fromString("application/json", "{\"identifier\": \"" + response.getString("identifier") +"\"}");
-                        
-                        try {
-                            request = requestFactory.buildPostRequest(new GenericUrl(connectionSettings.getBaseUrl() + "/authentication/grant_tool_token"), content);
-                            rawResponse = request.execute().parseAsString();
-                        } catch (IOException e1) {
-                            System.err.println("Failed " + i + " times, retrying");
-                            continue;
-                        }
-                        
-                        response = new JSONObject(rawResponse);
-                        accessToken = response.getString("access_token");
-                        break;
-                    }
-                    
-                    // Use it baby
-                    if(accessToken != null) {
-                        
-                        try {
-                            
-                            request = requestFactory.buildGetRequest(new GenericUrl(connectionSettings.getBaseUrl() + "/api/shared_spaces/1001/workspaces/1002/workspace_users?query=\"email%20EQ%20%27atoth@hpe.com%27\""));
-                            request.getHeaders().put("Cookie", Collections.singletonList("LWSSO_COOKIE_KEY=" + accessToken));
-                            rawResponse = request.execute().parseAsString();
-                            System.out.println(rawResponse);
-                            
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
-                        
-                        
-                    } else {
-                        System.err.println("Failed to get access token, timed out, move faster");
-                    }
-                    
-    
-                });
-            }
-        });
-        
-        
-        comboBoxAuthType.select(0);   
-        buttonOpenBrowser.setVisible(false);
-
-        setHints(true);
-        loadSavedValues();
-        setFieldsFromServerUrl(false);
-
         buttonTestConnection.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -299,7 +181,6 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
                     testConnection(textServerUrl.getText(), textUsername.getText(), textPassword.getText());
                 });
             }
-
         });
 
         KeyAdapter keyListener = new KeyAdapter() {
@@ -311,10 +192,14 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
                 setFieldsFromServerUrl(true);
             }
         };
-
+        
         textServerUrl.addKeyListener(keyListener);
         textUsername.addKeyListener(keyListener);
         textPassword.addKeyListener(keyListener);
+        
+        setHints(true);
+        loadSavedValues();
+        setFieldsFromServerUrl(false);
 
         return parent;
     }

@@ -12,6 +12,8 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse;
 
+import javax.swing.SwingUtilities;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
@@ -28,8 +30,12 @@ import org.osgi.framework.BundleContext;
 import com.hpe.adm.octane.ideplugins.services.connection.BasicConnectionSettingProvider;
 import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettings;
 import com.hpe.adm.octane.ideplugins.services.connection.HttpClientProvider;
+import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoLoginGoogleHttpClient.SsoTokenPollingCompleteHandler;
+import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoLoginGoogleHttpClient.SsoTokenPollingInProgressHandler;
+import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoLoginGoogleHttpClient.SsoTokenPollingStartedHandler;
 import com.hpe.adm.octane.ideplugins.services.di.ServiceModule;
 import com.hpe.adm.octane.ideplugins.services.util.UrlParser;
+import com.hpe.octane.ideplugins.eclipse.preferences.LoginDialog;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PreferenceConstants;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditor;
@@ -50,7 +56,25 @@ public class Activator extends AbstractUIPlugin {
     private static Activator plugin;
 
     private static BasicConnectionSettingProvider settingsProviderInstance = new BasicConnectionSettingProvider();
-    private static ServiceModule serviceModuleInstance = new ServiceModule(settingsProviderInstance);
+    private static ServiceModule serviceModuleInstance;
+    private static LoginDialog loginDialog;
+
+    static {
+        SsoTokenPollingStartedHandler pollingStartedHandler = loginPageUrl -> SwingUtilities.invokeLater(() -> {
+            loginDialog = new LoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), loginPageUrl);
+            loginDialog.open();
+        });
+
+        SsoTokenPollingInProgressHandler pollingInProgressHandler = (pollingStatus -> SwingUtilities.invokeLater(() -> {
+          
+        }));
+
+        SsoTokenPollingCompleteHandler pollingCompleteHandler = () ->SwingUtilities.invokeLater(() -> {
+            loginDialog.close();
+        });
+        
+        serviceModuleInstance = new ServiceModule(settingsProviderInstance, pollingStartedHandler, pollingInProgressHandler, pollingCompleteHandler);
+    }
 
     /**
      * The constructor
@@ -71,7 +95,7 @@ public class Activator extends AbstractUIPlugin {
     }
 
     public static HttpClientProvider geOctaneHttpClient() {
-        return serviceModuleInstance.geOctaneHttpClient();
+        return serviceModuleInstance.getOctaneHttpClient();
     }
 
     public static <T> T getInstance(Class<T> type) {
