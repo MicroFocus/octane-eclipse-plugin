@@ -207,6 +207,8 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
             @Override
             public void widgetSelected(SelectionEvent e) {
                 buttonBrowserAuth.setSelection(false);
+                textUsername.setEnabled(true);
+                textPassword.setEnabled(true);
                 setFieldsFromServerUrl(true);
             }
         });
@@ -214,6 +216,10 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
             @Override
             public void widgetSelected(SelectionEvent e) {
                 buttonUserPassAuth.setSelection(false);
+                textUsername.setText("");
+                textPassword.setText("");
+                textUsername.setEnabled(false);
+                textPassword.setEnabled(false);
                 setFieldsFromServerUrl(true);
             }
         });
@@ -275,6 +281,8 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
 
             if (Boolean.parseBoolean(browserAuth)) {
                 buttonBrowserAuth.setSelection(true);
+                textUsername.setEnabled(false);
+                textPassword.setEnabled(false);
             } else {
                 buttonBrowserAuth.setSelection(false);
                 buttonUserPassAuth.setSelection(true);
@@ -362,6 +370,8 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
             return null;
         }
 
+        testOctaneVersion(newConnectionSettings);
+
         if (newConnectionSettings.getAuthentication() instanceof UserAuthentication) {
             UserAuthentication userAuthentication = (UserAuthentication) newConnectionSettings.getAuthentication();
 
@@ -376,7 +386,6 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
         try {
             // Will only test authentication if it's not browser based
             testService.testConnection(newConnectionSettings);
-            testOctaneVersion(newConnectionSettings);
             setConnectionStatus(true, null);
         } catch (Exception e) {
             String description;
@@ -413,6 +422,12 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
                 new InfoPopup("ALM Octane Settings",
                         "Octane version not supported. This plugin works with Octane versions starting " + OctaneVersion.DYNAMO.getVersionString(),
                         550, 100).open();
+            }
+            if (version.compareTo(OctaneVersion.INTER_P2) < 0) {
+                new InfoPopup("ALM Octane Settings",
+                        "Login with browser is only supported starting from Octane server version: " + OctaneVersion.INTER_P2.getVersionString(),
+                        550, 100).open();
+
             }
         } catch (Exception ex) {
             version = OctaneVersionService.fallbackVersion;
