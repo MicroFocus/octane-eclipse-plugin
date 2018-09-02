@@ -12,13 +12,12 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse;
 
-import javax.swing.SwingUtilities;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -27,9 +26,12 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
+import com.hpe.adm.nga.sdk.authentication.Authentication;
 import com.hpe.adm.octane.ideplugins.services.connection.BasicConnectionSettingProvider;
 import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettings;
 import com.hpe.adm.octane.ideplugins.services.connection.HttpClientProvider;
+import com.hpe.adm.octane.ideplugins.services.connection.UserAuthentication;
+import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoAuthentication;
 import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoLoginGoogleHttpClient.SsoTokenPollingCompleteHandler;
 import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoLoginGoogleHttpClient.SsoTokenPollingInProgressHandler;
 import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoLoginGoogleHttpClient.SsoTokenPollingStartedHandler;
@@ -57,22 +59,25 @@ public class Activator extends AbstractUIPlugin {
 
     private static BasicConnectionSettingProvider settingsProviderInstance = new BasicConnectionSettingProvider();
     private static ServiceModule serviceModuleInstance;
+
     private static LoginDialog loginDialog;
 
     static {
-        SsoTokenPollingStartedHandler pollingStartedHandler = loginPageUrl -> SwingUtilities.invokeLater(() -> {
-            loginDialog = new LoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), loginPageUrl);
+        SsoTokenPollingStartedHandler pollingStartedHandler = loginPageUrl -> Display.getDefault().asyncExec(() -> {
+            loginDialog = new LoginDialog(loginPageUrl);
             loginDialog.open();
         });
 
-        SsoTokenPollingInProgressHandler pollingInProgressHandler = (pollingStatus -> SwingUtilities.invokeLater(() -> {
-          
-        }));
+        SsoTokenPollingInProgressHandler pollingInProgressHandler = (pollingStatus -> {
+            Display.getDefault().syncExec(() -> {
+                pollingStatus.shouldPoll = !loginDialog.wasClosed();
+            });
+        });
 
-        SsoTokenPollingCompleteHandler pollingCompleteHandler = () ->SwingUtilities.invokeLater(() -> {
+        SsoTokenPollingCompleteHandler pollingCompleteHandler = () -> Display.getDefault().asyncExec(() -> {
             loginDialog.close();
         });
-        
+
         serviceModuleInstance = new ServiceModule(settingsProviderInstance, pollingStartedHandler, pollingInProgressHandler, pollingCompleteHandler);
     }
 
@@ -121,13 +126,24 @@ public class Activator extends AbstractUIPlugin {
         try {
             ISecurePreferences securePrefs = PluginPreferenceStorage.getSecurePrefs();
             String baseUrl = securePrefs.get(PreferenceConstants.OCTANE_SERVER_URL, "");
-            String username = securePrefs.get(PreferenceConstants.USERNAME, "");
-            String password = securePrefs.get(PreferenceConstants.PASSWORD, "");
-            if (StringUtils.isNotEmpty(baseUrl)) {
-                ConnectionSettings loadedConnectionSettings = UrlParser.resolveConnectionSettings(baseUrl, username, password);
-                settingsProviderInstance.setConnectionSettings(loadedConnectionSettings);
-            } else {
+            String isBrowserAuth = securePrefs.get(PreferenceConstants.IS_BROWSER_AUTH, Boolean.FALSE.toString());
+
+            if (StringUtils.isEmpty(baseUrl)) {
                 settingsProviderInstance.setConnectionSettings(new ConnectionSettings());
+            } else {
+
+                Authentication authentication;
+
+                if (Boolean.parseBoolean(isBrowserAuth)) {
+                    authentication = new SsoAuthentication();
+                } else {
+                    String username = securePrefs.get(PreferenceConstants.USERNAME, "");
+                    String password = securePrefs.get(PreferenceConstants.PASSWORD, "");
+                    authentication = new UserAuthentication(username, password);
+                }
+
+                ConnectionSettings loadedConnectionSettings = UrlParser.resolveConnectionSettings(baseUrl, authentication);
+                settingsProviderInstance.setConnectionSettings(loadedConnectionSettings);
             }
 
         } catch (Exception e) {
