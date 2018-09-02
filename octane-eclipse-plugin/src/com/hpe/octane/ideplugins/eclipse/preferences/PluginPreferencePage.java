@@ -206,20 +206,14 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
         buttonUserPassAuth.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                buttonBrowserAuth.setSelection(false);
-                textUsername.setEnabled(true);
-                textPassword.setEnabled(true);
+                setViewIsBrowserAuth(!buttonUserPassAuth.getSelection());
                 setFieldsFromServerUrl(true);
             }
         });
         buttonBrowserAuth.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                buttonUserPassAuth.setSelection(false);
-                textUsername.setText("");
-                textPassword.setText("");
-                textUsername.setEnabled(false);
-                textPassword.setEnabled(false);
+                setViewIsBrowserAuth(buttonBrowserAuth.getSelection());
                 setFieldsFromServerUrl(true);
             }
         });
@@ -242,6 +236,18 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
             apply();
         }
         return true;
+    }
+
+    private void setViewIsBrowserAuth(boolean isBrowserAuth) {
+        buttonBrowserAuth.setSelection(isBrowserAuth);
+        buttonUserPassAuth.setSelection(!isBrowserAuth);
+        if (isBrowserAuth) {
+            buttonBrowserAuth.setFocus();
+            textUsername.setText("");
+            textPassword.setText("");
+        }
+        textUsername.setEnabled(!isBrowserAuth);
+        textPassword.setEnabled(!isBrowserAuth);
     }
 
     @Override
@@ -280,12 +286,9 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
             String browserAuth = securePrefs.get(PreferenceConstants.IS_BROWSER_AUTH, Boolean.FALSE.toString());
 
             if (Boolean.parseBoolean(browserAuth)) {
-                buttonBrowserAuth.setSelection(true);
-                textUsername.setEnabled(false);
-                textPassword.setEnabled(false);
+                setViewIsBrowserAuth(true);
             } else {
-                buttonBrowserAuth.setSelection(false);
-                buttonUserPassAuth.setSelection(true);
+                setViewIsBrowserAuth(false);
                 textUsername.setText(securePrefs.get(PluginPreferenceStorage.PreferenceConstants.USERNAME, ""));
                 textPassword.setText(securePrefs.get(PluginPreferenceStorage.PreferenceConstants.PASSWORD, ""));
             }
@@ -393,13 +396,8 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
             if (e instanceof OctaneException) {
                 OctaneException octaneException = (OctaneException) e;
                 description = ErrorComposite.getDescriptionFromOctaneException(octaneException.getError());
-            } else if (e.getCause() != null && e.getCause() instanceof HttpResponseException) { // sdk
-                                                                                                // exceptions
-                                                                                                // are
-                                                                                                // wrapped
-                                                                                                // in
-                                                                                                // Runtime
-                                                                                                // exceptions
+            } else if (e.getCause() != null && e.getCause() instanceof HttpResponseException) {
+                // sdk exceptions are wrapped in Runtime exceptions
                 HttpResponseException httpResponseException = (HttpResponseException) e.getCause();
                 description = httpResponseException.getStatusCode() == 401 ? "Invalid username or password." : httpResponseException.getMessage();
             } else {
@@ -423,11 +421,14 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
                         "Octane version not supported. This plugin works with Octane versions starting " + OctaneVersion.DYNAMO.getVersionString(),
                         550, 100).open();
             }
-            if (version.compareTo(OctaneVersion.INTER_P2) < 0) {
+            if (buttonBrowserAuth.getSelection() && version.compareTo(OctaneVersion.INTER_P2) < 0) {
                 new InfoPopup("ALM Octane Settings",
                         "Login with browser is only supported starting from Octane server version: " + OctaneVersion.INTER_P2.getVersionString(),
                         550, 100).open();
 
+                // Reset to user pass
+                setViewIsBrowserAuth(false);
+                connectionSettings.setAuthentication(new UserAuthentication("", ""));
             }
         } catch (Exception ex) {
             version = OctaneVersionService.fallbackVersion;
