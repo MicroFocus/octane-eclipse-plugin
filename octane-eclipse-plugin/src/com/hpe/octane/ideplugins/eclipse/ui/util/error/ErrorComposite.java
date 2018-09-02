@@ -49,6 +49,7 @@ public class ErrorComposite extends Composite {
     private Composite compositeExceptionData;
     private Composite compositeBtns;
     private Label lblSeparator;
+
     /**
      * Create the composite.
      * 
@@ -99,6 +100,9 @@ public class ErrorComposite extends Composite {
     }
 
     public void displayException(Exception ex) {
+        // clear previous errors
+        Arrays.stream(compositeExceptionData.getChildren()).forEach(Control::dispose);
+
         if (ex instanceof OctaneException) {
             displayOctaneException((OctaneException) ex);
         } else {
@@ -131,7 +135,7 @@ public class ErrorComposite extends Composite {
             errorModel.removeValue(ERORR_MODEL_FIELD_DESCRIPTION);
             errorModel.removeValue(ERORR_MODEL_FIELD_DESCRIPTION_TRANSLATED);
         }
-        
+
         String fieldValueStackTrace = getFieldModelValueIfPresentAndNotEmpty(errorModel, ERROR_MODEL_FIELD_STACK_TRACE);
         errorModel.removeValue(ERROR_MODEL_FIELD_STACK_TRACE);
 
