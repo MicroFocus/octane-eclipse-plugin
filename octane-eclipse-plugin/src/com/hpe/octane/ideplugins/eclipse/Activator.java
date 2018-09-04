@@ -18,8 +18,11 @@ import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -32,9 +35,9 @@ import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettings;
 import com.hpe.adm.octane.ideplugins.services.connection.HttpClientProvider;
 import com.hpe.adm.octane.ideplugins.services.connection.UserAuthentication;
 import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoAuthentication;
-import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoLoginGoogleHttpClient.SsoTokenPollingCompleteHandler;
-import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoLoginGoogleHttpClient.SsoTokenPollingInProgressHandler;
-import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoLoginGoogleHttpClient.SsoTokenPollingStartedHandler;
+import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoTokenPollingCompleteHandler;
+import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoTokenPollingInProgressHandler;
+import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoTokenPollingStartedHandler;
 import com.hpe.adm.octane.ideplugins.services.di.ServiceModule;
 import com.hpe.adm.octane.ideplugins.services.util.UrlParser;
 import com.hpe.octane.ideplugins.eclipse.preferences.LoginDialog;
@@ -64,17 +67,22 @@ public class Activator extends AbstractUIPlugin {
 
     static {
         SsoTokenPollingStartedHandler pollingStartedHandler = loginPageUrl -> Display.getDefault().asyncExec(() -> {
-            loginDialog = new LoginDialog(loginPageUrl);
+            IWorkbench wb = PlatformUI.getWorkbench();
+            IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+            Shell shell = win != null ? win.getShell() : null;
+            loginDialog = new LoginDialog(shell, loginPageUrl);
             loginDialog.open();
         });
 
-        SsoTokenPollingInProgressHandler pollingInProgressHandler = (pollingStatus -> {
-            Display.getDefault().syncExec(() -> {
-                pollingStatus.shouldPoll = !loginDialog.wasClosed();
-            });
+        SsoTokenPollingInProgressHandler pollingInProgressHandler = (pollingStatus -> {            
+            if(loginDialog != null) { //nasty threaddin issues here
+                Display.getDefault().syncExec(() -> {
+                    pollingStatus.shouldPoll = !loginDialog.wasClosed();
+                });
+            }
         });
 
-        SsoTokenPollingCompleteHandler pollingCompleteHandler = () -> Display.getDefault().asyncExec(() -> {
+        SsoTokenPollingCompleteHandler pollingCompleteHandler = () -> Display.getDefault().syncExec(() -> {
             loginDialog.close();
         });
 
@@ -150,7 +158,7 @@ public class Activator extends AbstractUIPlugin {
             getLog().log(new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR,
                     "An exception has occured when loading the Octane connection details", e));
         }
-
+        
         settingsProviderInstance.addChangeHandler(() -> {
             // Clear active item
             PluginPreferenceStorage.setActiveItem(null);

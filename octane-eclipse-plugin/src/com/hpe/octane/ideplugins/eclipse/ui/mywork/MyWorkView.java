@@ -35,11 +35,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -73,17 +70,17 @@ import com.hpe.octane.ideplugins.eclipse.util.CommitMessageUtil;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
 public class MyWorkView extends OctaneViewPart {
-    public MyWorkView() {
-    }
-
+   
     private static final ILog logger = Activator.getDefault().getLog();
 
     public static final String ID = "com.hpe.octane.ideplugins.eclipse.ui.mywork.MyWorkView";
+    
     private static final String LOADING_MESSAGE = "Loading \"My Work\"";
+    private static final String darkBackgroundColorString = "rgb(52,57,61)";
 
     private Color backgroundColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry()
-            .get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);;
-    private String darkBackgroundColorString = "rgb(52,57,61)";
+            .get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
+    
     private MyWorkService myWorkService = Activator.getInstance(MyWorkService.class);
     private UserItemArrayEntityListData entityData = new UserItemArrayEntityListData();
     private EntityListComposite entityListComposite;

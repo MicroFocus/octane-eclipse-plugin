@@ -421,7 +421,7 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
                         "Octane version not supported. This plugin works with Octane versions starting " + OctaneVersion.DYNAMO.getVersionString(),
                         550, 100).open();
             }
-            if (buttonBrowserAuth.getSelection() && version.compareTo(OctaneVersion.INTER_P2) < 0) {
+            if (buttonBrowserAuth.getSelection() && version.compareTo(new OctaneVersion("11.11.11")) < 0) {
                 new InfoPopup("ALM Octane Settings",
                         "Login with browser is only supported starting from Octane server version: " + OctaneVersion.INTER_P2.getVersionString(),
                         550, 100).open();

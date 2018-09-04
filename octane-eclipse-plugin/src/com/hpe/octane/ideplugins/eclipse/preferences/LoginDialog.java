@@ -24,9 +24,9 @@ public class LoginDialog extends Dialog {
     private boolean wasClosed;
     private Label lblSysBrowser;
 
-    public LoginDialog(String loginUrl) {
-        super((Shell) null);
-        this.loginUrl = loginUrl;
+    public LoginDialog(Shell shell, String loginPageUrl) {
+        super(shell);
+        this.loginUrl = loginPageUrl;
         setShellStyle(SWT.CLOSE | SWT.BORDER | SWT.TITLE | SWT.RESIZE);
     }
 
