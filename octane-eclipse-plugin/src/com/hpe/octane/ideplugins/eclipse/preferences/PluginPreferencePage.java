@@ -33,9 +33,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.google.api.client.http.HttpResponseException;
 import com.hpe.adm.nga.sdk.exception.OctaneException;
@@ -76,7 +79,6 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
 
     @Override
     public void init(IWorkbench workbench) {
-
     }
 
     @Override
@@ -350,8 +352,14 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
                 getApplyButton().setEnabled(false);
                 Activator.setConnectionSettings(connectionSettings);
 
-                // TODO: need to close the damn thing on apply
+                // If apply is pressed when sso login option is selected, close
+                // the preference window
+                // Otherwise it would stop the login dialog from octane from
+                // being the "on-top" shell
                 if (connectionSettings.getAuthentication() instanceof SsoAuthentication) {
+                    // small change the active shell is no longer the preference dialog
+                    // calculated risk
+                    PlatformUI.getWorkbench().getDisplay().getActiveShell().close();
                 }
             }
         });
