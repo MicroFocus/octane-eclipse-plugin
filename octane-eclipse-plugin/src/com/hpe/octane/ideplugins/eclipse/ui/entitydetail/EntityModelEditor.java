@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -59,8 +58,6 @@ public class EntityModelEditor extends EditorPart {
     private LoadingComposite loadingComposite;
     private boolean isDirty = false;
     
-    private Image img;
-    
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 
@@ -73,11 +70,8 @@ public class EntityModelEditor extends EditorPart {
         setInput(input);
         
         setPartName(String.valueOf(this.input.getId()));
-        img = entityIconFactoryForTabInfo.getImageForEditorPart(this.input.getEntityType());
-        setTitleImage(img);
+        setTitleImage(entityIconFactoryForTabInfo.getImageForEditorPart(this.input.getEntityType()));
     }
-    
-   
 
     @Override
     public void createPartControl(Composite parent) {
