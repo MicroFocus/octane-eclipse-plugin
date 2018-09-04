@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -122,11 +123,12 @@ public class EntityIconFactory {
            
         gc.setForeground(fontColor);
         gc.setFont(new Font(display, "Arial", fontSize, SWT.BOLD));
-
-        int fontX = (iconHeight - gc.stringExtent(iconDetail.getDisplayLabelText()).y) / 2;
-        int fontY = (iconWidth - gc.stringExtent(iconDetail.getDisplayLabelText()).x) / 2;
-       
-        gc.drawText(iconDetail.getDisplayLabelText(), fontY, fontX);
+        
+        Point p = gc.stringExtent(iconDetail.getDisplayLabelText());
+        int fontX = (iconWidth  - p.x + 1) / 2;
+        int fontY = (iconHeight - p.y) / 2;
+        
+        gc.drawString(iconDetail.getDisplayLabelText(), fontX, fontY, true);
         gc.dispose();
     }
     
