@@ -12,6 +12,7 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.util.icon;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +22,9 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
@@ -36,12 +40,13 @@ public class EntityIconFactory {
     // cache
     private final Map<Entity, ImageData> imageDataCache = new HashMap<>();
 
-    private int iconHeight = 35;
-    private int iconWidth = 35;
+    private int iconHeight = 16;
+    private int iconWidth = 16;
     private Color fontColor = new Color(Display.getCurrent(), 255, 255, 255);
     private int fontSize = 11;
 
     private static Image activeImg = ImageResources.ACTIVEITEM.getImage();
+    
 
     public EntityIconFactory() {
         init();
@@ -85,27 +90,48 @@ public class EntityIconFactory {
 
     private void loadImageData(Entity entity) {
         IconDetail iconDetail = iconDetailMap.containsKey(entity) ? iconDetailMap.get(entity) : undefinedIconDetail;
-
         Display display = Display.getDefault();
         Image img = new Image(display, iconWidth, iconHeight);
-        GC gc = new GC(img);
-
-        gc.setBackground(iconDetail.getColor());
-        gc.fillRectangle(0, 0, iconWidth, iconHeight);
-
-        gc.setForeground(fontColor);
-        gc.setFont(new Font(display, "Arial", fontSize, SWT.BOLD));
-
-        int fontX = (iconHeight - gc.textExtent(iconDetail.getDisplayLabelText()).y) / 2;
-        int fontY = (iconWidth - gc.textExtent(iconDetail.getDisplayLabelText()).x) / 2;
-
-        gc.drawText(iconDetail.getDisplayLabelText(), fontY, fontX);
+        setUpGraphics(img, display, iconDetail);
         imageDataCache.put(entity, img.getImageData());
-
-        gc.dispose();
         img.dispose();
     }
-
+    
+    public Image getImageForEditorPart(Entity entity) {
+        IconDetail iconDetail = iconDetailMap.containsKey(entity) ? iconDetailMap.get(entity) : undefinedIconDetail;
+        Display display = Display.getDefault();
+        Color background = iconDetail.getColor();
+        PaletteData palette = new PaletteData(new RGB[] {
+                background.getRGB(), // pixel 0 = black
+                display.getSystemColor(SWT.COLOR_WHITE).getRGB(), // pixel 1 = white
+        });
+        ImageData imageData = new ImageData(iconWidth, iconHeight, 1, palette);
+        imageData.transparentPixel = 1; // set the transparent color to white
+        Image image = new Image( display, imageData);
+        setUpGraphics(image, display, iconDetail);
+        imageData = image.getImageData();
+        return image;
+    }
+    
+    private void setUpGraphics(Image image, Display display, IconDetail iconDetail) {
+        GC gc = new GC(image);
+        gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+        gc.fillRectangle(0, 0, iconWidth, iconHeight); // fill the whole image with white
+        gc.setAntialias(SWT.ON);
+        gc.setBackground(iconDetail.getColor());
+        gc.fillOval(0, 0, iconWidth, iconHeight); // fill an oval in the middle of the picture with the background color
+           
+        gc.setForeground(fontColor);
+        gc.setFont(new Font(display, "Arial", fontSize, SWT.BOLD));
+        
+        Point p = gc.stringExtent(iconDetail.getDisplayLabelText());
+        int fontX = (iconWidth  - p.x + 1) / 2;
+        int fontY = (iconHeight - p.y) / 2;
+        
+        gc.drawString(iconDetail.getDisplayLabelText(), fontX, fontY, true);
+        gc.dispose();
+    }
+    
     private ImageData overlayActiveImage(ImageData imgData) {
         Image img = new Image(Display.getDefault(), imgData);
         GC gc = new GC(img);
@@ -134,8 +160,8 @@ public class EntityIconFactory {
         if (isActive) {
             imageData = overlayActiveImage(imageData);
         }
-
-        return new Image(Display.getDefault(), imageData);
+          
+        return new Image(Display.getDefault(), imageData, imageData.getTransparencyMask());
     }
 
 }

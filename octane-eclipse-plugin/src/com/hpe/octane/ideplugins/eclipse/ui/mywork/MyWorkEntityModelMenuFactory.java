@@ -86,7 +86,7 @@ import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
 public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
 
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(16, 16, 7);
+    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(25, 25, 7);
     private static EntityService entityService = Activator.getInstance(EntityService.class);
     private static MyWorkService myWorkService = Activator.getInstance(MyWorkService.class);
     private static DownloadScriptService scriptService = Activator.getInstance(DownloadScriptService.class);

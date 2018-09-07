@@ -36,7 +36,7 @@ import com.hpe.octane.ideplugins.eclipse.util.PredefinedEntityComparator;
 
 public class EntityTypeSelectorComposite extends Composite {
 
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(20, 20, 7);
+    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(25, 25, 7);
     private List<Button> checkBoxes = new ArrayList<>();
     private List<Runnable> selectionListeners = new ArrayList<>();
     private Label totalCountLbl;
