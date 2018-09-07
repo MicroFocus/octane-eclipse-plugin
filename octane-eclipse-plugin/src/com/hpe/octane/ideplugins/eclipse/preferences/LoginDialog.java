@@ -3,6 +3,8 @@ package com.hpe.octane.ideplugins.eclipse.preferences;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -12,17 +14,20 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hpe.octane.ideplugins.eclipse.ui.util.LoadingComposite;
+import com.hpe.octane.ideplugins.eclipse.ui.util.StackLayoutComposite;
+
 public class LoginDialog extends Dialog {
 
+    public  static final String DEFAULT_TITLE = "ALM Octane Plugin: Login";
     private static final String LOGIN_TEXT = "If the page below does not display correctly, <a href=\"\">click here to use your system default browser.</a>";
 
     private String loginUrl;
     private boolean wasClosed;
-    private Label lblSysBrowser;
+    private Shell shell;
 
     public LoginDialog(Shell shell, String loginPageUrl) {
         super(shell);
@@ -33,54 +38,69 @@ public class LoginDialog extends Dialog {
     @Override
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
+        this.shell = shell;
         shell.setText("ALM Octane Plugin: Login");
+    }
+    
+    public void setTitle(String title) {
+        shell.setText(title);
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
-        container.setLayout(new GridLayout());
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        container.setLayout(gridLayout);
 
         Link link = new Link(container, SWT.NONE);
         link.setText(LOGIN_TEXT);
-
-        ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.H_SCROLL | SWT.H_SCROLL);
-        scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-        Browser.clearSessions();      
-        Browser browser = new Browser(scrolledComposite, SWT.NONE);
-        browser.setUrl(LoginDialog.this.loginUrl);
         
+        StackLayoutComposite stackLayoutComposite = new StackLayoutComposite(container, SWT.NONE);
+        stackLayoutComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        
+        LoadingComposite loadingComposite = new LoadingComposite(stackLayoutComposite, SWT.NONE);
+
+        ScrolledComposite scrolledComposite = new ScrolledComposite(stackLayoutComposite, SWT.H_SCROLL | SWT.H_SCROLL);
+        Browser.clearSessions();   
+        Browser browser = new Browser(scrolledComposite, SWT.NONE);
         scrolledComposite.setMinSize(800, 600);
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setExpandVertical(true);
-
         scrolledComposite.setContent(browser);
-
+        browser.setUrl(LoginDialog.this.loginUrl);
+  
+        browser.addLocationListener(new LocationListener() { 
+            @Override
+            public void changing(LocationEvent event) {
+                stackLayoutComposite.showControl(loadingComposite);
+            }
+            @Override
+            public void changed(LocationEvent event) {
+                stackLayoutComposite.showControl(scrolledComposite);
+            }
+        });
+        
         // Event handling when users click on links.
         link.addSelectionListener(new SelectionAdapter() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 Program.launch(LoginDialog.this.loginUrl);
-                browser.setVisible(false);
-
-                if (lblSysBrowser == null) {
-                    // Only add the label once, but the user can press the link
-                    // as many times as he wants
-                    lblSysBrowser = new Label(container, SWT.NONE);
-                    lblSysBrowser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-                    lblSysBrowser.setText("Opening login page in system default browser, waiting for session...");
-                }
             }
         });
 
         return container;
     }
+    
+    protected Control createButtonBar(Composite parent) {
+        Composite composite = new Composite(parent, SWT.NONE);
+        composite.setLayoutData(new GridData(0, 0));
+        return composite;
+    }
 
     @Override
-    protected void createButtonsForButtonBar(Composite parent) {
-    }
+    protected void createButtonsForButtonBar(Composite parent) {}
 
     @Override
     protected boolean isResizable() {

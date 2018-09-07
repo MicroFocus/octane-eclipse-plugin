@@ -43,7 +43,7 @@ import com.hpe.adm.nga.sdk.exception.OctaneException;
 import com.hpe.adm.octane.ideplugins.services.TestService;
 import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettings;
 import com.hpe.adm.octane.ideplugins.services.connection.UserAuthentication;
-import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoAuthentication;
+import com.hpe.adm.octane.ideplugins.services.connection.granttoken.GrantTokenAuthentication;
 import com.hpe.adm.octane.ideplugins.services.exception.ServiceException;
 import com.hpe.adm.octane.ideplugins.services.nonentity.OctaneVersionService;
 import com.hpe.adm.octane.ideplugins.services.util.OctaneVersion;
@@ -354,7 +354,7 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
                 // the preference window
                 // Otherwise it would stop the login dialog from octane from
                 // being the "on-top" shell
-                if (connectionSettings.getAuthentication() instanceof SsoAuthentication) {
+                if (connectionSettings.getAuthentication() instanceof GrantTokenAuthentication) {
                     // small change the active shell is no longer the preference dialog
                     // calculated risk
                     PlatformUI.getWorkbench().getDisplay().getActiveShell().close();
@@ -469,7 +469,7 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
 
     private ConnectionSettings getConnectionSettingsFromView() throws ServiceException {
         if (buttonBrowserAuth.getSelection()) {
-            return UrlParser.resolveConnectionSettings(textServerUrl.getText(), new SsoAuthentication());
+            return UrlParser.resolveConnectionSettings(textServerUrl.getText(), new GrantTokenAuthentication());
         } else {
             return UrlParser.resolveConnectionSettings(textServerUrl.getText(),
                     new UserAuthentication(textUsername.getText(), textPassword.getText()));

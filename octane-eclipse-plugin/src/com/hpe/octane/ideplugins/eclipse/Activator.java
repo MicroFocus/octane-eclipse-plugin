@@ -12,6 +12,8 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse;
 
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
@@ -34,10 +36,10 @@ import com.hpe.adm.octane.ideplugins.services.connection.BasicConnectionSettingP
 import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettings;
 import com.hpe.adm.octane.ideplugins.services.connection.HttpClientProvider;
 import com.hpe.adm.octane.ideplugins.services.connection.UserAuthentication;
-import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoAuthentication;
-import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoTokenPollingCompleteHandler;
-import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoTokenPollingInProgressHandler;
-import com.hpe.adm.octane.ideplugins.services.connection.sso.SsoTokenPollingStartedHandler;
+import com.hpe.adm.octane.ideplugins.services.connection.granttoken.GrantTokenAuthentication;
+import com.hpe.adm.octane.ideplugins.services.connection.granttoken.TokenPollingCompleteHandler;
+import com.hpe.adm.octane.ideplugins.services.connection.granttoken.TokenPollingInProgressHandler;
+import com.hpe.adm.octane.ideplugins.services.connection.granttoken.TokenPollingStartedHandler;
 import com.hpe.adm.octane.ideplugins.services.di.ServiceModule;
 import com.hpe.adm.octane.ideplugins.services.util.UrlParser;
 import com.hpe.octane.ideplugins.eclipse.preferences.LoginDialog;
@@ -66,7 +68,7 @@ public class Activator extends AbstractUIPlugin {
     private static LoginDialog loginDialog;
 
     static {
-        SsoTokenPollingStartedHandler pollingStartedHandler = loginPageUrl -> Display.getDefault().asyncExec(() -> {
+        TokenPollingStartedHandler pollingStartedHandler = loginPageUrl -> Display.getDefault().asyncExec(() -> {
             IWorkbench wb = PlatformUI.getWorkbench();
             IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
             Shell shell = win != null ? win.getShell() : null;
@@ -74,16 +76,21 @@ public class Activator extends AbstractUIPlugin {
             loginDialog.open();
         });
 
-        SsoTokenPollingInProgressHandler pollingInProgressHandler = (pollingStatus -> {            
-            if(loginDialog != null) { //nasty threaddin issues here
+        TokenPollingInProgressHandler pollingInProgressHandler = (pollingStatus -> {            
+            if(loginDialog != null) {
                 Display.getDefault().syncExec(() -> {
                     pollingStatus.shouldPoll = !loginDialog.wasClosed();
+                    loginDialog.setTitle(LoginDialog.DEFAULT_TITLE + " (waiting for session, timeout in: " + ((pollingStatus.timeoutTimeStamp - new Date().getTime()) / 1000) + ")");
                 });
             }
+            return pollingStatus;
         });
 
-        SsoTokenPollingCompleteHandler pollingCompleteHandler = () -> Display.getDefault().syncExec(() -> {
-            loginDialog.close();
+        TokenPollingCompleteHandler pollingCompleteHandler = (tokenPollingCompletedStatus) ->
+        Display.getDefault().syncExec(() -> {
+            if(loginDialog != null && !loginDialog.getShell().isDisposed()) { 
+                loginDialog.close();
+            }
         });
 
         serviceModuleInstance = new ServiceModule(settingsProviderInstance, pollingStartedHandler, pollingInProgressHandler, pollingCompleteHandler);
@@ -143,7 +150,7 @@ public class Activator extends AbstractUIPlugin {
                 Authentication authentication;
 
                 if (Boolean.parseBoolean(isBrowserAuth)) {
-                    authentication = new SsoAuthentication();
+                    authentication = new GrantTokenAuthentication();
                 } else {
                     String username = securePrefs.get(PreferenceConstants.USERNAME, "");
                     String password = securePrefs.get(PreferenceConstants.PASSWORD, "");
@@ -158,7 +165,7 @@ public class Activator extends AbstractUIPlugin {
             getLog().log(new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR,
                     "An exception has occured when loading the Octane connection details", e));
         }
-        
+
         settingsProviderInstance.addChangeHandler(() -> {
             // Clear active item
             PluginPreferenceStorage.setActiveItem(null);

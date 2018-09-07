@@ -35,7 +35,7 @@ public class ErrorDialog extends Dialog {
 
     public ErrorDialog(Shell parent) {
         super(parent);
-        shell = new Shell(getParent(), SWT.CLOSE | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
+        shell = new Shell(getParent(), SWT.CLOSE | SWT.RESIZE | SWT.TITLE);
         shell.setSize(600, 300);
         shell.setLayout(new FillLayout());
         errorComposite = new ErrorComposite(shell, SWT.NONE);
