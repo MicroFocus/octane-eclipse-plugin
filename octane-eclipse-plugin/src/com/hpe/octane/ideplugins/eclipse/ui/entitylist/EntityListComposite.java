@@ -133,5 +133,8 @@ public class EntityListComposite extends Composite {
     public void removeEntityMouseListener(EntityMouseListener entityMouseListener) {
         entityListViewer.removeEntityMouseListener(entityMouseListener);
     }
-
+    
+    public void refreshIcons() {
+        entityTypeSelectorComposite.refreshIcons();
+    }
 }

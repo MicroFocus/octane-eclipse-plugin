@@ -35,11 +35,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -116,6 +113,7 @@ public class MyWorkView extends OctaneViewPart {
                     }
                     Display.getDefault().asyncExec(() -> {
                         entityData.setEntityList(entities);
+                        entityListComposite.refreshIcons();
                         if (entities.size() == 0) {
                             showControl(noWorkComposite);
                         } else {
