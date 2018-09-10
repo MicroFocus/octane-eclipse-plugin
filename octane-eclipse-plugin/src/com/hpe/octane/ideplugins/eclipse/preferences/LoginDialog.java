@@ -43,7 +43,9 @@ public class LoginDialog extends Dialog {
     }
     
     public void setTitle(String title) {
-        shell.setText(title);
+        if(shell != null && !shell.isDisposed()) {
+            shell.setText(title);
+        }
     }
 
     @Override

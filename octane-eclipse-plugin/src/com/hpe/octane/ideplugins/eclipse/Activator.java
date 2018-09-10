@@ -88,7 +88,7 @@ public class Activator extends AbstractUIPlugin {
 
         TokenPollingCompleteHandler pollingCompleteHandler = (tokenPollingCompletedStatus) ->
         Display.getDefault().syncExec(() -> {
-            if(loginDialog != null && !loginDialog.getShell().isDisposed()) { 
+            if(loginDialog.wasClosed()) { 
                 loginDialog.close();
             }
         });
