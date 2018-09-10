@@ -33,7 +33,6 @@ public class SearchResultRowRenderer implements EntityModelRenderer {
 
     private Color foregroundColor = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry()
             .get(JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR);
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(40, 40, 14);
 
     @Override
     public Control createRow(Composite parent, EntityModel entityModel) {
@@ -45,7 +44,7 @@ public class SearchResultRowRenderer implements EntityModelRenderer {
         row.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
         row.setForeground(foregroundColor);
 
-        row.setEntityIcon(entityIconFactory.getImageIcon(entityType));
+        row.setEntityIcon(EntityIconFactory.getInstance().getImageIcon(entityType, 40, 14));
 
         String name = Util.getUiDataFromModel(entityModel.getValue("name"));
         name = Util.stripHtml(name);

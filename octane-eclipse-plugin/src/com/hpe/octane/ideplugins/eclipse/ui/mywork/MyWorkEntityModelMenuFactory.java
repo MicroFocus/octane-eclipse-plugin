@@ -86,7 +86,7 @@ import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
 public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
 
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(25, 25, 7);
+    
     private static EntityService entityService = Activator.getInstance(EntityService.class);
     private static MyWorkService myWorkService = Activator.getInstance(MyWorkService.class);
     private static DownloadScriptService scriptService = Activator.getInstance(DownloadScriptService.class);
@@ -154,7 +154,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
             addMenuItem(
                     menu,
                     "View details",
-                    entityIconFactory.getImageIcon(entityType),
+                    EntityIconFactory.getInstance().getImageIcon(entityType, 25, 8),
                     () -> openDetailTab(entityId, entityType));
         }
 
@@ -172,7 +172,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
                 addMenuItem(menu,
                         "View parent details",
 
-                        entityIconFactory.getImageIcon(Entity.getEntityType(parentEntityModel)), () -> {
+                        EntityIconFactory.getInstance().getImageIcon(Entity.getEntityType(parentEntityModel), 25, 8), () -> {
                             Integer parentId = Integer.valueOf(parentEntityModel.getValue("id").getValue().toString());
                             Entity parentEntityType = Entity.getEntityType(parentEntityModel);
                             if (Entity.FEATURE == Entity.getEntityType(parentEntityModel) || Entity.EPIC == Entity.getEntityType(parentEntityModel)) {
