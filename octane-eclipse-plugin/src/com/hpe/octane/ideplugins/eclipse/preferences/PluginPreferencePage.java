@@ -19,15 +19,19 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.StorageException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -52,6 +56,7 @@ import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PreferenceConstants;
 import com.hpe.octane.ideplugins.eclipse.ui.util.InfoPopup;
 import com.hpe.octane.ideplugins.eclipse.ui.util.error.ErrorComposite;
+import com.hpe.octane.ideplugins.eclipse.ui.util.resource.ImageResources;
 
 public class PluginPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
     public PluginPreferencePage() {
@@ -59,6 +64,13 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
 
     public static final String ID = "com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferencePage";
     public static final String CORRECT_URL_FORMAT_MESSAGE = "Example: (http|https)://{serverurl[:port]}/?p={sharedspaceId}/{workspaceId}";
+    
+    private static final String userPassAuthInfoText = "Log into ALM Octane directly with your user name and password, in non-SSO environments. " + System.lineSeparator() +
+            "This method saves your login credentials between sessions, so you don’t have to re-enter them.";
+
+    private static final String browserAuthInfoText = "Log into ALM Octane using a browser. " + System.lineSeparator() +
+            "You can use this method for non-SSO, SSO, and federated environments. " + System.lineSeparator() +
+            "Your login credentials are not saved between sessions, so you will have to re-enter them each time.";
 
     private Text textServerUrl;
     private Text textSharedSpace;
@@ -126,15 +138,30 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
         Label labelAuthMethod = new Label(authComposite, SWT.NONE);
         labelAuthMethod.setText("Authentication:");
         labelAuthMethod.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        
+        Composite buttonUserPassComposite = new Composite(authComposite, SWT.NONE);
+        GridData gd_buttonUserPassComposite = new GridData(SWT.FILL, SWT.FILL, true, false);
+        gd_buttonUserPassComposite.verticalIndent = 7;
+        buttonUserPassComposite.setLayoutData(gd_buttonUserPassComposite);
+        RowLayout rowLayoutUserPassAuth = new RowLayout();
+        rowLayoutUserPassAuth.marginLeft = 0;
+        rowLayoutUserPassAuth.center = true;
+        buttonUserPassComposite.setLayout(rowLayoutUserPassAuth);        
 
-        buttonUserPassAuth = new Button(authComposite, SWT.CHECK);
-        GridData gd_buttonUserPassAuth = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-        gd_buttonUserPassAuth.verticalIndent = 7;
-        buttonUserPassAuth.setLayoutData(gd_buttonUserPassAuth);
+        buttonUserPassAuth = new Button(buttonUserPassComposite, SWT.CHECK);
         buttonUserPassAuth.setText("Login with username and password");
+        
+        Label infoUserPassAuth = new Label(buttonUserPassComposite, SWT.NONE);
+        infoUserPassAuth.addMouseListener(new MouseAdapter() {            
+            @Override
+            public void mouseDown(MouseEvent e) {
+                MessageDialog.openInformation(null, "Login with username and password", userPassAuthInfoText);
+            }
+        });
+        infoUserPassAuth.setToolTipText(userPassAuthInfoText);
+        infoUserPassAuth.setImage(ImageResources.INFO.getImage());
 
         Composite userPassComposite = new Composite(authComposite, SWT.NONE);
-
         GridData gd_userPassComposite = new GridData(SWT.FILL, SWT.FILL, true, false);
         gd_userPassComposite.horizontalIndent = 15;
         userPassComposite.setLayoutData(gd_userPassComposite);
@@ -157,11 +184,27 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
         textPassword = new Text(userPassComposite, SWT.BORDER | SWT.PASSWORD);
         textPassword.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
-        buttonBrowserAuth = new Button(authComposite, SWT.CHECK);
-        buttonBrowserAuth.setText("Login using a browser");
+        Composite buttonBrowserAuthComposite = new Composite(authComposite, SWT.NONE);
         GridData gd_buttonBrowserAuth = new GridData(SWT.FILL, SWT.FILL, true, false);
         gd_buttonBrowserAuth.verticalIndent = 7;
-        buttonBrowserAuth.setLayoutData(gd_buttonBrowserAuth);
+        buttonBrowserAuthComposite.setLayoutData(gd_buttonBrowserAuth);
+        RowLayout rowLayoutBrowserAuth = new RowLayout();
+        rowLayoutBrowserAuth.marginLeft = 0;
+        rowLayoutBrowserAuth.center = true;
+        buttonBrowserAuthComposite.setLayout(rowLayoutBrowserAuth);
+        
+        buttonBrowserAuth = new Button(buttonBrowserAuthComposite, SWT.CHECK);
+        buttonBrowserAuth.setText("Login using a browser");
+        
+        Label infoBrowserAuth = new Label(buttonBrowserAuthComposite, SWT.NONE);
+        infoBrowserAuth.addMouseListener(new MouseAdapter() {            
+            @Override
+            public void mouseDown(MouseEvent e) {
+                MessageDialog.openInformation(null, "Login using a browser", browserAuthInfoText);
+            }
+        });
+        infoBrowserAuth.setToolTipText(browserAuthInfoText);
+        infoBrowserAuth.setImage(ImageResources.INFO.getImage());
 
         Label separatorAuthCompositeBottom = new Label(authComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
         separatorAuthCompositeBottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
