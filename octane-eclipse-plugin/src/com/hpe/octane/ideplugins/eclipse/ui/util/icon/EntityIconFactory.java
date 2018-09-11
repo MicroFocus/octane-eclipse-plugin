@@ -174,19 +174,28 @@ public class EntityIconFactory {
     }
 
     public Image getImageIcon(Entity entity, int iconSize, int fontSize, boolean isActive) {
+        
         if (!imageDataCache.containsKey(iconSize)) {
+        
             //create a map for this size
             Map<Entity, ImageData> imageMap = new HashMap<>();
             imageMap.put(entity, loadImageData(entity, iconSize, fontSize));
+            
             Map<Integer, Map<Entity, ImageData>> fontSizeMap = new HashMap<>();
             fontSizeMap.put(fontSize, imageMap);
+            
             imageDataCache.put(iconSize, fontSizeMap);
+        
         } else if (!imageDataCache.get(iconSize).containsKey(fontSize)) {
+            
             //size map exists but fontSize map does not
             Map<Entity, ImageData> imageMap = new HashMap<>();
             imageMap.put(entity, loadImageData(entity, iconSize, fontSize));
+            
             imageDataCache.get(iconSize).put(fontSize, imageMap);
+        
         } else if (!imageDataCache.get(iconSize).get(fontSize).containsKey(entity)) {
+        
             //size map exists, font map exists but entity icon does not
             imageDataCache.get(iconSize).get(fontSize).put(entity, loadImageData(entity, iconSize, fontSize));
         }
