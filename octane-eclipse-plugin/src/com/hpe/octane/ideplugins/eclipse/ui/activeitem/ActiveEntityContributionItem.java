@@ -59,7 +59,7 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
     private static Action commitMessageAction = new Action() {
         @Override
         public void run() {
-            CommitMessageUtil.copyMessageIfValid();
+            CommitMessageUtil.copyMessageIfValid(null);
         }
     };
     
