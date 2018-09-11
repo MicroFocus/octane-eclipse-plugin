@@ -64,8 +64,6 @@ import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
 public class EntityHeaderComposite extends Composite {
 
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(25, 25, 7);
-
     private static final String TOOLTIP_REFRESH = "Refresh entity details";
     private static final String TOOLTIP_PHASE = "Save changes";
     private static final String TOOLTIP_FIELDS = "Customize fields to be shown";
@@ -206,7 +204,7 @@ public class EntityHeaderComposite extends Composite {
 
         phaseComposite.setEntityModel(entityModelWrapper);
 
-        lblEntityIcon.setImage(entityIconFactory.getImageIcon(entityModelWrapper.getEntityType()));
+        lblEntityIcon.setImage(EntityIconFactory.getInstance().getImageIcon(entityModelWrapper.getEntityType(), 25, 8));
 
         txtEntityId.setText(entityModelWrapper.getReadOnlyEntityModel().getId());
 

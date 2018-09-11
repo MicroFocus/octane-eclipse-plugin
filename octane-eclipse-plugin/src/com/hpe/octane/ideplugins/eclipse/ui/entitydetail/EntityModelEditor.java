@@ -46,7 +46,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 public class EntityModelEditor extends EditorPart {
 
     public static final String ID = "com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditor"; //$NON-NLS-1$
-    private static final EntityIconFactory entityIconFactoryForTabInfo = new EntityIconFactory(25, 25, 7);
+   
     private static final String SAVE_FAILED_DIALOG_TITLE = "Saving entity failed";
 
     private static EntityService entityService = Activator.getInstance(EntityService.class);
@@ -70,7 +70,7 @@ public class EntityModelEditor extends EditorPart {
         setInput(input);
         
         setPartName(String.valueOf(this.input.getId()));
-        setTitleImage(entityIconFactoryForTabInfo.getImageForEditorPart(this.input.getEntityType()));
+        setTitleImage(EntityIconFactory.getInstance().getImageForEditorPart(this.input.getEntityType(), 25, 8));
     }
 
     @Override

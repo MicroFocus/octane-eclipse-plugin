@@ -54,7 +54,6 @@ import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 public class SearchEntityModelMenuFactory implements EntityModelMenuFactory {
 
     // private static final ILog logger = Activator.getDefault().getLog();
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(16, 16, 7);
     private static MyWorkService myWorkService = Activator.getInstance(MyWorkService.class);
 
     public SearchEntityModelMenuFactory() {
@@ -121,7 +120,7 @@ public class SearchEntityModelMenuFactory implements EntityModelMenuFactory {
             addMenuItem(
                     menu,
                     "View details",
-                    entityIconFactory.getImageIcon(entityType),
+                    EntityIconFactory.getInstance().getImageIcon(entityType, 16, 7),
                     () -> openDetailTab(entityId, entityType));
         }
 

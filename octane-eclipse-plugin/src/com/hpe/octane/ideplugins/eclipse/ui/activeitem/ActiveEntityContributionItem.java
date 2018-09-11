@@ -40,7 +40,6 @@ import com.hpe.octane.ideplugins.eclipse.util.CommitMessageUtil;
 public class ActiveEntityContributionItem extends WorkbenchWindowControlContribution {
 
     private static final ILog logger = Activator.getDefault().getLog();
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(20, 20, 8);
     private static ToolBarManager manager;
     private static EntityModelEditorInput entityModelEditorInput;
     private static ToolBar toolbar;
@@ -111,7 +110,7 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
 
         if (entityModelEditorInput != null) {
             openAction.setText(entityModelEditorInput.getId() + "");
-            Image img = entityIconFactory.getImageIcon(entityModelEditorInput.getEntityType());
+            Image img = EntityIconFactory.getInstance().getImageIcon(entityModelEditorInput.getEntityType(), 20, 8);
             openAction.setImageDescriptor(
                     new ImageDataImageDescriptor(img.getImageData()));
             openAction.setEnabled(true);

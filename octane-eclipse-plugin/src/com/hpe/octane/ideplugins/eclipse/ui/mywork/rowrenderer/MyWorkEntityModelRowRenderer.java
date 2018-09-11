@@ -50,7 +50,6 @@ import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
 public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
 
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(40, 40, 14);
 
     // Re-usable field setters
     static TitleFieldSetter titleFieldSetter = new TitleFieldSetter();
@@ -218,9 +217,9 @@ public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
         }
 
         if (new EntityModelEditorInput(entityModel).equals(activeItem)) {
-            rowComposite.setEntityIcon(entityIconFactory.getImageIcon(entityType, true));
+            rowComposite.setEntityIcon(EntityIconFactory.getInstance().getImageIcon(entityType, 40, 14, true));
         } else {
-            rowComposite.setEntityIcon(entityIconFactory.getImageIcon(entityType, false));
+            rowComposite.setEntityIcon(EntityIconFactory.getInstance().getImageIcon(entityType, 40, 14, false));
         }
 
         // Setup row based on field setters
