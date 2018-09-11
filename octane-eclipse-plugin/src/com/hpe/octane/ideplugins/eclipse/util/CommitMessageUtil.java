@@ -40,12 +40,17 @@ public class CommitMessageUtil {
 
     private static final ILog logger = Activator.getDefault().getLog();
     
-    public static void copyMessageIfValidNoActiveItem(EntityModel entityModel) {
+    public static void copyMessageIfValid(EntityModel entityModel) {
         new Job("Generating commit message ...") {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-
-                EntityModelEditorInput currentItem = new EntityModelEditorInput(entityModel);
+                EntityModelEditorInput currentItem;
+                
+                if (!entityModel.equals(null)) {
+                    currentItem = new EntityModelEditorInput(entityModel);
+                } else { 
+                    currentItem = PluginPreferenceStorage.getActiveItem();    
+                }
                 monitor.beginTask("Generating commit message ...", IProgressMonitor.UNKNOWN);
                 
                 // Convert to partial entity model
@@ -130,113 +135,10 @@ public class CommitMessageUtil {
                 monitor.done();
                 return Status.OK_STATUS;
             }
-
         }.schedule();
-
-
-                
-
-        
     }
 
-    public static void copyMessageIfValid() {
-        new Job("Generating commit message ...") {
-
-            @Override
-            protected IStatus run(IProgressMonitor monitor) {
-
-                monitor.beginTask("Generating commit message ...", IProgressMonitor.UNKNOWN);
-
-                EntityModelEditorInput activeItem = PluginPreferenceStorage.getActiveItem();
-
-                // Convert to partial entity model
-                EntityModel activeEntityModel;
-                if (Entity.TASK == activeItem.getEntityType()) {
-                    // load task entity, for story field
-                    EntityService entityService = Activator.getInstance(EntityService.class);
-                    try {
-                        activeEntityModel = entityService.findEntity(Entity.TASK, activeItem.getId(), Sets.newHashSet("story", "name"));
-                    } catch (Exception e) {
-                        logger.log(new Status(
-                                Status.ERROR,
-                                Activator.PLUGIN_ID,
-                                Status.OK,
-                                "Failed to fetch parent story of task: " + activeItem.getId(),
-                                null));
-
-                        return new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR, "Failed to generate commit message", e);
-                    }
-                } else {
-                    activeEntityModel = activeItem.toEntityModel();
-                }
-
-                String commitMessage = generateClientSideCommitMessage(activeEntityModel);
-
-                // Validate against server side patterns, since generation based
-                // on a regex with no params is not possible
-
-                // Task are validated against their parent, since Octane has no
-                // support for task commits, convert the entity to it's parent
-                // from here on
-                if (Entity.TASK == Entity.getEntityType(activeEntityModel)) {
-                    activeEntityModel = ((ReferenceFieldModel) activeEntityModel.getValue("story")).getValue();
-                }
-
-                CommitMessageService commitService = Activator.getInstance(CommitMessageService.class);
-                if (commitService.validateCommitMessage(
-                        commitMessage,
-                        Entity.getEntityType(activeEntityModel),
-                        Long.parseLong(activeEntityModel.getValue("id").getValue().toString()))) {
-
-                    Display.getDefault().asyncExec(() -> {
-                        Clipboard cp = new Clipboard(Display.getDefault());
-                        TextTransfer textTransfer = TextTransfer.getInstance();
-                        cp.setContents(new Object[] { commitMessage }, new Transfer[] { textTransfer });
-                        new InfoPopup("Commit message copied to clipboard", commitMessage, 300, 100).open();
-                    });
-
-                } else {
-
-                    CommitMessageService commitMessageService = Activator.getInstance(CommitMessageService.class);
-
-                    // Make sure you use the parent of the task here, since
-                    // server doesn't have scm patterns for tasks
-                    Entity activeItemType = Entity.getEntityType(activeEntityModel);
-
-                    String patterns = commitMessageService.getCommitPatternsForStoryType(activeItemType)
-                            .stream()
-                            .collect(Collectors.joining(SystemUtils.LINE_SEPARATOR));
-
-                    StringBuilder messageBuilder = new StringBuilder();
-
-                    messageBuilder
-                            .append("Failed to generate commit message for ")
-                            .append(getEntityStringFromType(activeItemType))
-                            .append(" ,server side patters are different from the default.")
-                            .append(SystemUtils.LINE_SEPARATOR)
-                            .append("Please make sure your commit message matches one of the following patterns: ")
-                            .append(SystemUtils.LINE_SEPARATOR)
-                            .append(patterns);
-
-                    if (activeItem.getEntityType() == Entity.TASK) {
-                        messageBuilder
-                                .append(SystemUtils.LINE_SEPARATOR)
-                                .append("For tasks, use the parent backlog item's commit pattern.");
-                    }
-
-                    Display.getDefault().asyncExec(() -> {
-                        new InfoPopup("Failed to generate commit message", messageBuilder.toString(), 300, 100).open();
-                    });
-                }
-
-                monitor.done();
-                return Status.OK_STATUS;
-            }
-
-        }.schedule();
-
-    }
-
+    
     /*
      * Task requires story field to be loaded
      */
