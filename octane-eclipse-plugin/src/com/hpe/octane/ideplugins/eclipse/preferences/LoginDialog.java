@@ -52,14 +52,14 @@ public class LoginDialog extends Dialog {
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
         GridLayout gridLayout = new GridLayout();
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
+        gridLayout.marginHeight = 10;
+        gridLayout.marginWidth = 10;
         container.setLayout(gridLayout);
 
         Link link = new Link(container, SWT.NONE);
         link.setText(LOGIN_TEXT);
         
-        StackLayoutComposite stackLayoutComposite = new StackLayoutComposite(container, SWT.NONE);
+        StackLayoutComposite stackLayoutComposite = new StackLayoutComposite(container, SWT.BORDER);
         stackLayoutComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         
         LoadingComposite loadingComposite = new LoadingComposite(stackLayoutComposite, SWT.NONE);
