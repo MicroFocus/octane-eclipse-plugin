@@ -154,7 +154,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
             addMenuItem(
                     menu,
                     "View details",
-                    EntityIconFactory.getInstance().getImageIcon(entityType, 25, 8),
+                    EntityIconFactory.getInstance().getImageForEditorPart(entityType, 17, 6),
                     () -> openDetailTab(entityId, entityType));
         }
 
