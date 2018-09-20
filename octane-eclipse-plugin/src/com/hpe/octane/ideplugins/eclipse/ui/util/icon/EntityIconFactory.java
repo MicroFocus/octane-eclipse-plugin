@@ -22,9 +22,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettingsProvider;
@@ -45,7 +43,9 @@ public class EntityIconFactory {
     private final Map<Entity, IconDetail> iconDetailMap = new HashMap<>();
     // cache images by size font and entity
     private final Map<Integer, Map<Integer, Map<Entity, ImageData>>> imageDataCache = new HashMap<>();
-
+    // cache for editor part images - the rectangle images
+    private final Map<Integer, Map<Integer, Map<Entity, Image>>> imageCacheForEditorPart = new HashMap<>();
+    
     private Color fontColor = new Color(Display.getCurrent(), 255, 255, 255);
     
     private static Image activeImg = ImageResources.ACTIVEITEM.getImage();
@@ -120,22 +120,6 @@ public class EntityIconFactory {
         return imgData;
     }
     
-    public Image getImageForEditorPart(Entity entity, int iconSize, int fontSize) {
-        IconDetail iconDetail = iconDetailMap.containsKey(entity) ? iconDetailMap.get(entity) : undefinedIconDetail;
-        Display display = Display.getDefault();
-        Color background = iconDetail.getColor();
-        PaletteData palette = new PaletteData(new RGB[] {
-                background.getRGB(), // pixel 0 = black
-                display.getSystemColor(SWT.COLOR_WHITE).getRGB(), // pixel 1 = white
-        });
-        ImageData imageData = new ImageData(iconSize, iconSize, 1, palette);
-        imageData.transparentPixel = 1; // set the transparent color to white
-        Image image = new Image( display, imageData);
-        setUpGraphics(image, display, iconDetail, iconSize, fontSize);
-        imageData = image.getImageData();
-        return image;
-    }
-    
     private void setUpGraphics(Image image, Display display, IconDetail iconDetail, int iconSize, int fontSize) {
         GC gc = new GC(image);
         gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
@@ -208,5 +192,61 @@ public class EntityIconFactory {
           
         return new Image(Display.getDefault(), imageData, imageData.getTransparencyMask());
     }
+    
+    private Image loadImageForEditorPart(Entity entity, int iconSize, int fontSize) {
+        IconDetail iconDetail = iconDetailMap.containsKey(entity) ? iconDetailMap.get(entity) : undefinedIconDetail;
+        Display display = Display.getDefault();   
+        Image image = new Image( display, iconSize, iconSize);
+        setUpGraphicsForEditorPart(image, display, iconDetail, iconSize, fontSize);
+        return image;
+    }
+    
+    private void setUpGraphicsForEditorPart(Image image, Display display, IconDetail iconDetail, int iconSize, int fontSize) {
+        GC gc = new GC(image);
+        gc.setBackground(iconDetail.getColor());
+        gc.fillRectangle(0, 0, iconSize, iconSize);
+        gc.setAntialias(SWT.ON);
+        
+        gc.setForeground(fontColor);
+        gc.setFont(new Font(display, "Arial", fontSize, SWT.BOLD));
+        
+        Point p = gc.stringExtent(iconDetail.getDisplayLabelText());
+        int fontX = (iconSize  - p.x + 1) / 2;
+        int fontY = (iconSize - p.y) / 2;
+        
+        gc.drawString(iconDetail.getDisplayLabelText(), fontX, fontY, true);
+        gc.dispose();
+    }
+    
+    public Image getImageForEditorPart(Entity entity, int iconSize, int fontSize) {
+        
+        if (!imageCacheForEditorPart.containsKey(iconSize)) {
+            
+            //create a map for this size
+            Map<Entity, Image> imageMap = new HashMap<>();
+            imageMap.put(entity, loadImageForEditorPart(entity, iconSize, fontSize));
+            
+            Map<Integer, Map<Entity, Image>> fontSizeMap = new HashMap<>();
+            fontSizeMap.put(fontSize, imageMap);
+            
+            imageCacheForEditorPart.put(iconSize, fontSizeMap);
+        
+        } else if (!imageCacheForEditorPart.get(iconSize).containsKey(fontSize)) {
+            
+            //size map exists but fontSize map does not
+            Map<Entity, Image> imageMap = new HashMap<>();
+            imageMap.put(entity, loadImageForEditorPart(entity, iconSize, fontSize));
+            
+            imageCacheForEditorPart.get(iconSize).put(fontSize, imageMap);
+        
+        } else if (!imageCacheForEditorPart.get(iconSize).get(fontSize).containsKey(entity)) {
+        
+            //size map exists, font map exists but entity icon does not
+            imageCacheForEditorPart.get(iconSize).get(fontSize).put(entity, loadImageForEditorPart(entity, iconSize, fontSize));
+        }
 
+        return imageCacheForEditorPart.get(iconSize).get(fontSize).get(entity);    
+    }
+    
+   
 }

@@ -120,7 +120,7 @@ public class SearchEntityModelMenuFactory implements EntityModelMenuFactory {
             addMenuItem(
                     menu,
                     "View details",
-                    EntityIconFactory.getInstance().getImageIcon(entityType, 16, 7),
+                    EntityIconFactory.getInstance().getImageForEditorPart(entityType, 16, 7),
                     () -> openDetailTab(entityId, entityType));
         }
 

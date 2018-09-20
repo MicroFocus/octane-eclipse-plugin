@@ -70,7 +70,7 @@ public class EntityModelEditor extends EditorPart {
         setInput(input);
         
         setPartName(String.valueOf(this.input.getId()));
-        setTitleImage(EntityIconFactory.getInstance().getImageForEditorPart(this.input.getEntityType(), 25, 8));
+        setTitleImage(EntityIconFactory.getInstance().getImageForEditorPart(this.input.getEntityType(), 17, 7));
     }
 
     @Override

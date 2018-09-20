@@ -172,7 +172,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
                 addMenuItem(menu,
                         "View parent details",
 
-                        EntityIconFactory.getInstance().getImageIcon(Entity.getEntityType(parentEntityModel), 25, 8), () -> {
+                        EntityIconFactory.getInstance().getImageForEditorPart(Entity.getEntityType(parentEntityModel), 25, 8), () -> {
                             Integer parentId = Integer.valueOf(parentEntityModel.getValue("id").getValue().toString());
                             Entity parentEntityType = Entity.getEntityType(parentEntityModel);
                             if (Entity.FEATURE == Entity.getEntityType(parentEntityModel) || Entity.EPIC == Entity.getEntityType(parentEntityModel)) {
