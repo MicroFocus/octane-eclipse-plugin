@@ -154,7 +154,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
             addMenuItem(
                     menu,
                     "View details",
-                    EntityIconFactory.getInstance().getImageForEditorPart(entityType, 17, 6),
+                    EntityIconFactory.getInstance().getImageForEditorPart(entityType, 17, 7),
                     () -> openDetailTab(entityId, entityType));
         }
 
@@ -172,7 +172,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
                 addMenuItem(menu,
                         "View parent details",
 
-                        EntityIconFactory.getInstance().getImageIcon(Entity.getEntityType(parentEntityModel), 25, 8), () -> {
+                        EntityIconFactory.getInstance().getImageForEditorPart(Entity.getEntityType(parentEntityModel), 17, 7), () -> {
                             Integer parentId = Integer.valueOf(parentEntityModel.getValue("id").getValue().toString());
                             Entity parentEntityType = Entity.getEntityType(parentEntityModel);
                             if (Entity.FEATURE == Entity.getEntityType(parentEntityModel) || Entity.EPIC == Entity.getEntityType(parentEntityModel)) {
