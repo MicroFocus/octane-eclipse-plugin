@@ -14,6 +14,7 @@ package com.hpe.octane.ideplugins.eclipse.ui.entitylist;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +37,7 @@ import com.hpe.octane.ideplugins.eclipse.util.PredefinedEntityComparator;
 
 public class EntityTypeSelectorComposite extends Composite {
 
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(20, 20, 7);
-    private List<Button> checkBoxes = new ArrayList<>();
+    private Map<Entity, Button> checkBoxes = new HashMap<>();
     private List<Runnable> selectionListeners = new ArrayList<>();
     private Label totalCountLbl;
     private Color backgroundColor = SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT);
@@ -72,8 +72,8 @@ public class EntityTypeSelectorComposite extends Composite {
 
             btnCheckButton.setFont(SWTResourceManager.getBoldFont(btnCheckButton.getFont()));
             btnCheckButton.setData(entity);
-            btnCheckButton.setImage(entityIconFactory.getImageIcon(entity));
-            checkBoxes.add(btnCheckButton);
+            btnCheckButton.setImage(EntityIconFactory.getInstance().getImageIcon(entity, 25, 8));
+            checkBoxes.put(entity, btnCheckButton);
         }
         
         totalCountLbl = new Label(this, SWT.NONE);
@@ -82,7 +82,7 @@ public class EntityTypeSelectorComposite extends Composite {
     }
 
     public void setEntityTypeCount(Map<Entity, Integer> entityTypeCount) {
-        checkBoxes.forEach(checkBox -> {
+        checkBoxes.values().forEach(checkBox -> {
             checkBox.setBackground(backgroundColor);
         	Integer count = entityTypeCount.get(checkBox.getData());
             if (count != null) {
@@ -96,7 +96,7 @@ public class EntityTypeSelectorComposite extends Composite {
 
     public Set<Entity> getCheckedEntityTypes() {
         Set<Entity> result = new HashSet<>();
-        for (Button checkBox : checkBoxes) {
+        for (Button checkBox : checkBoxes.values()) {
             if (checkBox.getSelection()) {
                 result.add((Entity) checkBox.getData());
             }
@@ -109,12 +109,12 @@ public class EntityTypeSelectorComposite extends Composite {
     }
 
     public void checkAll() {
-        checkBoxes.forEach(checkBox -> checkBox.setSelection(true));
+        checkBoxes.values().forEach(checkBox -> checkBox.setSelection(true));
         fireAllSelectionListeners();
     }
 
     public void checkNone() {
-        checkBoxes.forEach(checkBox -> checkBox.setSelection(false));
+        checkBoxes.values().forEach(checkBox -> checkBox.setSelection(false));
         fireAllSelectionListeners();
     }
 
@@ -125,6 +125,13 @@ public class EntityTypeSelectorComposite extends Composite {
     @Override
     protected void checkSubclass() {
         // Disable the check that prevents subclassing of SWT components
+    }
+    
+    public void refreshIcons() {
+        for(Entity entity : checkBoxes.keySet()) {
+            Button button = checkBoxes.get(entity);
+            button.setImage(EntityIconFactory.getInstance().getImageIcon(entity, 25, 8));
+        }
     }
 
 }

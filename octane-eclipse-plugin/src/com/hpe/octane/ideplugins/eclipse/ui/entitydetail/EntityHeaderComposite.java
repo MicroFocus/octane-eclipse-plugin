@@ -12,6 +12,7 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.entitydetail;
 
+
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
@@ -61,8 +63,6 @@ import com.hpe.octane.ideplugins.eclipse.util.DelayedRunnable;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
 public class EntityHeaderComposite extends Composite {
-
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(25, 25, 7);
 
     private static final String TOOLTIP_REFRESH = "Refresh entity details";
     private static final String TOOLTIP_PHASE = "Save changes";
@@ -103,7 +103,7 @@ public class EntityHeaderComposite extends Composite {
         setLayout(new GridLayout(10, false));
         
         Font boldFont = new Font(getDisplay(), new FontData(JFaceResources.DEFAULT_FONT, 11, SWT.BOLD));
-
+        
         lblEntityIcon = new Label(this, SWT.NONE);
         lblEntityIcon.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 
@@ -204,7 +204,7 @@ public class EntityHeaderComposite extends Composite {
 
         phaseComposite.setEntityModel(entityModelWrapper);
 
-        lblEntityIcon.setImage(entityIconFactory.getImageIcon(entityModelWrapper.getEntityType()));
+        lblEntityIcon.setImage(EntityIconFactory.getInstance().getImageIcon(entityModelWrapper.getEntityType(), 25, 8));
 
         txtEntityId.setText(entityModelWrapper.getReadOnlyEntityModel().getId());
 

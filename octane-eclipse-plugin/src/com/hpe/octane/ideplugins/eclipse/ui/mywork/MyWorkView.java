@@ -113,6 +113,7 @@ public class MyWorkView extends OctaneViewPart {
                     }
                     Display.getDefault().asyncExec(() -> {
                         entityData.setEntityList(entities);
+                        entityListComposite.refreshIcons();
                         if (entities.size() == 0) {
                             showControl(noWorkComposite);
                         } else {

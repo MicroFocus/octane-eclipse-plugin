@@ -39,38 +39,40 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.InfoPopup;
 public class CommitMessageUtil {
 
     private static final ILog logger = Activator.getDefault().getLog();
-
-    public static void copyMessageIfValid() {
+    
+    public static void copyMessageIfValid(EntityModel entityModel) {
         new Job("Generating commit message ...") {
-
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-
+                EntityModelEditorInput currentItem;
+                
+                if (!entityModel.equals(null)) {
+                    currentItem = new EntityModelEditorInput(entityModel);
+                } else { 
+                    currentItem = PluginPreferenceStorage.getActiveItem();    
+                }
                 monitor.beginTask("Generating commit message ...", IProgressMonitor.UNKNOWN);
-
-                EntityModelEditorInput activeItem = PluginPreferenceStorage.getActiveItem();
-
+                
                 // Convert to partial entity model
                 EntityModel activeEntityModel;
-                if (Entity.TASK == activeItem.getEntityType()) {
+                if (Entity.TASK == currentItem.getEntityType()) {
                     // load task entity, for story field
                     EntityService entityService = Activator.getInstance(EntityService.class);
                     try {
-                        activeEntityModel = entityService.findEntity(Entity.TASK, activeItem.getId(), Sets.newHashSet("story", "name"));
+                        activeEntityModel = entityService.findEntity(Entity.TASK, currentItem.getId(), Sets.newHashSet("story", "name"));
                     } catch (Exception e) {
                         logger.log(new Status(
                                 Status.ERROR,
                                 Activator.PLUGIN_ID,
                                 Status.OK,
-                                "Failed to fetch parent story of task: " + activeItem.getId(),
+                                "Failed to fetch parent story of task: " + currentItem.getId(),
                                 null));
 
                         return new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR, "Failed to generate commit message", e);
                     }
                 } else {
-                    activeEntityModel = activeItem.toEntityModel();
+                    activeEntityModel = currentItem.toEntityModel();
                 }
-
                 String commitMessage = generateClientSideCommitMessage(activeEntityModel);
 
                 // Validate against server side patterns, since generation based
@@ -119,7 +121,7 @@ public class CommitMessageUtil {
                             .append(SystemUtils.LINE_SEPARATOR)
                             .append(patterns);
 
-                    if (activeItem.getEntityType() == Entity.TASK) {
+                    if (currentItem.getEntityType() == Entity.TASK) {
                         messageBuilder
                                 .append(SystemUtils.LINE_SEPARATOR)
                                 .append("For tasks, use the parent backlog item's commit pattern.");
@@ -133,11 +135,10 @@ public class CommitMessageUtil {
                 monitor.done();
                 return Status.OK_STATUS;
             }
-
         }.schedule();
-
     }
 
+    
     /*
      * Task requires story field to be loaded
      */

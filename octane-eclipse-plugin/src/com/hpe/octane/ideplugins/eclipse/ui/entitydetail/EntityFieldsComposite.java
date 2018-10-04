@@ -145,10 +145,6 @@ public class EntityFieldsComposite extends Composite {
     private void drawEntityFields(Set<String> shownFields, EntityModelWrapper entityModelWrapper) {
         Arrays.stream(fieldsComposite.getChildren()).forEach(child -> child.dispose());
 
-        // make a map of the field names and labels
-        Collection<FieldMetadata> fieldMetadata = metadataService.getVisibleFields(entityModelWrapper.getEntityType());
-        fieldLabelMap = fieldMetadata.stream().collect(Collectors.toMap(FieldMetadata::getName, FieldMetadata::getLabel));
-
         fieldsComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
         Composite sectionClientLeft = new Composite(fieldsComposite, SWT.NONE);
         sectionClientLeft.setLayout(new GridLayout(2, false));
@@ -168,10 +164,10 @@ public class EntityFieldsComposite extends Composite {
         for (int i = 0; i < shownFields.size(); i++) {
             String fieldName = iterator.next();
 
-            // Check if the field is valid (exists) before trying to show it
-            // If the field name for the given type doesn't return any metadata,
-            // we ignore it
-            // Default field might be out-dated, and cause detail tab to crash
+//            // Check if the field is valid (exists) before trying to show it
+//            // If the field name for the given type doesn't return any metadata,
+//            // we ignore it
+//            // Default field might be out-dated, and cause detail tab to crash
             try {
                 metadataService.getMetadata(entityModelWrapper.getEntityType(), fieldName);
             } catch (ServiceRuntimeException ex) {
@@ -252,6 +248,9 @@ public class EntityFieldsComposite extends Composite {
 
     public void setEntityModel(EntityModelWrapper entityModelWrapper) {
         this.entityModel = entityModelWrapper;
+        // make a map of the field names and labels
+        Collection<FieldMetadata> fieldMetadata = metadataService.getVisibleFields(entityModelWrapper.getEntityType());
+        fieldLabelMap = fieldMetadata.stream().collect(Collectors.toMap(FieldMetadata::getName, FieldMetadata::getLabel));
         drawEntityFields(entityModelWrapper);
         descriptionComposite.setEntityModel(entityModelWrapper);
     }

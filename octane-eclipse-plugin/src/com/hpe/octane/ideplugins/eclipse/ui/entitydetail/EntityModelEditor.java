@@ -12,6 +12,7 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.entitydetail;
 
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -45,7 +46,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 public class EntityModelEditor extends EditorPart {
 
     public static final String ID = "com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditor"; //$NON-NLS-1$
-    private static final EntityIconFactory entityIconFactoryForTabInfo = new EntityIconFactory(20, 20, 7);
+   
     private static final String SAVE_FAILED_DIALOG_TITLE = "Saving entity failed";
 
     private static EntityService entityService = Activator.getInstance(EntityService.class);
@@ -56,7 +57,7 @@ public class EntityModelEditor extends EditorPart {
     private StackLayoutComposite rootComposite;
     private LoadingComposite loadingComposite;
     private boolean isDirty = false;
-
+    
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 
@@ -67,9 +68,9 @@ public class EntityModelEditor extends EditorPart {
 
         setSite(site);
         setInput(input);
-
+        
         setPartName(String.valueOf(this.input.getId()));
-        setTitleImage(entityIconFactoryForTabInfo.getImageIcon(this.input.getEntityType()));
+        setTitleImage(EntityIconFactory.getInstance().getImageForEditorPart(this.input.getEntityType(), 17, 7));
     }
 
     @Override
@@ -91,7 +92,6 @@ public class EntityModelEditor extends EditorPart {
                 doSave(null);
             }
         });
-
         loadEntity();
     }
 

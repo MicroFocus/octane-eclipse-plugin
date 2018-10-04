@@ -28,7 +28,6 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.icon.EntityIconFactory;
 public class EntityModelEditorInput implements IElementFactory, IEditorInput {
 
     private static final String FACTORY_ID = "com.hpe.octane.ideplugins.eclipse.ui.editor.EntityModelEditorInput";
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(20, 20, 7);
 
     private long id;
     private Entity entityType;
@@ -84,7 +83,7 @@ public class EntityModelEditorInput implements IElementFactory, IEditorInput {
     @Override
     public ImageDescriptor getImageDescriptor() {
         return new ImageDataImageDescriptor(
-                entityIconFactory.getImageIcon(entityType).getImageData());
+                EntityIconFactory.getInstance().getImageIcon(entityType, 20, 8).getImageData());
     }
 
     @Override

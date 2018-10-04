@@ -80,9 +80,11 @@ public class FieldEditorFactory {
         FieldEditor fieldEditor = null;
 
         //EntityFieldsConstants.FIELD_APPMODULE is a wannabe tree, need to make special ui for it
-        if (!fieldMetadata.isEditable() || fieldMetadata.isFinal() || fieldName.equals(EntityFieldsConstants.FIELD_APPMODULE)) {
+        if (!fieldMetadata.isEditable() || fieldMetadata.isFinal()) {
             fieldEditor = new ReadOnlyFieldEditor(parent, SWT.NONE);
-
+        } else if((entityModelWrapper.getEntityType()==Entity.MANUAL_TEST_RUN || entityModelWrapper.getEntityType() == Entity.TEST_SUITE_RUN) &&
+                (fieldName.equals(EntityFieldsConstants.FIELD_APPMODULE) || fieldName.contains(EntityFieldsConstants.FIELD_ENVIROMENT))) {
+            fieldEditor = new ReadOnlyFieldEditor(parent, SWT.NONE);
         } else {
             switch (fieldMetadata.getFieldType()) {
                 case Integer:

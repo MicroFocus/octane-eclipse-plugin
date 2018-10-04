@@ -40,7 +40,6 @@ import com.hpe.octane.ideplugins.eclipse.util.CommitMessageUtil;
 public class ActiveEntityContributionItem extends WorkbenchWindowControlContribution {
 
     private static final ILog logger = Activator.getDefault().getLog();
-    private static final EntityIconFactory entityIconFactory = new EntityIconFactory(20, 20, 8);
     private static ToolBarManager manager;
     private static EntityModelEditorInput entityModelEditorInput;
     private static ToolBar toolbar;
@@ -60,7 +59,14 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
     private static Action commitMessageAction = new Action() {
         @Override
         public void run() {
-            CommitMessageUtil.copyMessageIfValid();
+            CommitMessageUtil.copyMessageIfValid(null);
+        }
+    };
+    
+    private static Action stopWorkAction = new Action() {
+        @Override
+        public void run() {
+            PluginPreferenceStorage.setActiveItem(null);
         }
     };
 
@@ -104,13 +110,16 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
 
         if (entityModelEditorInput != null) {
             openAction.setText(entityModelEditorInput.getId() + "");
-            Image img = entityIconFactory.getImageIcon(entityModelEditorInput.getEntityType());
+            Image img = EntityIconFactory.getInstance().getImageIcon(entityModelEditorInput.getEntityType(), 20, 8);
             openAction.setImageDescriptor(
                     new ImageDataImageDescriptor(img.getImageData()));
             openAction.setEnabled(true);
             
             commitMessageAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
             commitMessageAction.setToolTipText("Generate and copy commit message to clipboard");
+            
+            stopWorkAction.setImageDescriptor(new ImageDataImageDescriptor(ImageResources.STOP_TIMER_16X16.getImage().getImageData()));
+            stopWorkAction.setToolTipText("Stop work on current entity");
             
         } else {
             openAction.setImageDescriptor(
@@ -125,6 +134,7 @@ public class ActiveEntityContributionItem extends WorkbenchWindowControlContribu
         
         if (entityModelEditorInput != null) {
             manager.add(new ActionContributionItem(commitMessageAction));
+            manager.add(new ActionContributionItem(stopWorkAction));
         }
         
         manager.update(true);
