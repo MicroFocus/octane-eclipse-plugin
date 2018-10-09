@@ -25,44 +25,52 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
-import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettingsProvider;
-import com.hpe.adm.nga.sdk.model.EntityModel;
 import com.hpe.adm.octane.ideplugins.services.EntityLabelService;
+import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettingsProvider;
 import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
 import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.ImageResources;
 
 public class EntityIconFactory {
-
-    private static final IconDetail undefinedIconDetail = new IconDetail(0, 0, 0, "N/A");
-    private static String INITIALS = "initials";
     
     private EntityLabelService entityLabelService;
     
-    // map to color and short text
-    private final Map<Entity, IconDetail> iconDetailMap = new HashMap<>();
     // cache images by size font and entity
     private final Map<Integer, Map<Integer, Map<Entity, ImageData>>> imageDataCache = new HashMap<>();
     // cache for editor part images - the rectangle images
     private final Map<Integer, Map<Integer, Map<Entity, Image>>> imageCacheForEditorPart = new HashMap<>();
     
     private Color fontColor = new Color(Display.getCurrent(), 255, 255, 255);
-    
     private static Image activeImg = ImageResources.ACTIVEITEM.getImage();
     
     private static EntityIconFactory instance;
+
+    private static final Map<Entity, Color> entityColorMap = new HashMap<>();
     
-    private EntityIconFactory() {
+    static {
+        entityColorMap.put(Entity.USER_STORY, new Color(Display.getCurrent(), 255, 176, 0));
+        entityColorMap.put(Entity.QUALITY_STORY, new Color(Display.getCurrent(), 51, 193, 128));
+        entityColorMap.put(Entity.DEFECT, new Color(Display.getCurrent(), 178, 22, 70));
+        entityColorMap.put(Entity.EPIC, new Color(Display.getCurrent(), 116, 37, 173));
+        entityColorMap.put(Entity.FEATURE, new Color(Display.getCurrent(), 229, 120, 40));
+        entityColorMap.put(Entity.TASK, new Color(Display.getCurrent(), 22, 104, 193));
+        entityColorMap.put(Entity.MANUAL_TEST, new Color(Display.getCurrent(), 0, 171, 243));
+        entityColorMap.put(Entity.GHERKIN_TEST, new Color(Display.getCurrent(), 0, 169, 137));
+        entityColorMap.put(Entity.TEST_SUITE, new Color(Display.getCurrent(), 39, 23, 130));
+        entityColorMap.put(Entity.MANUAL_TEST_RUN, new Color(Display.getCurrent(), 0, 171, 243));
+        entityColorMap.put(Entity.TEST_SUITE_RUN, new Color(Display.getCurrent(), 0, 171, 243));
+        entityColorMap.put(Entity.AUTOMATED_TEST, new Color(Display.getCurrent(), 186, 71, 226));
+        entityColorMap.put(Entity.COMMENT, new Color(Display.getCurrent(), 253, 225, 89));
+        entityColorMap.put(Entity.REQUIREMENT, new Color(Display.getCurrent(), 11, 142, 172));
+    }
+
+    public EntityIconFactory() {
         this.entityLabelService = Activator.getInstance(EntityLabelService.class);
         ConnectionSettingsProvider connectionSettingsProvider = Activator.getInstance(ConnectionSettingsProvider.class);
         
         connectionSettingsProvider.addChangeHandler(() -> {
-            iconDetailMap.clear();
-            imageDataCache.clear();
-            init();
+            //imageDataCache.clear();
         });
-        
-        init();
     }
     
     public static EntityIconFactory getInstance() {
@@ -71,71 +79,36 @@ public class EntityIconFactory {
         }    
         return instance;
     }
-    
-    
-    private void init() {
-        Map<String, EntityModel> entityLabels = entityLabelService.getEntityLabelDetails();
+
+    private ImageData loadImageData(Entity entity, int iconSize, int fontSize) {     
+
+        Color color = entityColorMap.get(entity);
+        String initials = entityLabelService.getEntityInitials(entity);
         
-        iconDetailMap.put(Entity.USER_STORY, new IconDetail(255, 176, 0, 
-                entityLabels.get(Entity.USER_STORY.getSubtypeName()).getValue(INITIALS).getValue().toString()));
-        iconDetailMap.put(Entity.QUALITY_STORY, new IconDetail(51, 193, 128, 
-                entityLabels.get(Entity.QUALITY_STORY.getEntityName()).getValue(INITIALS).getValue().toString()));
-        iconDetailMap.put(Entity.DEFECT, new IconDetail(178, 22, 70, 
-                entityLabels.get(Entity.DEFECT.getEntityName()).getValue(INITIALS).getValue().toString()));
-        iconDetailMap.put(Entity.EPIC, new IconDetail(116, 37, 173, 
-                entityLabels.get(Entity.EPIC.getEntityName()).getValue(INITIALS).getValue().toString()));
-        iconDetailMap.put(Entity.FEATURE, new IconDetail(229, 120, 40, 
-                entityLabels.get(Entity.FEATURE.getEntityName()).getValue(INITIALS).getValue().toString()));
-        iconDetailMap.put(Entity.REQUIREMENT, new IconDetail(11, 142, 172, 
-                entityLabels.get(Entity.REQUIREMENT.getTypeName()).getValue(INITIALS).getValue().toString()));
-
-        iconDetailMap.put(Entity.TASK, new IconDetail(22, 104, 193, 
-                entityLabels.get(Entity.TASK.getEntityName()).getValue(INITIALS).getValue().toString())); 
-
-        iconDetailMap.put(Entity.TEST_SUITE, new IconDetail(39, 23, 130, 
-                entityLabels.get(Entity.TEST_SUITE.getEntityName()).getValue(INITIALS).getValue().toString()));
-        iconDetailMap.put(Entity.MANUAL_TEST, new IconDetail(0, 171, 243, 
-                entityLabels.get(Entity.MANUAL_TEST.getEntityName()).getValue(INITIALS).getValue().toString()));
-        iconDetailMap.put(Entity.GHERKIN_TEST, new IconDetail(0, 169, 137, 
-                entityLabels.get(Entity.GHERKIN_TEST.getEntityName()).getValue(INITIALS).getValue().toString()));
-        iconDetailMap.put(Entity.AUTOMATED_TEST, new IconDetail(186, 71, 226, 
-                entityLabels.get(Entity.AUTOMATED_TEST.getEntityName()).getValue(INITIALS).getValue().toString()));
-
-        iconDetailMap.put(Entity.MANUAL_TEST_RUN, new IconDetail(0, 171, 243, 
-                entityLabels.get(Entity.MANUAL_TEST_RUN.getEntityName()).getValue(INITIALS).getValue().toString()));
-        iconDetailMap.put(Entity.TEST_SUITE_RUN, new IconDetail(0, 171, 243, 
-                entityLabels.get(Entity.TEST_SUITE_RUN.getEntityName()).getValue(INITIALS).getValue().toString()));
-
-        iconDetailMap.put(Entity.COMMENT, new IconDetail(253, 225, 89, 
-                entityLabels.get(Entity.COMMENT.getEntityName()).getValue(INITIALS).getValue().toString()));
-    }
-
-    private ImageData loadImageData(Entity entity, int iconSize, int fontSize) {
-        IconDetail iconDetail = iconDetailMap.containsKey(entity) ? iconDetailMap.get(entity) : undefinedIconDetail;
         Display display = Display.getDefault();
         Image img = new Image(display, iconSize, iconSize);
-        setUpGraphics(img, display, iconDetail, iconSize, fontSize);
+        setUpGraphics(img, display, initials, color, iconSize, fontSize);
         ImageData imgData = img.getImageData();
         img.dispose();
         return imgData;
     }
     
-    private void setUpGraphics(Image image, Display display, IconDetail iconDetail, int iconSize, int fontSize) {
+    private void setUpGraphics(Image image, Display display, String initials, Color color, int iconSize, int fontSize) {
         GC gc = new GC(image);
         gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
         gc.fillRectangle(0, 0, iconSize, iconSize); // fill the whole image with white
         gc.setAntialias(SWT.ON);
-        gc.setBackground(iconDetail.getColor());
+        gc.setBackground(color);
         gc.fillOval(0, 0, iconSize, iconSize); // fill an oval in the middle of the picture with the background color
            
         gc.setForeground(fontColor);
         gc.setFont(new Font(display, "Arial", fontSize, SWT.BOLD));
         
-        Point p = gc.stringExtent(iconDetail.getDisplayLabelText());
+        Point p = gc.stringExtent(initials);
         int fontX = (iconSize  - p.x + 1) / 2;
         int fontY = (iconSize - p.y) / 2;
         
-        gc.drawString(iconDetail.getDisplayLabelText(), fontX, fontY, true);
+        gc.drawString(initials, fontX, fontY, true);
         gc.dispose();
     }
     
@@ -153,6 +126,64 @@ public class EntityIconFactory {
         return img.getImageData();
     }
 
+    private Image loadImageForEditorPart(Entity entity, int iconSize, int fontSize) {
+        
+        Color color = entityColorMap.get(entity);
+        String initials = entityLabelService.getEntityInitials(entity);
+        
+        Display display = Display.getDefault();   
+        Image image = new Image( display, iconSize, iconSize);
+        setUpGraphicsForEditorPart(image, display, initials, color, iconSize, fontSize);
+        return image;
+    }
+    
+    private void setUpGraphicsForEditorPart(Image image, Display display, String initials, Color color, int iconSize, int fontSize) {
+        GC gc = new GC(image);
+        gc.setBackground(color);
+        gc.fillRectangle(0, 0, iconSize, iconSize);
+        gc.setAntialias(SWT.ON);
+        
+        gc.setForeground(fontColor);
+        gc.setFont(new Font(display, "Arial", fontSize, SWT.BOLD));
+        
+        Point p = gc.stringExtent(initials);
+        int fontX = (iconSize  - p.x + 1) / 2;
+        int fontY = (iconSize - p.y) / 2;
+        
+        gc.drawString(initials, fontX, fontY, true);
+        gc.dispose();
+    }
+    
+    public Image getImageForEditorPart(Entity entity, int iconSize, int fontSize) {
+        
+        if (!imageCacheForEditorPart.containsKey(iconSize)) {
+            
+            //create a map for this size
+            Map<Entity, Image> imageMap = new HashMap<>();
+            imageMap.put(entity, loadImageForEditorPart(entity, iconSize, fontSize));
+            
+            Map<Integer, Map<Entity, Image>> fontSizeMap = new HashMap<>();
+            fontSizeMap.put(fontSize, imageMap);
+            
+            imageCacheForEditorPart.put(iconSize, fontSizeMap);
+            
+        } else if (!imageCacheForEditorPart.get(iconSize).containsKey(fontSize)) {
+            
+            //size map exists but fontSize map does not
+            Map<Entity, Image> imageMap = new HashMap<>();
+            imageMap.put(entity, loadImageForEditorPart(entity, iconSize, fontSize));
+            
+            imageCacheForEditorPart.get(iconSize).put(fontSize, imageMap);
+        
+        } else if (!imageCacheForEditorPart.get(iconSize).get(fontSize).containsKey(entity)) {
+        
+            //size map exists, font map exists but entity icon does not
+            imageCacheForEditorPart.get(iconSize).get(fontSize).put(entity, loadImageForEditorPart(entity, iconSize, fontSize));
+        }
+
+        return imageCacheForEditorPart.get(iconSize).get(fontSize).get(entity);    
+    }
+    
     public Image getImageIcon(Entity entity, int iconSize, int fontSize) {
         return getImageIcon(entity, iconSize, fontSize, false);
     }
@@ -193,60 +224,4 @@ public class EntityIconFactory {
         return new Image(Display.getDefault(), imageData, imageData.getTransparencyMask());
     }
     
-    private Image loadImageForEditorPart(Entity entity, int iconSize, int fontSize) {
-        IconDetail iconDetail = iconDetailMap.containsKey(entity) ? iconDetailMap.get(entity) : undefinedIconDetail;
-        Display display = Display.getDefault();   
-        Image image = new Image( display, iconSize, iconSize);
-        setUpGraphicsForEditorPart(image, display, iconDetail, iconSize, fontSize);
-        return image;
-    }
-    
-    private void setUpGraphicsForEditorPart(Image image, Display display, IconDetail iconDetail, int iconSize, int fontSize) {
-        GC gc = new GC(image);
-        gc.setBackground(iconDetail.getColor());
-        gc.fillRectangle(0, 0, iconSize, iconSize);
-        gc.setAntialias(SWT.ON);
-        
-        gc.setForeground(fontColor);
-        gc.setFont(new Font(display, "Arial", fontSize, SWT.BOLD));
-        
-        Point p = gc.stringExtent(iconDetail.getDisplayLabelText());
-        int fontX = (iconSize  - p.x + 1) / 2;
-        int fontY = (iconSize - p.y) / 2;
-        
-        gc.drawString(iconDetail.getDisplayLabelText(), fontX, fontY, true);
-        gc.dispose();
-    }
-    
-    public Image getImageForEditorPart(Entity entity, int iconSize, int fontSize) {
-        
-        if (!imageCacheForEditorPart.containsKey(iconSize)) {
-            
-            //create a map for this size
-            Map<Entity, Image> imageMap = new HashMap<>();
-            imageMap.put(entity, loadImageForEditorPart(entity, iconSize, fontSize));
-            
-            Map<Integer, Map<Entity, Image>> fontSizeMap = new HashMap<>();
-            fontSizeMap.put(fontSize, imageMap);
-            
-            imageCacheForEditorPart.put(iconSize, fontSizeMap);
-        
-        } else if (!imageCacheForEditorPart.get(iconSize).containsKey(fontSize)) {
-            
-            //size map exists but fontSize map does not
-            Map<Entity, Image> imageMap = new HashMap<>();
-            imageMap.put(entity, loadImageForEditorPart(entity, iconSize, fontSize));
-            
-            imageCacheForEditorPart.get(iconSize).put(fontSize, imageMap);
-        
-        } else if (!imageCacheForEditorPart.get(iconSize).get(fontSize).containsKey(entity)) {
-        
-            //size map exists, font map exists but entity icon does not
-            imageCacheForEditorPart.get(iconSize).get(fontSize).put(entity, loadImageForEditorPart(entity, iconSize, fontSize));
-        }
-
-        return imageCacheForEditorPart.get(iconSize).get(fontSize).get(entity);    
-    }
-    
-   
 }
