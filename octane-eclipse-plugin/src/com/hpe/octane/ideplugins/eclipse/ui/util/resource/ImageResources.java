@@ -26,8 +26,11 @@ import com.hpe.octane.ideplugins.eclipse.Activator;
 /**
  * Can be used as constants <br>
  * Fetch images for the plugin or for the test SWT shells used for debugging
+ * Enum values are generated, please use main method of this class, don't modify by hand
  */
 public enum ImageResources {
+    //generated, please use main method of this class, don't modify by hand
+    
     //@formatter:off
     ACTIVEITEM("activeitem.png"),
     ADD("add.png"),
@@ -39,6 +42,7 @@ public enum ImageResources {
     FAVICON("favicon.png"),
     FIELDS_OFF("fields-off.png"),
     FIELDS_ON("fields-on.png"),
+    INFO("info.png"),
     MICROFOCUS_LOGO("microfocus-logo.png"),
     MYWORK("mywork.png"),
     OCTANE_ICON_13X13("octane-icon-13x13.png"),

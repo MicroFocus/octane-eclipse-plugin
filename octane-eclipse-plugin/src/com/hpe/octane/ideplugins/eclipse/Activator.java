@@ -12,24 +12,37 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse;
 
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
+import com.hpe.adm.nga.sdk.authentication.Authentication;
 import com.hpe.adm.octane.ideplugins.services.connection.BasicConnectionSettingProvider;
 import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettings;
 import com.hpe.adm.octane.ideplugins.services.connection.HttpClientProvider;
+import com.hpe.adm.octane.ideplugins.services.connection.UserAuthentication;
+import com.hpe.adm.octane.ideplugins.services.connection.granttoken.GrantTokenAuthentication;
+import com.hpe.adm.octane.ideplugins.services.connection.granttoken.TokenPollingCompleteHandler;
+import com.hpe.adm.octane.ideplugins.services.connection.granttoken.TokenPollingInProgressHandler;
+import com.hpe.adm.octane.ideplugins.services.connection.granttoken.TokenPollingStartedHandler;
 import com.hpe.adm.octane.ideplugins.services.di.ServiceModule;
 import com.hpe.adm.octane.ideplugins.services.util.UrlParser;
+import com.hpe.octane.ideplugins.eclipse.preferences.LoginDialog;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PreferenceConstants;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditor;
@@ -50,7 +63,38 @@ public class Activator extends AbstractUIPlugin {
     private static Activator plugin;
 
     private static BasicConnectionSettingProvider settingsProviderInstance = new BasicConnectionSettingProvider();
-    private static ServiceModule serviceModuleInstance = new ServiceModule(settingsProviderInstance);
+    private static ServiceModule serviceModuleInstance;
+
+    private static LoginDialog loginDialog;
+
+    static {
+        TokenPollingStartedHandler pollingStartedHandler = loginPageUrl -> Display.getDefault().asyncExec(() -> {
+            IWorkbench wb = PlatformUI.getWorkbench();
+            IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+            Shell shell = win != null ? win.getShell() : null;
+            loginDialog = new LoginDialog(shell, loginPageUrl);
+            loginDialog.open();
+        });
+
+        TokenPollingInProgressHandler pollingInProgressHandler = (pollingStatus -> {            
+            if(loginDialog != null) {
+                Display.getDefault().syncExec(() -> {
+                    pollingStatus.shouldPoll = !loginDialog.wasClosed();
+                    loginDialog.setTitle(LoginDialog.DEFAULT_TITLE + " (waiting for session, timeout in: " + ((pollingStatus.timeoutTimeStamp - new Date().getTime()) / 1000) + ")");
+                });
+            }
+            return pollingStatus;
+        });
+
+        TokenPollingCompleteHandler pollingCompleteHandler = (tokenPollingCompletedStatus) ->
+        Display.getDefault().syncExec(() -> {
+            if(!loginDialog.wasClosed()) { 
+                loginDialog.close();
+            }
+        });
+
+        serviceModuleInstance = new ServiceModule(settingsProviderInstance, pollingStartedHandler, pollingInProgressHandler, pollingCompleteHandler);
+    }
 
     /**
      * The constructor
@@ -71,7 +115,7 @@ public class Activator extends AbstractUIPlugin {
     }
 
     public static HttpClientProvider geOctaneHttpClient() {
-        return serviceModuleInstance.geOctaneHttpClient();
+        return serviceModuleInstance.getOctaneHttpClient();
     }
 
     public static <T> T getInstance(Class<T> type) {
@@ -97,13 +141,24 @@ public class Activator extends AbstractUIPlugin {
         try {
             ISecurePreferences securePrefs = PluginPreferenceStorage.getSecurePrefs();
             String baseUrl = securePrefs.get(PreferenceConstants.OCTANE_SERVER_URL, "");
-            String username = securePrefs.get(PreferenceConstants.USERNAME, "");
-            String password = securePrefs.get(PreferenceConstants.PASSWORD, "");
-            if (StringUtils.isNotEmpty(baseUrl)) {
-                ConnectionSettings loadedConnectionSettings = UrlParser.resolveConnectionSettings(baseUrl, username, password);
-                settingsProviderInstance.setConnectionSettings(loadedConnectionSettings);
-            } else {
+            String isBrowserAuth = securePrefs.get(PreferenceConstants.IS_BROWSER_AUTH, Boolean.FALSE.toString());
+
+            if (StringUtils.isEmpty(baseUrl)) {
                 settingsProviderInstance.setConnectionSettings(new ConnectionSettings());
+            } else {
+
+                Authentication authentication;
+
+                if (Boolean.parseBoolean(isBrowserAuth)) {
+                    authentication = new GrantTokenAuthentication();
+                } else {
+                    String username = securePrefs.get(PreferenceConstants.USERNAME, "");
+                    String password = securePrefs.get(PreferenceConstants.PASSWORD, "");
+                    authentication = new UserAuthentication(username, password);
+                }
+
+                ConnectionSettings loadedConnectionSettings = UrlParser.resolveConnectionSettings(baseUrl, authentication);
+                settingsProviderInstance.setConnectionSettings(loadedConnectionSettings);
             }
 
         } catch (Exception e) {
