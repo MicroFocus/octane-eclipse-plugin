@@ -10,7 +10,7 @@
 		<artifactId>octane-eclipse-parent</artifactId>
 		<version>12.60.27-SNAPSHOT</version>
 	</parent>
-	<artifactId>octane-eclispse-update-site</artifactId>
+	<artifactId>octane-eclipse-update-site</artifactId>
 	<packaging>eclipse-update-site</packaging>
 
 	<build>
