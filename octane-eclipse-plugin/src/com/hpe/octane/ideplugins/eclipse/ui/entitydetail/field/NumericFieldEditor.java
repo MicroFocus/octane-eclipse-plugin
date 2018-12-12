@@ -53,7 +53,7 @@ public class NumericFieldEditor extends Composite implements FieldEditor {
         textField.addListener(SWT.Verify, new Listener() {
             @Override
             public void handleEvent(Event e) {
-                String string = e.text;
+                String string = textField.getText() + e.text;
 
                 if (string.isEmpty() || "-".equals(string)) {
                     return;
