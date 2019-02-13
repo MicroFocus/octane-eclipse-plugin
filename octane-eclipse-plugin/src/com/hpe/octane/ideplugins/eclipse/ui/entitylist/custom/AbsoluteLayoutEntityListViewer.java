@@ -278,7 +278,6 @@ public class AbsoluteLayoutEntityListViewer extends ScrolledComposite implements
             
             if(event.count == 2) {
             	changeSelection(-1);
-            	forceRedrawRows();
             }
             // Fire listeners
             MouseEvent mouseEvent = new MouseEvent(event);
@@ -287,7 +286,6 @@ public class AbsoluteLayoutEntityListViewer extends ScrolledComposite implements
             }
         } else {
             changeSelection(-1);
-            forceRedrawRows();
         }
 
     }
