@@ -29,7 +29,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 
 import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.ImageResources;
@@ -46,7 +48,8 @@ public class LoadingComposite extends Composite {
     private Image image;
     private ImageLoader loader;
     private LoadingPosition loadingPosition = LoadingPosition.CENTER;
-
+    private boolean stopAnimation = false;
+    private Composite parent;
     /**
      * Create the composite.
      * 
@@ -55,13 +58,13 @@ public class LoadingComposite extends Composite {
      */
     public LoadingComposite(Composite parent, int style) {
         super(parent, style);
+        
+        this.parent = parent;
+        
         setBackground(PlatformResourcesManager.getPlatformBackgroundColor());
-        Display display = parent.getDisplay();
-        GC shellGC = new GC(this);
-        Color shellBackground = getBackground();
-
+        
         loader = new ImageLoader();
-
+        
         try {
             imageDataArray = getImageDataForPlatform(loader);
         } catch (Exception ex1) {
@@ -78,7 +81,30 @@ public class LoadingComposite extends Composite {
                 return;
             }
         }
-
+        
+        addListener(SWT.Hide, new Listener() {
+            @Override
+            public void handleEvent(Event e) {
+                stopAnimation = true;
+            }
+        });
+        
+        addListener(SWT.Show, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                stopAnimation = false;
+                createAnimationThread();
+            }
+        });
+        
+        createAnimationThread();
+    }
+    
+    private void createAnimationThread() {
+        Display display = parent.getDisplay();
+        GC shellGC = new GC(this);
+        Color shellBackground = getBackground();
+        
         animateThread = new Thread() {
             @Override
             public void run() {
@@ -119,8 +145,7 @@ public class LoadingComposite extends Composite {
                      * one on the off-screen image before drawing it on the
                      * shell.
                      */
-                    int repeatCount = loader.repeatCount;
-                    while (loader.repeatCount == 0 || repeatCount > 0) {
+                    while (!stopAnimation) {
                         switch (imageData.disposalMethod) {
                             case SWT.DM_FILL_BACKGROUND:
                                 /*
@@ -213,13 +238,6 @@ public class LoadingComposite extends Composite {
                             Thread.sleep(ms);
                         } catch (InterruptedException e) {
                         }
-
-                        /*
-                         * If we have just drawn the last image, decrement the
-                         * repeat count and start again.
-                         */
-                        if (imageDataIndex == imageDataArray.length - 1)
-                            repeatCount--;
                     }
                 } catch (SWTException ignored) {
                     // Assuming thread was stopped because component was
@@ -234,7 +252,7 @@ public class LoadingComposite extends Composite {
                 }
             }
         };
-
+        
         animateThread.setDaemon(true);
         animateThread.start();
     }
