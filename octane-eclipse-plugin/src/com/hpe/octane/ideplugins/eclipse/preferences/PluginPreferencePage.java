@@ -112,7 +112,7 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
         textServerUrl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
         Label labelSharedSpace = new Label(parent, SWT.NONE);
-        labelSharedSpace.setText("Shared space:");
+        labelSharedSpace.setText("Space:");
 
         textSharedSpace = new Text(parent, SWT.BORDER);
         textSharedSpace.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
