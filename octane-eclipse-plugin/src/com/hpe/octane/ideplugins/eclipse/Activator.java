@@ -17,6 +17,7 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -35,7 +36,6 @@ import com.hpe.adm.nga.sdk.authentication.Authentication;
 import com.hpe.adm.octane.ideplugins.services.connection.BasicConnectionSettingProvider;
 import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettings;
 import com.hpe.adm.octane.ideplugins.services.connection.HttpClientProvider;
-import com.hpe.adm.octane.ideplugins.services.connection.UserAuthentication;
 import com.hpe.adm.octane.ideplugins.services.connection.granttoken.GrantTokenAuthentication;
 import com.hpe.adm.octane.ideplugins.services.connection.granttoken.TokenPollingCompleteHandler;
 import com.hpe.adm.octane.ideplugins.services.connection.granttoken.TokenPollingInProgressHandler;
@@ -50,6 +50,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditorInput;
 import com.hpe.octane.ideplugins.eclipse.ui.search.SearchEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.snake.KonamiCodeListener;
 import com.hpe.octane.ideplugins.eclipse.ui.snake.SnakeEditor;
+import com.hpe.octane.ideplugins.eclipse.util.EncodedAuthentication;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -153,8 +154,17 @@ public class Activator extends AbstractUIPlugin {
                     authentication = new GrantTokenAuthentication();
                 } else {
                     String username = securePrefs.get(PreferenceConstants.USERNAME, "");
-                    String password = securePrefs.get(PreferenceConstants.PASSWORD, "");
-                    authentication = new UserAuthentication(username, password);
+                    authentication = new EncodedAuthentication(username) {
+
+                        @Override
+                        public String getPassword() {
+                            try {
+                                return securePrefs.get(PreferenceConstants.PASSWORD, "");
+                            } catch (StorageException e) {
+                                return "";
+                            }
+                        }
+                    };
                 }
 
                 ConnectionSettings loadedConnectionSettings = UrlParser.resolveConnectionSettings(baseUrl, authentication);
@@ -179,7 +189,7 @@ public class Activator extends AbstractUIPlugin {
             }
 
             // Clear selected fields for detail view
-            // One octane can have differnt fields that the other
+            // One octane can have different fields that the other
             PluginPreferenceStorage.resetShownEntityFields();
         });
 
