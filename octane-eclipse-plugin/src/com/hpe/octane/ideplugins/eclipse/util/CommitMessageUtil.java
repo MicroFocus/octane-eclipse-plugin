@@ -46,7 +46,7 @@ public class CommitMessageUtil {
             protected IStatus run(IProgressMonitor monitor) {
                 EntityModelEditorInput currentItem;
                 
-                if (!entityModel.equals(null)) {
+                if (entityModel != null) {
                     currentItem = new EntityModelEditorInput(entityModel);
                 } else { 
                     currentItem = PluginPreferenceStorage.getActiveItem();    
@@ -128,7 +128,7 @@ public class CommitMessageUtil {
                     }
 
                     Display.getDefault().asyncExec(() -> {
-                        new InfoPopup("Failed to generate commit message", messageBuilder.toString(), 300, 100).open();
+                        new InfoPopup("Failed to generate commit message", messageBuilder.toString(), 300, 200).open();
                     });
                 }
 
