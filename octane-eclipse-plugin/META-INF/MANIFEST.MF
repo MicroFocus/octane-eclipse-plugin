@@ -38,7 +38,6 @@ Bundle-ClassPath: .,
  lib/google-http-client.jar,
  lib/google-oauth-client.jar,
  lib/gson.jar,
- lib/guava-jdk5.jar,
  lib/guava.jar,
  lib/guice.jar,
  lib/httpclient.jar,
@@ -55,6 +54,11 @@ Bundle-ClassPath: .,
  target/,
  lib/sdk-extension-src.jar,
  lib/slf4j-api.jar,
- lib/octane-plugin-common.jar
+ lib/octane-plugin-common.jar,
+ lib/google-http-client-apache-v2.jar,
+ lib/grpc-context.jar,
+ lib/j2objc-annotations.jar,
+ lib/opencensus-api.jar,
+ lib/opencensus-contrib-http-util.jar
 
 
