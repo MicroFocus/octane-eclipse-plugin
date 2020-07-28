@@ -228,6 +228,13 @@ public class FieldEditorFactory {
                 }
             }
             
+            //Check if the workspace user is active
+            if (Entity.WORKSPACE_USER == entity) {
+            	QueryBuilder activityQb = 
+            			Query.statement(EntityFieldsConstants.FIELD_ACTIVITY_LEVEL, QueryMethod.EqualTo, 0);
+            	qb = qb != null ? qb.and(activityQb) : activityQb;
+            }
+            
             return entityService.findEntities(entity, qb, null, null, null, COMBO_BOX_ENTITY_LIMIT);
         };  
     }
