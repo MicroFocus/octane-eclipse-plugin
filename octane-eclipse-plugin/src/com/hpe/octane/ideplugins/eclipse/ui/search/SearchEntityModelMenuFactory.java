@@ -88,30 +88,6 @@ public class SearchEntityModelMenuFactory implements EntityModelMenuFactory {
                 ImageResources.BROWSER_16X16.getImage(),
                 () -> OpenInBrowser.openEntityInBrowser(entityModel));
 
-        if (PlatformUI.getWorkbench().getBrowserSupport().isInternalWebBrowserAvailable()) {
-            addMenuItem(
-                    menu,
-                    "View in browser (Eclipse)",
-                    ImageResources.BROWSER_16X16.getImage(),
-                    () -> {
-                        Entity ownerEntityType = null;
-                        Integer ownerEntityId = null;
-                        if (entityType == Entity.COMMENT) {
-                            ReferenceFieldModel owner = (ReferenceFieldModel) Util.getContainerItemForCommentModel(entityModel);
-                            ownerEntityType = Entity.getEntityType(owner.getValue());
-                            ownerEntityId = Integer.valueOf(Util.getUiDataFromModel(owner, "id"));
-                        }
-                        URI uri = UrlParser.createEntityWebURI(
-                                Activator.getConnectionSettings(),
-                                entityType == Entity.COMMENT ? ownerEntityType : entityType,
-                                entityType == Entity.COMMENT ? ownerEntityId : entityId);
-                        try {
-                            PlatformUI.getWorkbench().getBrowserSupport().createBrowser(uri.toString()).openURL((uri.toURL()));
-                        } catch (PartInitException | MalformedURLException e) {
-                            e.printStackTrace();
-                        }
-                    });
-        }
         if (EntityFieldsConstants.supportedEntitiesThatAllowDetailView.contains(entityType)) {
             new MenuItem(menu, SWT.SEPARATOR);
         }
