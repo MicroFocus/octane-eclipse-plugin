@@ -72,6 +72,7 @@ public class EntityFieldsConstants {
     public static final String FIELD_ESTIMATED_HOURS = "estimated_hours";
     public static final String FIELD_AUTOMATION_STATUS = "automation_status";
     public static final String FIELD_RANK = "rank";
+    public static final String FIELD_ACTIVITY_LEVEL = "activity_level";
 
     // inner user prop
     public static final String FIELD_FULL_NAME = "full_name";
