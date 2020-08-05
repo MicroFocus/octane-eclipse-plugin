@@ -239,7 +239,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
             }
         }
 
-        if (myWorkService.isAddingToMyWorkSupported(entityType) && MyWorkUtil.isUserItemDismissible(userItem)) {
+        if (entityType == Entity.COMMENT || (myWorkService.isAddingToMyWorkSupported(entityType) && MyWorkUtil.isUserItemDismissible(userItem))) {
             new MenuItem(menu, SWT.SEPARATOR);
             addMenuItem(
                     menu,
@@ -267,6 +267,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
                         });
                     });
         }
+        
         return menu;
     }
 
