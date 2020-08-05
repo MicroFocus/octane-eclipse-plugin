@@ -18,12 +18,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
 import com.hpe.adm.nga.sdk.model.EntityModel;
+import com.hpe.adm.octane.ideplugins.services.CommentService;
 import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkService;
 import com.hpe.octane.ideplugins.eclipse.Activator;
 
 public class DismissItemJob extends Job {
 
     MyWorkService myWorkService = Activator.getInstance(MyWorkService.class);
+    private CommentService commentService = Activator.getInstance(CommentService.class);
     EntityModel entityModel;
     private boolean wasRemoved = false;
 
@@ -35,7 +37,12 @@ public class DismissItemJob extends Job {
     @Override
     protected IStatus run(IProgressMonitor monitor) {
         monitor.beginTask(getName(), IProgressMonitor.UNKNOWN);
-        wasRemoved = myWorkService.removeFromMyWork(entityModel);
+        if (entityModel.getType().equals("comment")) {
+        	wasRemoved = commentService.dismissComment(entityModel);
+        } 
+        else {
+        	wasRemoved = myWorkService.removeFromMyWork(entityModel);
+        }
         monitor.done();
         return Status.OK_STATUS;
     }
