@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.jobs.Job;
 
 import com.hpe.adm.nga.sdk.model.EntityModel;
 import com.hpe.adm.octane.ideplugins.services.CommentService;
+import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
 import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkService;
 import com.hpe.octane.ideplugins.eclipse.Activator;
 
@@ -27,17 +28,19 @@ public class DismissItemJob extends Job {
     MyWorkService myWorkService = Activator.getInstance(MyWorkService.class);
     private CommentService commentService = Activator.getInstance(CommentService.class);
     EntityModel entityModel;
+    Entity entityType;
     private boolean wasRemoved = false;
 
-    public DismissItemJob(String name, EntityModel entityModel) {
+    public DismissItemJob(String name, EntityModel entityModel, Entity entityType) {
         super(name);
         this.entityModel = entityModel;
+        this.entityType = entityType;
     }
 
     @Override
     protected IStatus run(IProgressMonitor monitor) {
         monitor.beginTask(getName(), IProgressMonitor.UNKNOWN);
-        if (entityModel.getType().equals("comment")) {
+        if (entityType == Entity.COMMENT) {
         	wasRemoved = commentService.dismissComment(entityModel);
         } 
         else {

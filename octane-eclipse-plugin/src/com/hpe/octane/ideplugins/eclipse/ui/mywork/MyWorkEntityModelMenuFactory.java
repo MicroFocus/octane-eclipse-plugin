@@ -246,7 +246,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
                     "Dismiss",
                     ImageResources.DISMISS.getImage(),
                     () -> {
-                        DismissItemJob job = new DismissItemJob("Dismissing item from \"My Work...\"", entityModel);
+                        DismissItemJob job = new DismissItemJob("Dismissing item from \"My Work...\"", entityModel, entityType);
                         job.schedule();
                         job.addJobChangeListener(new JobChangeAdapter() {
                             @Override
