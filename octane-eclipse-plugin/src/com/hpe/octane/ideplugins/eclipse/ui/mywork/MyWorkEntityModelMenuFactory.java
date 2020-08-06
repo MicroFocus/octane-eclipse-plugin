@@ -239,14 +239,14 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
             }
         }
 
-        if (myWorkService.isAddingToMyWorkSupported(entityType) && MyWorkUtil.isUserItemDismissible(userItem)) {
+        if (entityType == Entity.COMMENT || myWorkService.isAddingToMyWorkSupported(entityType) && MyWorkUtil.isUserItemDismissible(userItem)) {
             new MenuItem(menu, SWT.SEPARATOR);
             addMenuItem(
                     menu,
                     "Dismiss",
                     ImageResources.DISMISS.getImage(),
                     () -> {
-                        DismissItemJob job = new DismissItemJob("Dismissing item from \"My Work...\"", entityModel);
+                        DismissItemJob job = new DismissItemJob("Dismissing item from \"My Work...\"", entityModel, entityType);
                         job.schedule();
                         job.addJobChangeListener(new JobChangeAdapter() {
                             @Override
