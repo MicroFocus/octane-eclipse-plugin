@@ -211,8 +211,8 @@ public class FieldEditorFactory {
                      "*" + searchQuery + "*");
             }
            
-            //Restrict sprint dropdown to current release, if there's no current release, display no
-            if(Entity.SPRINT == entity) {
+            //Restrict sprint/milestone dropdown to current release, if there's no current release, display no
+            if(Entity.SPRINT == entity || Entity.MILESTONE == entity) {
                 if(entityModelWrapper.hasValue(EntityFieldsConstants.FIELD_RELEASE)) {
                     ReferenceFieldModel releaseFieldModel = (ReferenceFieldModel) entityModelWrapper.getValue(EntityFieldsConstants.FIELD_RELEASE);
                     String releaseId = releaseFieldModel.getValue().getId();
