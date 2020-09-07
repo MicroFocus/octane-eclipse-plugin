@@ -235,7 +235,20 @@ public class FieldEditorFactory {
             	qb = qb != null ? qb.and(activityQb) : activityQb;
             }
             
-            return entityService.findEntities(entity, qb, null, null, null, COMBO_BOX_ENTITY_LIMIT);
+            //Check if the entity is milestone, so the order of the items in the combobox will be the same as in Octane
+            String sortingFields;
+            boolean sortingOrderByAsc;
+            switch (entity) {
+                case MILESTONE:
+                    sortingFields = "release,date,name";
+                    sortingOrderByAsc = false;
+                    break;
+                default:
+                    sortingFields = "id";
+                    sortingOrderByAsc = true;
+            }
+
+            return entityService.findEntities(entity, qb, null, null, null, COMBO_BOX_ENTITY_LIMIT, sortingFields, sortingOrderByAsc);
         };  
     }
     
