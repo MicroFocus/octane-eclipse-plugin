@@ -62,6 +62,7 @@ public class EntityIconFactory {
         entityColorMap.put(Entity.AUTOMATED_TEST, new Color(Display.getCurrent(), 186, 71, 226));
         entityColorMap.put(Entity.COMMENT, new Color(Display.getCurrent(), 253, 225, 89));
         entityColorMap.put(Entity.REQUIREMENT, new Color(Display.getCurrent(), 11, 142, 172));
+        entityColorMap.put(Entity.BDD_SCENARIO, new Color(Display.getCurrent(),117,218, 77));
     }
 
     public EntityIconFactory() {
