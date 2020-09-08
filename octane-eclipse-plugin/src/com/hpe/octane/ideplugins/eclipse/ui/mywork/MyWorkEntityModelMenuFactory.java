@@ -125,7 +125,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
 
         new MenuItem(menu, SWT.SEPARATOR);
 
-        if (entityType != Entity.COMMENT) {
+        if (entityType != Entity.COMMENT && entityType != Entity.BDD_SCENARIO) {
             addMenuItem(
                     menu,
                     "View details",
@@ -159,7 +159,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
             }
         }
 
-        if (entityType == Entity.GHERKIN_TEST) {
+        if (entityType == Entity.GHERKIN_TEST || entityType == Entity.BDD_SCENARIO) {
             addMenuItem(
                     menu,
                     "Download script",
@@ -168,10 +168,10 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
                         File parentFolder = chooseParentFolder();
 
                         if (parentFolder != null) {
-                            long gherkinTestId = Long.parseLong(entityModel.getValue("id").getValue().toString());
-                            String gherkinTestName = entityModel.getValue("name").getValue().toString();
-                            String scriptFileName = gherkinTestName + "-" +
-                                    gherkinTestId + ".feature";
+                            long testId = Long.parseLong(entityModel.getValue("id").getValue().toString());
+                            String testName = entityModel.getValue("name").getValue().toString();
+                            String scriptFileName = testName + "-" +
+                                    testId + ".feature";
                             File scriptFile = new File(parentFolder.getPath() + File.separator +
                                     scriptFileName);
                             boolean shouldDownloadScript = true;
@@ -187,7 +187,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
 
                             if (shouldDownloadScript) {
                                 BusyIndicator.showWhile(Display.getCurrent(), () -> {
-                                    String content = scriptService.getGherkinTestScriptContent(gherkinTestId);
+                                    String content = scriptService.getTestScriptContent(testId);
                                     createTestScriptFile(parentFolder.getPath(), scriptFileName,
                                             content);
 
