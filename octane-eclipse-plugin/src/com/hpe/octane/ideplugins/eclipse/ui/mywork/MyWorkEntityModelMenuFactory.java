@@ -14,61 +14,27 @@ package com.hpe.octane.ideplugins.eclipse.ui.mywork;
 
 import static com.hpe.adm.octane.ideplugins.services.util.Util.getUiDataFromModel;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-
-import org.eclipse.core.filesystem.EFS;
-import org.eclipse.core.filesystem.IFileStore;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IFileEditorMapping;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.internal.registry.EditorDescriptor;
-import org.eclipse.ui.internal.registry.EditorRegistry;
-import org.eclipse.ui.internal.registry.FileEditorMapping;
 
 import com.hpe.adm.nga.sdk.model.EntityModel;
-import com.hpe.adm.nga.sdk.model.ReferenceFieldModel;
 import com.hpe.adm.octane.ideplugins.services.EntityService;
 import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
 import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkService;
 import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkUtil;
-import com.hpe.adm.octane.ideplugins.services.nonentity.DownloadScriptService;
-import com.hpe.adm.octane.ideplugins.services.util.UrlParser;
 import com.hpe.adm.octane.ideplugins.services.util.Util;
 import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.filter.EntityListData;
@@ -77,6 +43,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditorInput;
 import com.hpe.octane.ideplugins.eclipse.ui.entitylist.EntityModelMenuFactory;
 import com.hpe.octane.ideplugins.eclipse.ui.mywork.job.DismissItemJob;
+import com.hpe.octane.ideplugins.eclipse.ui.util.DownloadScriptUtil;
 import com.hpe.octane.ideplugins.eclipse.ui.util.InfoPopup;
 import com.hpe.octane.ideplugins.eclipse.ui.util.OpenInBrowser;
 import com.hpe.octane.ideplugins.eclipse.ui.util.icon.EntityIconFactory;
@@ -89,7 +56,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
     
     private static EntityService entityService = Activator.getInstance(EntityService.class);
     private static MyWorkService myWorkService = Activator.getInstance(MyWorkService.class);
-    private static DownloadScriptService scriptService = Activator.getInstance(DownloadScriptService.class);
+    private static DownloadScriptUtil downloadScriptUtil = Activator.getInstance(DownloadScriptUtil.class);
     private EntityListData entityListData;
 
     public MyWorkEntityModelMenuFactory(EntityListData entityListData) {
@@ -165,37 +132,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
                     "Download script",
                     ImageResources.DOWNLOAD.getImage(),
                     () -> {
-                        File parentFolder = chooseParentFolder();
-
-                        if (parentFolder != null) {
-                            long testId = Long.parseLong(entityModel.getValue("id").getValue().toString());
-                            String testName = entityModel.getValue("name").getValue().toString();
-                            String scriptFileName = testName + "-" +
-                                    testId + ".feature";
-                            File scriptFile = new File(parentFolder.getPath() + File.separator +
-                                    scriptFileName);
-                            boolean shouldDownloadScript = true;
-
-                            if (scriptFile.exists()) {
-                                MessageBox messageBox = new MessageBox(menu.getShell(), SWT.ICON_QUESTION |
-                                        SWT.YES | SWT.NO);
-                                messageBox.setMessage("Selected destination folder already contains a file named \"" +
-                                        scriptFileName + "\". Do you want to overwrite this file?");
-                                messageBox.setText("Confirm file overwrite");
-                                shouldDownloadScript = messageBox.open() == SWT.YES;
-                            }
-
-                            if (shouldDownloadScript) {
-                                BusyIndicator.showWhile(Display.getCurrent(), () -> {
-                                    String content = scriptService.getTestScriptContent(testId);
-                                    createTestScriptFile(parentFolder.getPath(), scriptFileName,
-                                            content);
-
-                                    associateTextEditorToScriptFile(scriptFile);
-                                    openInEditor(scriptFile);
-                                });
-                            }
-                        }
+                    	downloadScriptUtil.downloadScriptForTest(entityModel, menu);
                     });
         }
 
@@ -268,82 +205,6 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
                     });
         }
         return menu;
-    }
-
-    private void associateTextEditorToScriptFile(File file) {
-        EditorRegistry editorRegistry = (EditorRegistry) PlatformUI.getWorkbench().getEditorRegistry();
-        IEditorDescriptor editorDescriptor = editorRegistry.getDefaultEditor(file.getName());
-        if (editorDescriptor == null) {
-            String extension = "feature";
-            String editorId = EditorsUI.DEFAULT_TEXT_EDITOR_ID;
-
-            EditorDescriptor editor = (EditorDescriptor) editorRegistry.findEditor(editorId);
-            FileEditorMapping mapping = new FileEditorMapping(extension);
-            mapping.addEditor(editor);
-            mapping.setDefaultEditor(editor);
-
-            IFileEditorMapping[] mappings = editorRegistry.getFileEditorMappings();
-            FileEditorMapping[] newMappings = new FileEditorMapping[mappings.length + 1];
-            for (int i = 0; i < mappings.length; i++) {
-                newMappings[i] = (FileEditorMapping) mappings[i];
-            }
-            newMappings[mappings.length] = mapping;
-            editorRegistry.setFileEditorMappings(newMappings);
-        }
-    }
-
-    private void openInEditor(File file) {
-        IPath path = new Path(file.getPath());
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-
-        IFileStore fileStore = EFS.getLocalFileSystem().getStore(file.toURI());
-        try {
-            // open as external file
-            IDE.openEditorOnFileStore(page, fileStore);
-            refreshFile(file);
-        } catch (PartInitException e) {
-            Activator.getDefault().getLog().log(new Status(Status.ERROR, Activator.PLUGIN_ID,
-                    Status.ERROR, "Script file could not be opened in the editor", e));
-        }
-    }
-
-    private void refreshFile(File file) {
-        IPath path = new Path(file.getPath());
-        IFile eclipseFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
-        if (eclipseFile != null) {
-            try {
-                eclipseFile.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-            } catch (CoreException e) {
-                Activator.getDefault().getLog().log(new Status(Status.ERROR, Activator.PLUGIN_ID,
-                        Status.ERROR, "Script file could not be refreshed", e));
-            }
-        }
-    }
-
-    private File chooseParentFolder() {
-        DirectoryDialog dialog = new DirectoryDialog(Display.getDefault().getActiveShell(), SWT.OPEN);
-        dialog.setText("Parent folder selection");
-        dialog.setMessage("Select the folder where the script file should be downloaded");
-        dialog.setFilterPath(ResourcesPlugin.getWorkspace().getRoot().getLocation().toString());
-        String result = dialog.open();
-        return result == null ? null : new File(result);
-    }
-
-    private File createTestScriptFile(String path, String fileName, String script) {
-        File f = new File(path + "/" + fileName.replaceAll("[\\\\/:?*\"<>|]", ""));
-        try {
-            f.createNewFile();
-            if (script != null) {
-                Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8));
-                out.append(script);
-                out.flush();
-                out.close();
-            }
-        } catch (IOException e) {
-            Activator.getDefault().getLog().log(new Status(Status.ERROR, Activator.PLUGIN_ID,
-                    Status.ERROR, "Could not create or write script file in " + path, e));
-        }
-        return f;
     }
 
     private static MenuItem addMenuItem(Menu menu, String text, Image image, Runnable selectAction) {

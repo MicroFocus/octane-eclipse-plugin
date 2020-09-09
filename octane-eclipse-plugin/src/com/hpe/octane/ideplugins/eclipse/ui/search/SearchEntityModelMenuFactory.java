@@ -45,6 +45,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditorInput;
 import com.hpe.octane.ideplugins.eclipse.ui.entitylist.EntityModelMenuFactory;
 import com.hpe.octane.ideplugins.eclipse.ui.mywork.MyWorkView;
 import com.hpe.octane.ideplugins.eclipse.ui.mywork.job.AddToMyWorkJob;
+import com.hpe.octane.ideplugins.eclipse.ui.util.DownloadScriptUtil;
 import com.hpe.octane.ideplugins.eclipse.ui.util.InfoPopup;
 import com.hpe.octane.ideplugins.eclipse.ui.util.OpenInBrowser;
 import com.hpe.octane.ideplugins.eclipse.ui.util.icon.EntityIconFactory;
@@ -55,6 +56,7 @@ public class SearchEntityModelMenuFactory implements EntityModelMenuFactory {
 
     // private static final ILog logger = Activator.getDefault().getLog();
     private static MyWorkService myWorkService = Activator.getInstance(MyWorkService.class);
+    private static DownloadScriptUtil downloadScriptUtil = Activator.getInstance(DownloadScriptUtil.class);
 
     public SearchEntityModelMenuFactory() {
     }
@@ -98,6 +100,16 @@ public class SearchEntityModelMenuFactory implements EntityModelMenuFactory {
                     "View details",
                     EntityIconFactory.getInstance().getImageForEditorPart(entityType, 16, 7),
                     () -> openDetailTab(entityId, entityType));
+        }
+
+        if (entityType == Entity.GHERKIN_TEST || entityType == Entity.BDD_SCENARIO) {
+            addMenuItem(
+                    menu,
+                    "Download script",
+                    ImageResources.DOWNLOAD.getImage(),
+                    () -> {
+                    	downloadScriptUtil.downloadScriptForTest(entityModel, menu);
+                    });
         }
 
         if (myWorkService.isAddingToMyWorkSupported(entityType)) {
