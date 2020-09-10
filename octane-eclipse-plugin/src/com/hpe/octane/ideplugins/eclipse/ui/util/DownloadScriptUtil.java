@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -34,23 +35,38 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.registry.EditorDescriptor;
 import org.eclipse.ui.internal.registry.EditorRegistry;
 import org.eclipse.ui.internal.registry.FileEditorMapping;
+import org.jsoup.Jsoup;
 
 import com.hpe.adm.nga.sdk.model.EntityModel;
+import com.hpe.adm.octane.ideplugins.services.EntityService;
+import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
 import com.hpe.adm.octane.ideplugins.services.nonentity.DownloadScriptService;
+import com.hpe.adm.octane.ideplugins.services.util.Util;
 import com.hpe.octane.ideplugins.eclipse.Activator;
 
 public class DownloadScriptUtil {
 	
     private static DownloadScriptService scriptService = Activator.getInstance(DownloadScriptService.class);
+    private static EntityService entityService = Activator.getInstance(EntityService.class);
     
     public void downloadScriptForTest(EntityModel entityModel, Menu menu) {
     	File parentFolder = chooseParentFolder();
 
         if (parentFolder != null) {
-            long testId = Long.parseLong(entityModel.getValue("id").getValue().toString());
-            String testName = entityModel.getValue("name").getValue().toString();
-            String scriptFileName = testName + "-" +
-                    testId + ".feature";
+        	long testId = Long.parseLong(entityModel.getValue("id").getValue().toString());
+            String testName, scriptFileName;
+
+            if(Entity.getEntityType(entityModel) == Entity.BDD_SCENARIO) {
+                EntityModel bddScenario = entityService.findEntity(Entity.BDD_SCENARIO, testId, Collections.singleton("bdd_spec"));
+                testName = Util.getUiDataFromModel(bddScenario.getValue("bdd_spec"));
+                String bddSpecId = Util.getUiDataFromModel(bddScenario.getValue("bdd_spec"), "id");
+                scriptFileName = testName + "_" + bddSpecId + ".feature";
+            } else {
+                testName = entityModel.getValue("name").getValue().toString();
+                testName = removeHtmlTags(testName);
+                scriptFileName = testName + "_" + testId + ".feature";
+            }
+            
             File scriptFile = new File(parentFolder.getPath() + File.separator +
                     scriptFileName);
             boolean shouldDownloadScript = true;
@@ -151,5 +167,9 @@ public class DownloadScriptUtil {
                     Status.ERROR, "Could not create or write script file in " + path, e));
         }
         return f;
+    }
+
+    private String removeHtmlTags(String testName) {
+        return Jsoup.parse(testName).text();
     }
 }
