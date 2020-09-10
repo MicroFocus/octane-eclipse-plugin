@@ -90,8 +90,6 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
                 ImageResources.BROWSER_16X16.getImage(),
                 () -> OpenInBrowser.openEntityInBrowser(entityModel));
 
-        new MenuItem(menu, SWT.SEPARATOR);
-
         if (entityType != Entity.COMMENT && entityType != Entity.BDD_SCENARIO) {
             addMenuItem(
                     menu,
