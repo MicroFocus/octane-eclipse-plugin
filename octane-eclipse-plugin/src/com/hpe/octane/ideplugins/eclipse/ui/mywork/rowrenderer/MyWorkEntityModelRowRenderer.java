@@ -161,7 +161,6 @@ public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
         
         fieldSetterMap.put(Entity.BDD_SCENARIO, asList(
                 // top
-                fsPhase,
                 fsOwner,
                 // bottom
                 fsAutomationStatus,
