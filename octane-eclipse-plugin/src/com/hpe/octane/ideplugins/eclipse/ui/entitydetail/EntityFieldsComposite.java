@@ -153,7 +153,6 @@ public class EntityFieldsComposite extends Composite {
         sectionClientRight.setLayout(new GridLayout(2, false));
         sectionClientRight.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 
-        // Skip the description field because it's in another UI component
         // (below other fields)
         Iterator<String> iterator = shownFields.iterator();
 
@@ -164,6 +163,10 @@ public class EntityFieldsComposite extends Composite {
 
         for (int i = 0; i < shownFields.size(); i++) {
             String fieldName = iterator.next();
+
+            // Skip the description field because it's in another UI component
+            if (fieldName.equals(EntityFieldsConstants.FIELD_DESCRIPTION))
+            	continue;
 
             // Check if the field is valid (exists) before trying to show it
             // If the field name for the given type doesn't return any metadata,
