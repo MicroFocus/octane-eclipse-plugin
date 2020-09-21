@@ -174,7 +174,7 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
             }
         }
 
-        if (entityType == Entity.COMMENT || myWorkService.isAddingToMyWorkSupported(entityType) && MyWorkUtil.isUserItemDismissible(userItem)) {
+        if (entityType == Entity.COMMENT || myWorkService.isAddingToMyWorkSupported(entityType)) {
             new MenuItem(menu, SWT.SEPARATOR);
             addMenuItem(
                     menu,
