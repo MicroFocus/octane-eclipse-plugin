@@ -212,11 +212,6 @@ public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
         rowComposite.setForeground(PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry()
                 .get(JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR));
 
-        // Show dismissible if needed
-        if (MyWorkUtil.isUserItemDismissible(userItem)) {
-            rowComposite.addDetails("", "Dismissible", DetailsPosition.BOTTOM);
-        }
-
         EntityModelEditorInput activeItem = null;
         try {
             activeItem = PluginPreferenceStorage.getActiveItem();
