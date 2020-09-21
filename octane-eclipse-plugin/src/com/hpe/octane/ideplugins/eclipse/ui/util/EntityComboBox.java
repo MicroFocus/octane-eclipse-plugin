@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -44,7 +45,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -60,12 +63,16 @@ public class EntityComboBox extends Composite {
     private Point maxSize = new Point(600, 400);
     private Point minSize = new Point(200, 200);
 
+    private final Listener globalScrollListener;
+    private static boolean isPopupHovered = false;
+    
     private static final MouseTrackAdapter focusMouseTrackAdapter = new MouseTrackAdapter() {
         @Override
         public void mouseEnter(MouseEvent mouseEvent) {
             Control control = (Control) mouseEvent.getSource();
             control.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
             control.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION_TEXT));
+            isPopupHovered = true;
         }
 
         @Override
@@ -73,6 +80,7 @@ public class EntityComboBox extends Composite {
             Control control = (Control) mouseEvent.getSource();
             control.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
             control.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_FOREGROUND));
+            isPopupHovered = false;
         }
     };
 
@@ -154,6 +162,18 @@ public class EntityComboBox extends Composite {
                 displayEntities(textSearch.getText());
             }
         });
+
+        globalScrollListener = new Listener() {
+			
+			@Override
+			public void handleEvent(Event event) {
+				if (!isPopupHovered && shell != null) {
+					shell.dispose();
+				}
+			}
+		};
+        
+        Display.getDefault().addFilter(SWT.MouseWheel, globalScrollListener);
     }
 
     /**
@@ -387,7 +407,19 @@ public class EntityComboBox extends Composite {
         shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
         shell.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_FOREGROUND));
         shell.setBackgroundMode(SWT.INHERIT_FORCE);
-
+        
+        shell.addListener(SWT.MouseEnter, e -> {
+        	isPopupHovered = true;
+        });
+        
+        shell.removeListener(SWT.MouseExit, e -> {
+        	isPopupHovered = false;
+        });
+        
+        shell.addListener(SWT.Dispose, e -> {
+        	Display.getDefault().removeFilter(SWT.MouseWheel, globalScrollListener);
+        });
+        
         textSearch = new Text(shell, SWT.BORDER);
         textSearch.setMessage("Search");
         textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
