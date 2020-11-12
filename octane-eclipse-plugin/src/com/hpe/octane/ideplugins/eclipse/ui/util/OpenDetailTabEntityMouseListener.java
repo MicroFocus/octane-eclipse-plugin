@@ -52,7 +52,7 @@ public class OpenDetailTabEntityMouseListener implements EntityMouseListener {
                 entityModel = (EntityModel) Util.getContainerItemForCommentModel(entityModel).getValue();
             }
             
-            if(Entity.FEATURE == Entity.getEntityType(entityModel) || Entity.EPIC == Entity.getEntityType(entityModel) || Entity.AUTOMATED_TEST_RUN == Entity.getEntityType(entityModel)) {
+            if(Entity.FEATURE == Entity.getEntityType(entityModel) || Entity.EPIC == Entity.getEntityType(entityModel) || Entity.AUTOMATED_TEST_RUN == Entity.getEntityType(entityModel) || Entity.BDD_SCENARIO == Entity.getEntityType(entityModel)) {
             	entityService.openInBrowser(entityModel);
             } else {
 	            Long id = Long.parseLong(entityModel.getValue("id").getValue().toString());
