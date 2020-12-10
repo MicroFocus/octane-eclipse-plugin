@@ -65,7 +65,7 @@ public class EntityIconFactory {
         entityColorMap.put(Entity.BDD_SCENARIO, new Color(Display.getCurrent(),117,218, 77));
     }
 
-    public EntityIconFactory() {
+    private EntityIconFactory() {
         this.entityLabelService = Activator.getInstance(EntityLabelService.class);
         ConnectionSettingsProvider connectionSettingsProvider = Activator.getInstance(ConnectionSettingsProvider.class);
         
@@ -153,6 +153,11 @@ public class EntityIconFactory {
         
         gc.drawString(initials, fontX, fontY, true);
         gc.dispose();
+    }
+    
+    public void clearImageDataCache() {
+    	imageCacheForEditorPart.clear();
+    	imageDataCache.clear();
     }
     
     public Image getImageForEditorPart(Entity entity, int iconSize, int fontSize) {
