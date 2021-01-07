@@ -149,6 +149,7 @@ public class SearchEditor extends EditorPart {
                         if (entityData.getOriginalEntityList().size() == 0) {
                             container.showControl(noSearchResultsComposite);
                         } else {
+                        	entityListComposite.refreshIcons();
                             container.showControl(entityListComposite);
                         }
                     }

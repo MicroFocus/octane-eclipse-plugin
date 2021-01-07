@@ -50,6 +50,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityModelEditorInput;
 import com.hpe.octane.ideplugins.eclipse.ui.search.SearchEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.snake.KonamiCodeListener;
 import com.hpe.octane.ideplugins.eclipse.ui.snake.SnakeEditor;
+import com.hpe.octane.ideplugins.eclipse.ui.util.icon.EntityIconFactory;
 import com.hpe.octane.ideplugins.eclipse.util.EncodedAuthentication;
 
 /**
@@ -89,6 +90,8 @@ public class Activator extends AbstractUIPlugin {
 
         TokenPollingCompleteHandler pollingCompleteHandler = (tokenPollingCompletedStatus) ->
         Display.getDefault().syncExec(() -> {
+        	EntityIconFactory.getInstance().clearImageDataCache();
+        	
             if(!loginDialog.wasClosed()) { 
                 loginDialog.close();
             }
