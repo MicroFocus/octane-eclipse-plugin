@@ -140,4 +140,7 @@ public class ReferenceFieldEditor extends Composite implements FieldEditor {
         entityComboBox.setSelectedEntities(entityModel);
     }
 
+	public void closeEntityComboBox() {
+		entityComboBox.closeAndDisposeShell(); 
+	}
 }

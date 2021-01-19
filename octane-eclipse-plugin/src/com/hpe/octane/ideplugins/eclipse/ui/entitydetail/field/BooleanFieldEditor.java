@@ -85,5 +85,9 @@ public class BooleanFieldEditor extends Composite implements FieldEditor {
             booleanEntityComboBox.setSelectedEntity(ENTITY_FALSE);
         }
     }
+
+	public void closeEntityComboBox() {
+		booleanEntityComboBox.closeAndDisposeShell(); 
+	}
     
 }
