@@ -93,7 +93,6 @@ public class EntityComboBox extends Composite {
     private boolean isLoadingIndicatorEnabled = true;
     private boolean isFilteringEnabled = true;
     
-    public static ArrayList<EntityComboBox> entityComboBoxInstances = new ArrayList<EntityComboBox>();
     
     /**
      * Floating window that appears
