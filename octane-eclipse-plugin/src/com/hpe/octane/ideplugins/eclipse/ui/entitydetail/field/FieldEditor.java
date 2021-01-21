@@ -18,6 +18,4 @@ import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 
 public interface FieldEditor extends Drawable {
     public void setField(EntityModelWrapper entityModel, String fieldName);
-    
-    public default void closeEntityComboBox() {};
 }

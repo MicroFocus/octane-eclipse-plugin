@@ -29,7 +29,7 @@ import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.ui.util.EntityComboBox;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
 
-public class BooleanFieldEditor extends Composite implements FieldEditor {
+public class BooleanFieldEditor extends Composite implements FieldEditor, EntityComboBoxFieldEditor {
     
     protected EntityModelWrapper entityModelWrapper;
     protected String fieldName;

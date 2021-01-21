@@ -36,7 +36,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.EntityComboBox;
 import com.hpe.octane.ideplugins.eclipse.ui.util.EntityComboBox.EntityLoader;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.ImageResources;
 
-public class ReferenceFieldEditor extends Composite implements FieldEditor {
+public class ReferenceFieldEditor extends Composite implements FieldEditor, EntityComboBoxFieldEditor {
 
     protected EntityModelWrapper entityModelWrapper;
     protected String fieldName;

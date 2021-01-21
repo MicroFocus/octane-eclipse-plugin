@@ -28,6 +28,7 @@ import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.ui.comment.EntityCommentComposite;
 import com.hpe.octane.ideplugins.eclipse.ui.comment.job.GetCommentsJob;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.BooleanFieldEditor;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.EntityComboBoxFieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.ReferenceFieldEditor;
 
@@ -70,7 +71,7 @@ public class EntityComposite extends Composite {
 			public void mouseScrolled(MouseEvent e) {				
 				for (FieldEditor fEditor: entityFieldsComposite.getFieldsEditors()) {
 					if (fEditor instanceof ReferenceFieldEditor || fEditor instanceof BooleanFieldEditor) {
-						fEditor.closeEntityComboBox();
+						((EntityComboBoxFieldEditor) fEditor).closeEntityComboBox();
 					}
 				}
 			}
