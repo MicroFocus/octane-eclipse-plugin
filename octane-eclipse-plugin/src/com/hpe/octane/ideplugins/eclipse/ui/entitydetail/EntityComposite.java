@@ -14,6 +14,8 @@ package com.hpe.octane.ideplugins.eclipse.ui.entitydetail;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -25,6 +27,10 @@ import org.eclipse.swt.widgets.Listener;
 import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.octane.ideplugins.eclipse.ui.comment.EntityCommentComposite;
 import com.hpe.octane.ideplugins.eclipse.ui.comment.job.GetCommentsJob;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.BooleanFieldEditor;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.EntityComboBoxFieldEditor;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditor;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.ReferenceFieldEditor;
 
 public class EntityComposite extends Composite {
 
@@ -59,6 +65,18 @@ public class EntityComposite extends Composite {
 
         entityFieldsComposite = new EntityFieldsComposite(scrolledComposite, SWT.NONE);
         entityFieldsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+        entityFieldsComposite.addMouseWheelListener(new MouseWheelListener() {
+			
+			@Override
+			public void mouseScrolled(MouseEvent e) {				
+				for (FieldEditor fEditor: entityFieldsComposite.getFieldsEditors()) {
+					if (fEditor instanceof ReferenceFieldEditor || fEditor instanceof BooleanFieldEditor) {
+						((EntityComboBoxFieldEditor) fEditor).closeEntityComboBox();
+					}
+				}
+			}
+		});
+        
         scrolledComposite.setContent(entityFieldsComposite);
 
         entityCommentComposite = new EntityCommentComposite(this, SWT.NONE);

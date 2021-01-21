@@ -12,9 +12,11 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.entitydetail;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,6 +67,7 @@ public class EntityFieldsComposite extends Composite {
     private EntityModelWrapper entityModel;
 
     private Composite fieldsComposite;
+    private List<FieldEditor> fieldEditors = new ArrayList<FieldEditor>();;
     private DescriptionComposite descriptionComposite;
 
     private FormToolkit formGenerator;
@@ -208,7 +211,8 @@ public class EntityFieldsComposite extends Composite {
             labelFieldName.setLayoutData(labelFieldNameGridData);
 
             FieldEditor fieldEditor = fieldEditorFactory.createFieldEditor(columnComposite, entityModelWrapper, fieldName);
-
+            fieldEditors.add(fieldEditor);	
+            
             // Attach a clear handler to the sprint field editor
             // TODO: full mvc
             if (EntityFieldsConstants.FIELD_SPRINT.equals(fieldName)) {
@@ -259,5 +263,9 @@ public class EntityFieldsComposite extends Composite {
         drawEntityFields(entityModelWrapper);
         descriptionComposite.setEntityModel(entityModelWrapper);
     }
+
+	public List<FieldEditor> getFieldsEditors() {
+		return fieldEditors;
+	}
 
 }
