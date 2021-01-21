@@ -67,7 +67,7 @@ public class EntityFieldsComposite extends Composite {
     private EntityModelWrapper entityModel;
 
     private Composite fieldsComposite;
-    private List<FieldEditor> fieldEditors;
+    private List<FieldEditor> fieldEditors = new ArrayList<FieldEditor>();;
     private DescriptionComposite descriptionComposite;
 
     private FormToolkit formGenerator;
@@ -137,9 +137,6 @@ public class EntityFieldsComposite extends Composite {
         PrefereceChangeHandler prefereceChangeHandler = () -> drawEntityFields(entityModel);
         PluginPreferenceStorage.addPrefenceChangeHandler(PreferenceConstants.SHOWN_ENTITY_FIELDS, prefereceChangeHandler);
         addDisposeListener(e -> PluginPreferenceStorage.removePrefenceChangeHandler(PreferenceConstants.SHOWN_ENTITY_FIELDS, prefereceChangeHandler));
-        
-        //initialize fieldEditors
-        fieldEditors = new ArrayList<FieldEditor>();
     }
 
     private void drawEntityFields(EntityModelWrapper entityModelWrapper) {
