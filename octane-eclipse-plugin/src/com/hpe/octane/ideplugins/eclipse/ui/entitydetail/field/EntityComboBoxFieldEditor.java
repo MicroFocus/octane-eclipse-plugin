@@ -15,5 +15,5 @@ package com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field;
 import org.eclipse.swt.graphics.Drawable;
 
 public interface EntityComboBoxFieldEditor extends Drawable {    
-    public default void closeEntityComboBox() {};
+    public void closeEntityComboBox();
 }
