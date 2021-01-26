@@ -69,11 +69,7 @@ public class EntityComposite extends Composite {
 			
 			@Override
 			public void mouseScrolled(MouseEvent e) {				
-				for (FieldEditor fEditor: entityFieldsComposite.getFieldsEditors()) {
-					if (fEditor instanceof ReferenceFieldEditor || fEditor instanceof BooleanFieldEditor) {
-						((EntityComboBoxFieldEditor) fEditor).closeEntityComboBox();
-					}
-				}
+				entityFieldsComposite.closeEntityComboBoxes();
 			}
 		});
         
