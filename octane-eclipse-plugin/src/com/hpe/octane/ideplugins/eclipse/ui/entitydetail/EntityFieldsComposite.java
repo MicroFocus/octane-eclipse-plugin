@@ -46,9 +46,12 @@ import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PrefereceChangeHandler;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PreferenceConstants;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.BooleanFieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.DescriptionComposite;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.EntityComboBoxFieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditorFactory;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.ReferenceFieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.PlatformResourcesManager;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
@@ -95,7 +98,7 @@ public class EntityFieldsComposite extends Composite {
 
         Section sectionDescription = formGenerator.createSection(descriptionWrapper, Section.TREE_NODE | Section.EXPANDED);
         sectionDescription.setText("Description");
-        descriptionComposite = new DescriptionComposite(sectionDescription, SWT.NONE);
+        descriptionComposite = new DescriptionComposite(sectionDescription, this, SWT.NONE);
         sectionDescription.setClient(descriptionComposite);
 
         formGenerator.createCompositeSeparator(sectionDescription);
@@ -268,4 +271,11 @@ public class EntityFieldsComposite extends Composite {
 		return fieldEditors;
 	}
 
+	public void closeEntityComboBoxes() {
+		for (FieldEditor fEditor: fieldEditors) {
+			if (fEditor instanceof ReferenceFieldEditor || fEditor instanceof BooleanFieldEditor) {
+				((EntityComboBoxFieldEditor) fEditor).closeEntityComboBox();
+			}
+		}
+	}
 }
