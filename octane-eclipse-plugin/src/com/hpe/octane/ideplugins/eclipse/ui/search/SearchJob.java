@@ -32,11 +32,13 @@ public class SearchJob extends Job {
     private boolean isCancelled = false;
     private EntityListData resultEntityListData;
     private String query;
+    private Entity[] searchEntityTypes;
 
-    public SearchJob(String name, String query, EntityListData resultEntityListData) {
+    public SearchJob(String name, String query, EntityListData resultEntityListData, Entity... searchEntityTypes) {
         super(name);
         this.resultEntityListData = resultEntityListData;
         this.query = query;
+        this.searchEntityTypes = searchEntityTypes;
     }
 
     @Override
@@ -50,7 +52,7 @@ public class SearchJob extends Job {
         Collection<EntityModel> searchResults = searchService.searchGlobal(
                 query,
                 20,
-                SearchEditor.searchEntityTypes.toArray(new Entity[] {}));
+                this.searchEntityTypes);
 
         if (!isCancelled) {
             Display.getDefault().asyncExec(() -> {
