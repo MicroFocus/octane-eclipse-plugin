@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -82,7 +83,13 @@ public class DownloadScriptUtil {
 
             if (shouldDownloadScript) {
                 BusyIndicator.showWhile(Display.getCurrent(), () -> {
-                    String content = scriptService.getTestScriptContent(testId);
+                    String content;
+                    try {
+                    	content = scriptService.getTestScriptContent(testId);
+                    } catch (UnsupportedEncodingException e) {
+                    	content = null;
+                        new InfoPopup("Unsupported Encoding", "The script you are trying to download contains unsupported characters.").open();
+                    }
                     createTestScriptFile(parentFolder.getPath(), scriptFileName,
                             content);
 
