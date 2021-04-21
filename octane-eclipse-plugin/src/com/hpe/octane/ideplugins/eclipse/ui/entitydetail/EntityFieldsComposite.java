@@ -12,6 +12,7 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.entitydetail;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,6 +53,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.EntityComboBoxFie
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditorFactory;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.ReferenceFieldEditor;
+import com.hpe.octane.ideplugins.eclipse.ui.util.InfoPopup;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.PlatformResourcesManager;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
@@ -261,7 +263,13 @@ public class EntityFieldsComposite extends Composite {
     public void setEntityModel(EntityModelWrapper entityModelWrapper) {
         this.entityModel = entityModelWrapper;
         // make a map of the field names and labels
-        Collection<FieldMetadata> fieldMetadata = metadataService.getVisibleFields(entityModelWrapper.getEntityType());
+        Collection<FieldMetadata> fieldMetadata = null;
+        try {
+        	fieldMetadata = metadataService.getVisibleFields(entityModelWrapper.getEntityType());
+        } catch (UnsupportedEncodingException e) {
+        	new InfoPopup("Unsupported Encoding", "The labels of the visible fields contain unsupported characters.").open();
+        }
+
         fieldLabelMap = fieldMetadata.stream().collect(Collectors.toMap(FieldMetadata::getName, FieldMetadata::getLabel));
         drawEntityFields(entityModelWrapper);
         descriptionComposite.setEntityModel(entityModelWrapper);
