@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -30,6 +32,7 @@ import com.hpe.adm.octane.ideplugins.services.model.EntityModelWrapper;
 import com.hpe.adm.octane.ideplugins.services.nonentity.ImageService;
 import com.hpe.adm.octane.ideplugins.services.util.Util;
 import com.hpe.octane.ideplugins.eclipse.Activator;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.EntityFieldsComposite;
 import com.hpe.octane.ideplugins.eclipse.ui.util.LinkInterceptListener;
 import com.hpe.octane.ideplugins.eclipse.ui.util.LoadingComposite;
 import com.hpe.octane.ideplugins.eclipse.ui.util.PropagateScrollBrowserFactory;
@@ -50,7 +53,7 @@ public class DescriptionComposite extends Composite {
     private StackLayoutComposite stackLayoutComposite;
     private Exception pictureException;
 
-    public DescriptionComposite(Composite parent, int style) {
+    public DescriptionComposite(Composite parent, EntityFieldsComposite parentEntityFieldsComposite, int style) {
         super(parent, style);
         setLayout(new FillLayout(SWT.HORIZONTAL));
         stackLayoutComposite = new StackLayoutComposite(this, SWT.NONE);
@@ -59,6 +62,12 @@ public class DescriptionComposite extends Composite {
 
         browserDescHtml = factory.createBrowser(stackLayoutComposite, SWT.NONE);
         browserDescHtml.addLocationListener(new LinkInterceptListener());
+        browserDescHtml.addMouseWheelListener(new MouseWheelListener() {			
+			@Override
+			public void mouseScrolled(MouseEvent e) {
+				parentEntityFieldsComposite.closeEntityComboBoxes();
+			}
+		});
     }
 
     public void setEntityModel(EntityModelWrapper entityModelWrapper) {

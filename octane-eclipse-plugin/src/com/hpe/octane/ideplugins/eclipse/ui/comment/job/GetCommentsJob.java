@@ -29,7 +29,7 @@ import com.hpe.octane.ideplugins.eclipse.Activator;
 
 public class GetCommentsJob extends Job {
 
-    private static final List<Entity> noCommentsEntites = Arrays.asList(Entity.TASK);
+    private static final List<Entity> noCommentsEntites = Arrays.asList();
 
     private CommentService commentService = Activator.getInstance(CommentService.class);
     private Collection<EntityModel> comments = new ArrayList<>();

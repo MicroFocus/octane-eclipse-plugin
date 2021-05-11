@@ -12,9 +12,12 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.entitydetail;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,9 +47,13 @@ import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PrefereceChangeHandler;
 import com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferenceStorage.PreferenceConstants;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.BooleanFieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.DescriptionComposite;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.EntityComboBoxFieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditor;
 import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.FieldEditorFactory;
+import com.hpe.octane.ideplugins.eclipse.ui.entitydetail.field.ReferenceFieldEditor;
+import com.hpe.octane.ideplugins.eclipse.ui.util.InfoPopup;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.PlatformResourcesManager;
 import com.hpe.octane.ideplugins.eclipse.ui.util.resource.SWTResourceManager;
 import com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants;
@@ -65,6 +72,7 @@ public class EntityFieldsComposite extends Composite {
     private EntityModelWrapper entityModel;
 
     private Composite fieldsComposite;
+    private List<FieldEditor> fieldEditors = new ArrayList<FieldEditor>();;
     private DescriptionComposite descriptionComposite;
 
     private FormToolkit formGenerator;
@@ -92,7 +100,7 @@ public class EntityFieldsComposite extends Composite {
 
         Section sectionDescription = formGenerator.createSection(descriptionWrapper, Section.TREE_NODE | Section.EXPANDED);
         sectionDescription.setText("Description");
-        descriptionComposite = new DescriptionComposite(sectionDescription, SWT.NONE);
+        descriptionComposite = new DescriptionComposite(sectionDescription, this, SWT.NONE);
         sectionDescription.setClient(descriptionComposite);
 
         formGenerator.createCompositeSeparator(sectionDescription);
@@ -208,7 +216,8 @@ public class EntityFieldsComposite extends Composite {
             labelFieldName.setLayoutData(labelFieldNameGridData);
 
             FieldEditor fieldEditor = fieldEditorFactory.createFieldEditor(columnComposite, entityModelWrapper, fieldName);
-
+            fieldEditors.add(fieldEditor);	
+            
             // Attach a clear handler to the sprint field editor
             // TODO: full mvc
             if (EntityFieldsConstants.FIELD_SPRINT.equals(fieldName)) {
@@ -254,10 +263,27 @@ public class EntityFieldsComposite extends Composite {
     public void setEntityModel(EntityModelWrapper entityModelWrapper) {
         this.entityModel = entityModelWrapper;
         // make a map of the field names and labels
-        Collection<FieldMetadata> fieldMetadata = metadataService.getVisibleFields(entityModelWrapper.getEntityType());
+        Collection<FieldMetadata> fieldMetadata = null;
+        try {
+        	fieldMetadata = metadataService.getVisibleFields(entityModelWrapper.getEntityType());
+        } catch (UnsupportedEncodingException e) {
+        	new InfoPopup("Unsupported Encoding", "The labels of the visible fields contain unsupported characters.").open();
+        }
+
         fieldLabelMap = fieldMetadata.stream().collect(Collectors.toMap(FieldMetadata::getName, FieldMetadata::getLabel));
         drawEntityFields(entityModelWrapper);
         descriptionComposite.setEntityModel(entityModelWrapper);
     }
 
+	public List<FieldEditor> getFieldsEditors() {
+		return fieldEditors;
+	}
+
+	public void closeEntityComboBoxes() {
+		for (FieldEditor fEditor: fieldEditors) {
+			if (fEditor instanceof ReferenceFieldEditor || fEditor instanceof BooleanFieldEditor) {
+				((EntityComboBoxFieldEditor) fEditor).closeEntityComboBox();
+			}
+		}
+	}
 }

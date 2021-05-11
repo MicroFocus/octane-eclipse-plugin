@@ -12,6 +12,10 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.util;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.events.MouseEvent;
@@ -51,8 +55,15 @@ public class OpenDetailTabEntityMouseListener implements EntityMouseListener {
             if (Entity.COMMENT == Entity.getEntityType(entityModel)) {
                 entityModel = (EntityModel) Util.getContainerItemForCommentModel(entityModel).getValue();
             }
-            
-            if(Entity.FEATURE == Entity.getEntityType(entityModel) || Entity.EPIC == Entity.getEntityType(entityModel) || Entity.AUTOMATED_TEST_RUN == Entity.getEntityType(entityModel) || Entity.BDD_SCENARIO == Entity.getEntityType(entityModel)) {
+    		
+			Set<Entity> openInBrowserEntities = new LinkedHashSet<>(Arrays.asList(
+		            Entity.EPIC,
+		            Entity.FEATURE,
+		            Entity.AUTOMATED_TEST,
+		            Entity.AUTOMATED_TEST_RUN,
+		            Entity.BDD_SCENARIO));
+		    
+		    if(openInBrowserEntities.contains(Entity.getEntityType(entityModel))) {
             	entityService.openInBrowser(entityModel);
             } else {
 	            Long id = Long.parseLong(entityModel.getValue("id").getValue().toString());

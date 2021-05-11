@@ -93,6 +93,7 @@ public class EntityComboBox extends Composite {
     private boolean isLoadingIndicatorEnabled = true;
     private boolean isFilteringEnabled = true;
     
+    
     /**
      * Floating window that appears
      */
@@ -435,7 +436,7 @@ public class EntityComboBox extends Composite {
      * 
      * @see EntityComboBox#createAndShowShell()
      */
-    private void closeAndDisposeShell() {
+    public void closeAndDisposeShell() {
         if (shell != null && !shell.isDisposed()) {
             shell.close();
         }

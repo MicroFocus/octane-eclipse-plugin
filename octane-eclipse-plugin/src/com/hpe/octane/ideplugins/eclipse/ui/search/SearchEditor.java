@@ -35,8 +35,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettingsProvider;
 import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
+import com.hpe.adm.octane.ideplugins.services.nonentity.OctaneVersionService;
+import com.hpe.adm.octane.ideplugins.services.util.OctaneVersion;
 import com.hpe.adm.octane.ideplugins.services.util.Util;
+import com.hpe.octane.ideplugins.eclipse.Activator;
 import com.hpe.octane.ideplugins.eclipse.filter.ArrayEntityListData;
 import com.hpe.octane.ideplugins.eclipse.ui.entitylist.EntityListComposite;
 import com.hpe.octane.ideplugins.eclipse.ui.entitylist.custom.AbsoluteLayoutEntityListViewer;
@@ -51,6 +55,7 @@ public class SearchEditor extends EditorPart {
 
     public static final String ID = "com.hpe.octane.ideplugins.eclipse.ui.search.SearchEditor";
     private String darkBackgroundColorString = "rgb(52,57,61)"; 
+    ConnectionSettingsProvider connectionSettingsProvider = Activator.getInstance(ConnectionSettingsProvider.class);
     
     static final Set<Entity> searchEntityTypes = new LinkedHashSet<>(Arrays.asList(
             Entity.EPIC,
@@ -63,7 +68,6 @@ public class SearchEditor extends EditorPart {
             Entity.MANUAL_TEST,
             Entity.AUTOMATED_TEST,
             Entity.GHERKIN_TEST,
-            Entity.BDD_SCENARIO,
             Entity.REQUIREMENT));
 
     private static final Set<String> searchEntityFilterFields = new HashSet<>(Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_DESCRIPTION));
@@ -105,6 +109,13 @@ public class SearchEditor extends EditorPart {
         container = new StackLayoutComposite(parent, SWT.NONE);
         container.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
         container.setForeground(foregroundColor);
+        
+        Set<Entity> searchEntityTypesCopy = new LinkedHashSet<>(searchEntityTypes);
+        // add BDD to searchEntityTypes for Octane versions higher or eq than Coldplay P1 ( 15.1.4 - version where BDD was implemented )
+        OctaneVersion octaneVersion = OctaneVersionService.getOctaneVersion(connectionSettingsProvider.getConnectionSettings());
+        if (octaneVersion.isMoreOrEqThan(OctaneVersion.COLDPLAY_P1) && !searchEntityTypesCopy.contains(Entity.BDD_SCENARIO)) {
+            searchEntityTypesCopy.add(Entity.BDD_SCENARIO);
+        }
 
         entityListComposite = new EntityListComposite(
                 container,
@@ -116,7 +127,7 @@ public class SearchEditor extends EditorPart {
                             new SearchResultRowRenderer(),
                             new SearchEntityModelMenuFactory());
                 },
-                searchEntityTypes,
+                searchEntityTypesCopy,
                 searchEntityFilterFields);
         entityListComposite.setBackground(backgroundColor);
         String backgroundColorString = "rgb(" + backgroundColor.getRed() + "," + backgroundColor.getGreen() + "," + backgroundColor.getBlue() + ")" ;
@@ -134,7 +145,8 @@ public class SearchEditor extends EditorPart {
         searchJob = new SearchJob(
                 "Searching Octane for: \"" + searchEditorInput.getQuery() + "\"",
                 searchEditorInput.getQuery(),
-                entityData);
+                entityData,
+                searchEntityTypesCopy.toArray(new Entity[] {}));
 
         container.showControl(loadingComposite);
 
