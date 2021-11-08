@@ -32,9 +32,9 @@
 
 	<repositories>
 		<repository>
-			<id>neon</id>
+			<id>photon</id>
 			<layout>p2</layout>
-			<url>https://download.eclipse.org/releases/neon/</url>
+			<url>https://download.eclipse.org/releases/photon/</url>
 		</repository>
 	</repositories>
 
