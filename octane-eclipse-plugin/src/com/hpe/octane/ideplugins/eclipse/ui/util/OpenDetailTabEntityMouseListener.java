@@ -61,7 +61,8 @@ public class OpenDetailTabEntityMouseListener implements EntityMouseListener {
 		            Entity.FEATURE,
 		            Entity.AUTOMATED_TEST,
 		            Entity.AUTOMATED_TEST_RUN,
-		            Entity.BDD_SCENARIO));
+		            Entity.BDD_SCENARIO,
+					Entity.REQUIREMENT_FOLDER));
 		    
 		    if(openInBrowserEntities.contains(Entity.getEntityType(entityModel))) {
             	entityService.openInBrowser(entityModel);
