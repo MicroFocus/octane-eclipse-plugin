@@ -84,12 +84,6 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
         Entity entityType = Entity.getEntityType(entityModel);
         Integer entityId = Integer.valueOf(getUiDataFromModel(entityModel.getValue("id")));
 
-        addMenuItem(
-                menu,
-                "View in browser (System)",
-                ImageResources.BROWSER_16X16.getImage(),
-                () -> OpenInBrowser.openEntityInBrowser(entityModel));
-
         if (entityType != Entity.COMMENT && entityType != Entity.BDD_SCENARIO) {
             addMenuItem(
                     menu,
@@ -123,6 +117,12 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
                         });
             }
         }
+
+        addMenuItem(
+                menu,
+                "View in browser (System)",
+                ImageResources.BROWSER_16X16.getImage(),
+                () -> OpenInBrowser.openEntityInBrowser(entityModel));
 
         if (entityType == Entity.GHERKIN_TEST || entityType == Entity.BDD_SCENARIO) {
             addMenuItem(
