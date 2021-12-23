@@ -55,29 +55,29 @@ public class OpenDetailTabEntityMouseListener implements EntityMouseListener {
             if (Entity.COMMENT == Entity.getEntityType(entityModel)) {
                 entityModel = (EntityModel) Util.getContainerItemForCommentModel(entityModel).getValue();
             }
-    		
-			Set<Entity> openInBrowserEntities = new LinkedHashSet<>(Arrays.asList(
-		            Entity.EPIC,
-		            Entity.FEATURE,
-		            Entity.AUTOMATED_TEST,
-		            Entity.AUTOMATED_TEST_RUN,
-		            Entity.BDD_SCENARIO,
-					Entity.REQUIREMENT_FOLDER));
-		    
-		    if(openInBrowserEntities.contains(Entity.getEntityType(entityModel))) {
-            	entityService.openInBrowser(entityModel);
+
+            Set<Entity> openInBrowserEntities = new LinkedHashSet<>(Arrays.asList(
+                    Entity.EPIC,
+                    Entity.FEATURE,
+                    Entity.AUTOMATED_TEST,
+                    Entity.AUTOMATED_TEST_RUN,
+                    Entity.BDD_SCENARIO,
+                    Entity.REQUIREMENT_FOLDER));
+
+            if (openInBrowserEntities.contains(Entity.getEntityType(entityModel))) {
+                entityService.openInBrowser(entityModel);
             } else {
-	            Long id = Long.parseLong(entityModel.getValue("id").getValue().toString());
-	            EntityModelEditorInput entityModelEditorInput = new EntityModelEditorInput(id, Entity.getEntityType(entityModel));
-	            try {
-	                logger.log(new Status(Status.INFO, Activator.PLUGIN_ID, Status.OK, entityModelEditorInput.toString(), null));                
-	                page.openEditor(entityModelEditorInput, EntityModelEditor.ID);                                      
-	            } catch (PartInitException ex) {
-	                logger.log(
-	                        new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR, "An exception has occured when opening the editor", ex));
-	            }
+                Long id = Long.parseLong(entityModel.getValue("id").getValue().toString());
+                EntityModelEditorInput entityModelEditorInput = new EntityModelEditorInput(id, Entity.getEntityType(entityModel));
+                try {
+                    logger.log(new Status(Status.INFO, Activator.PLUGIN_ID, Status.OK, entityModelEditorInput.toString(), null));
+                    page.openEditor(entityModelEditorInput, EntityModelEditor.ID);
+                } catch (PartInitException ex) {
+                    logger.log(
+                            new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR, "An exception has occured when opening the editor", ex));
+                }
             }
-            
+
         }
     }
 
