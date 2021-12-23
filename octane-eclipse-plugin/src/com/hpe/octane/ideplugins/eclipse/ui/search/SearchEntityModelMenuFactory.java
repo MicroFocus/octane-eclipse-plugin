@@ -84,16 +84,6 @@ public class SearchEntityModelMenuFactory implements EntityModelMenuFactory {
         Entity entityType = Entity.getEntityType(entityModel);
         Integer entityId = Integer.valueOf(getUiDataFromModel(entityModel.getValue("id")));
 
-        addMenuItem(
-                menu,
-                "View in browser (System)",
-                ImageResources.BROWSER_16X16.getImage(),
-                () -> OpenInBrowser.openEntityInBrowser(entityModel));
-
-        if (EntityFieldsConstants.supportedEntitiesThatAllowDetailView.contains(entityType)) {
-            new MenuItem(menu, SWT.SEPARATOR);
-        }
-
         if (EntityFieldsConstants.supportedEntitiesThatAllowDetailView.contains(entityType)) {
             addMenuItem(
                     menu,
@@ -101,6 +91,16 @@ public class SearchEntityModelMenuFactory implements EntityModelMenuFactory {
                     EntityIconFactory.getInstance().getImageForEditorPart(entityType, 16, 7),
                     () -> openDetailTab(entityId, entityType));
         }
+
+        if (EntityFieldsConstants.supportedEntitiesThatAllowDetailView.contains(entityType)) {
+            new MenuItem(menu, SWT.SEPARATOR);
+        }
+
+        addMenuItem(
+                menu,
+                "View in browser (System)",
+                ImageResources.BROWSER_16X16.getImage(),
+                () -> OpenInBrowser.openEntityInBrowser(entityModel));
 
         if (entityType == Entity.GHERKIN_TEST || entityType == Entity.BDD_SCENARIO) {
             addMenuItem(
