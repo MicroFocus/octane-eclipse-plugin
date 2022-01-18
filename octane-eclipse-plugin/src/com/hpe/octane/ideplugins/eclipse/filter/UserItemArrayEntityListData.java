@@ -24,7 +24,8 @@ import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkUtil;
 public class UserItemArrayEntityListData extends ArrayEntityListData {
 
     @Override
-    public boolean matchStringFilter(EntityModel entityModel, String queryString, Set<String> affectedFields) {
+    public boolean matchStringFilter(EntityModel userItem, String queryString, Set<String> affectedFields) {
+    	EntityModel entityModel = userItem;
     	if (Entity.USER_ITEM == Entity.getEntityType(entityModel)) {
     		entityModel = MyWorkUtil.getEntityModelFromUserItem(entityModel);
     	}
@@ -32,7 +33,8 @@ public class UserItemArrayEntityListData extends ArrayEntityListData {
     }
 
     @Override
-    public boolean matchTypeFilter(EntityModel entityModel, Set<Entity> entityTypeFilter) {
+    public boolean matchTypeFilter(EntityModel userItem, Set<Entity> entityTypeFilter) {
+    	EntityModel entityModel = userItem;
     	if (Entity.USER_ITEM == Entity.getEntityType(entityModel)) {
     		entityModel = MyWorkUtil.getEntityModelFromUserItem(entityModel);
     	}
