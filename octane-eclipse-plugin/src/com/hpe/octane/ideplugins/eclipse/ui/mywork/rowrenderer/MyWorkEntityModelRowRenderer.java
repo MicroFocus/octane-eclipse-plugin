@@ -205,7 +205,12 @@ public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
     @Override
     public EntityModelRow createRow(Composite parent, EntityModel userItem) {
 
-        final EntityModel entityModel = MyWorkUtil.getEntityModelFromUserItem(userItem);
+        final EntityModel entityModel;
+    	if (Entity.USER_ITEM == Entity.getEntityType(userItem)) {
+    		entityModel = MyWorkUtil.getEntityModelFromUserItem(userItem);
+    	} else {
+    		entityModel = userItem;
+    	}
         Entity entityType = Entity.getEntityType(entityModel);
 
         final EntityModelRow rowComposite = new EntityModelRow(parent, SWT.NONE);

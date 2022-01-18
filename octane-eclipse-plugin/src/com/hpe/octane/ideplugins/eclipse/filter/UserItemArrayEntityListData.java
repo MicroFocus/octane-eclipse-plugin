@@ -25,13 +25,17 @@ public class UserItemArrayEntityListData extends ArrayEntityListData {
 
     @Override
     public boolean matchStringFilter(EntityModel entityModel, String queryString, Set<String> affectedFields) {
-        entityModel = MyWorkUtil.getEntityModelFromUserItem(entityModel);
+    	if (Entity.USER_ITEM == Entity.getEntityType(entityModel)) {
+    		entityModel = MyWorkUtil.getEntityModelFromUserItem(entityModel);
+    	}
         return super.matchStringFilter(entityModel, queryString, affectedFields);
     }
 
     @Override
     public boolean matchTypeFilter(EntityModel entityModel, Set<Entity> entityTypeFilter) {
-        entityModel = MyWorkUtil.getEntityModelFromUserItem(entityModel);
+    	if (Entity.USER_ITEM == Entity.getEntityType(entityModel)) {
+    		entityModel = MyWorkUtil.getEntityModelFromUserItem(entityModel);
+    	}
         return super.matchTypeFilter(entityModel, entityTypeFilter);
     }
 

@@ -79,8 +79,13 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
     public Menu createMenu(EntityModel userItem, Control menuParent) {
 
         Menu menu = new Menu(menuParent);
-
-        EntityModel entityModel = MyWorkUtil.getEntityModelFromUserItem(userItem);
+        
+        final EntityModel entityModel;
+    	if (Entity.USER_ITEM == Entity.getEntityType(userItem)) {
+    		entityModel = MyWorkUtil.getEntityModelFromUserItem(userItem);
+    	} else {
+    		entityModel = userItem;
+    	}
         Entity entityType = Entity.getEntityType(entityModel);
         Integer entityId = Integer.valueOf(getUiDataFromModel(entityModel.getValue("id")));
 

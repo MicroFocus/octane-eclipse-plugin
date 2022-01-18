@@ -248,7 +248,7 @@ public class FieldEditorFactory {
                     sortingOrderByAsc = true;
             }
 
-            return entityService.findEntities(entity, qb, null, null, null, COMBO_BOX_ENTITY_LIMIT, sortingFields, sortingOrderByAsc);
+            return entityService.findEntities(entity, qb, null, null, null, COMBO_BOX_ENTITY_LIMIT, sortingFields, sortingOrderByAsc, null);
         };  
     }
     
