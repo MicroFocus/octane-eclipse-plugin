@@ -136,7 +136,7 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
             zonedDateTime = timeStamp.atZone(ZoneId.systemDefault());
             
             dtDate.setYear(zonedDateTime.getYear());
-            dtDate.setMonth(zonedDateTime.getMonthValue());
+            dtDate.setMonth(zonedDateTime.getMonthValue() - 1); // "- 1" because we convert from ZonedDateTime (1-12 months) to DateTime (0-11 months)
             dtDate.setDay(zonedDateTime.getDayOfMonth());
             dtTime.setHours(zonedDateTime.getHour());
             dtTime.setMinutes(zonedDateTime.getMinute());
@@ -154,7 +154,7 @@ public class DateTimeFieldEditor extends Composite implements FieldEditor {
             // Converting to UTC is not necessary, the SDK will do it for you
             return ZonedDateTime.of(
                     dtDate.getYear(),
-                    dtDate.getMonth(),
+                    dtDate.getMonth() + 1, // "+ 1" because we convert from DateTime (0-11 months) to ZonedDateTime (1-12 months)
                     dtDate.getDay(),
                     dtTime.getHours(),
                     dtTime.getMinutes(),
