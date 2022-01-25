@@ -44,6 +44,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.hpe.adm.nga.sdk.model.EntityModel;
+import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
 import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkService;
 import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkUtil;
 import com.hpe.adm.octane.ideplugins.services.util.EntityUtil;
@@ -324,14 +325,20 @@ public class MyWorkView extends OctaneViewPart {
     }
 
     /**
-     * Check if the provided list of Entity.USER_ITEM contains the current
+     * Check if the provided list of EntityModels contains the current
      * active item
      * 
      * @param entityModels
      */
     public static boolean userItemsContainsActiveItem(Collection<EntityModel> entityModels) {
-        Collection<EntityModel> entities = MyWorkUtil.getEntityModelsFromUserItems(entityModels);
         EntityModelEditorInput activeItem = PluginPreferenceStorage.getActiveItem();
+        Collection<EntityModel> entities = entityModels.stream().map(entity -> {
+            if (Entity.USER_ITEM == Entity.getEntityType(entity)) {
+                return MyWorkUtil.getEntityModelFromUserItem(entity);
+            } 
+            
+            return entity;
+        }).collect(Collectors.toList());
 
         if (activeItem == null) {
             return false;
