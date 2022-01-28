@@ -22,9 +22,13 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IPartListener2;
+import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -198,11 +202,25 @@ public class Activator extends AbstractUIPlugin {
 
         // Restore all entity model editors from their references, this is a
         // silly fix to properly set the editor part icon and tooltip
-        for (IEditorReference editorReference : page.getEditorReferences()) {
-            if (editorReference.getEditorInput() instanceof EntityModelEditorInput) {
-                editorReference.getEditor(true);
+        IPartListener2 activePartListener = new IPartListener2() {
+            public void partActivated(IWorkbenchPartReference ref) {
+                String activeEditorTitle = ref.getTitle();
+
+                try {
+                    for (IEditorReference editorReference : page.getEditorReferences()) {
+                        IEditorInput editorInput = editorReference.getEditorInput();
+
+                        if (editorInput instanceof EntityModelEditorInput
+                                && !((EntityModelEditorInput) editorInput).getTitle().equals(activeEditorTitle)) {
+                            editorReference.getEditor(true);
+                        }
+                    }
+                } catch (PartInitException e) {
+                    getLog().warn("Could not retrieve the active editor");
+                }
             }
-        }
+        };
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(activePartListener);
 
         // Easter egg
         KonamiCodeListener konamiCodeListener = new KonamiCodeListener(() -> {
