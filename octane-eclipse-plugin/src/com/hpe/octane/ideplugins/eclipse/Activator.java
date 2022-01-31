@@ -24,11 +24,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.IPartService;
+import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -202,9 +201,9 @@ public class Activator extends AbstractUIPlugin {
 
         // Restore all entity model editors from their references, this is a
         // silly fix to properly set the editor part icon and tooltip
-        IPartListener2 activePartListener = new IPartListener2() {
-            public void partActivated(IWorkbenchPartReference ref) {
-                String activeEditorTitle = ref.getTitle();
+        IPartListener activePartListener = new IPartListener() {
+            public void partActivated(IWorkbenchPart part) {
+                String activeEditorTitle = part.getTitle();
 
                 try {
                     for (IEditorReference editorReference : page.getEditorReferences()) {
@@ -216,8 +215,28 @@ public class Activator extends AbstractUIPlugin {
                         }
                     }
                 } catch (PartInitException e) {
-                    getLog().warn("Could not retrieve the active editor");
+                    getLog().log(new Status(Status.WARNING, Activator.PLUGIN_ID, "Could not retrieve the active editor"));
                 }
+            }
+
+            @Override
+            public void partBroughtToTop(IWorkbenchPart part) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void partClosed(IWorkbenchPart part) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void partDeactivated(IWorkbenchPart part) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void partOpened(IWorkbenchPart part) {
+                // TODO Auto-generated method stub
             }
         };
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(activePartListener);
