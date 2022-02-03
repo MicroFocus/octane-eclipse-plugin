@@ -63,6 +63,7 @@ public class OpenDetailTabEntityMouseListener implements EntityMouseListener {
                     Entity.AUTOMATED_TEST_RUN,
                     Entity.BDD_SCENARIO,
                     Entity.BDD_SPEC,
+                    Entity.GHERKIN_AUTOMATED_RUN,
                     Entity.REQUIREMENT_FOLDER));
 
             if (openInBrowserEntities.contains(Entity.getEntityType(entityModel))) {
