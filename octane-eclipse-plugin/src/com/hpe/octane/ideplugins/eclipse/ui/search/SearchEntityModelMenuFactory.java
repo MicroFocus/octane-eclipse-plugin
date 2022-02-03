@@ -1,5 +1,5 @@
 /*******************************************************************************
- * © 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * © Copyright 2017-2022 Micro Focus or one of its affiliates.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -84,16 +84,6 @@ public class SearchEntityModelMenuFactory implements EntityModelMenuFactory {
         Entity entityType = Entity.getEntityType(entityModel);
         Integer entityId = Integer.valueOf(getUiDataFromModel(entityModel.getValue("id")));
 
-        addMenuItem(
-                menu,
-                "View in browser (System)",
-                ImageResources.BROWSER_16X16.getImage(),
-                () -> OpenInBrowser.openEntityInBrowser(entityModel));
-
-        if (EntityFieldsConstants.supportedEntitiesThatAllowDetailView.contains(entityType)) {
-            new MenuItem(menu, SWT.SEPARATOR);
-        }
-
         if (EntityFieldsConstants.supportedEntitiesThatAllowDetailView.contains(entityType)) {
             addMenuItem(
                     menu,
@@ -101,6 +91,16 @@ public class SearchEntityModelMenuFactory implements EntityModelMenuFactory {
                     EntityIconFactory.getInstance().getImageForEditorPart(entityType, 16, 7),
                     () -> openDetailTab(entityId, entityType));
         }
+
+        if (EntityFieldsConstants.supportedEntitiesThatAllowDetailView.contains(entityType)) {
+            new MenuItem(menu, SWT.SEPARATOR);
+        }
+
+        addMenuItem(
+                menu,
+                "View in browser (System)",
+                ImageResources.BROWSER_16X16.getImage(),
+                () -> OpenInBrowser.openEntityInBrowser(entityModel));
 
         if (entityType == Entity.GHERKIN_TEST || entityType == Entity.BDD_SCENARIO) {
             addMenuItem(

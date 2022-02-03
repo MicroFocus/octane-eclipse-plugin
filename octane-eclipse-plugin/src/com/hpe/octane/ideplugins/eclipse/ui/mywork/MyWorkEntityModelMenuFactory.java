@@ -1,5 +1,5 @@
 /*******************************************************************************
- * © 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * © Copyright 2017-2022 Micro Focus or one of its affiliates.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -79,16 +79,15 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
     public Menu createMenu(EntityModel userItem, Control menuParent) {
 
         Menu menu = new Menu(menuParent);
-
-        EntityModel entityModel = MyWorkUtil.getEntityModelFromUserItem(userItem);
+        
+        final EntityModel entityModel;
+    	if (Entity.USER_ITEM == Entity.getEntityType(userItem)) {
+    		entityModel = MyWorkUtil.getEntityModelFromUserItem(userItem);
+    	} else {
+    		entityModel = userItem;
+    	}
         Entity entityType = Entity.getEntityType(entityModel);
         Integer entityId = Integer.valueOf(getUiDataFromModel(entityModel.getValue("id")));
-
-        addMenuItem(
-                menu,
-                "View in browser (System)",
-                ImageResources.BROWSER_16X16.getImage(),
-                () -> OpenInBrowser.openEntityInBrowser(entityModel));
 
         if (entityType != Entity.COMMENT && entityType != Entity.BDD_SCENARIO) {
             addMenuItem(
@@ -123,6 +122,12 @@ public class MyWorkEntityModelMenuFactory implements EntityModelMenuFactory {
                         });
             }
         }
+
+        addMenuItem(
+                menu,
+                "View in browser (System)",
+                ImageResources.BROWSER_16X16.getImage(),
+                () -> OpenInBrowser.openEntityInBrowser(entityModel));
 
         if (entityType == Entity.GHERKIN_TEST || entityType == Entity.BDD_SCENARIO) {
             addMenuItem(

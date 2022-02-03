@@ -1,5 +1,5 @@
 /*******************************************************************************
- * © 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * © Copyright 2017-2022 Micro Focus or one of its affiliates.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -248,7 +248,7 @@ public class FieldEditorFactory {
                     sortingOrderByAsc = true;
             }
 
-            return entityService.findEntities(entity, qb, null, null, null, COMBO_BOX_ENTITY_LIMIT, sortingFields, sortingOrderByAsc);
+            return entityService.findEntities(entity, qb, null, null, null, COMBO_BOX_ENTITY_LIMIT, sortingFields, sortingOrderByAsc, null);
         };  
     }
     

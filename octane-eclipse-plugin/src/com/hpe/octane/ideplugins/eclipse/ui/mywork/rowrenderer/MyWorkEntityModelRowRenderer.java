@@ -1,5 +1,5 @@
 /*******************************************************************************
- * © 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * © Copyright 2017-2022 Micro Focus or one of its affiliates.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -205,7 +205,12 @@ public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
     @Override
     public EntityModelRow createRow(Composite parent, EntityModel userItem) {
 
-        final EntityModel entityModel = MyWorkUtil.getEntityModelFromUserItem(userItem);
+        final EntityModel entityModel;
+    	if (Entity.USER_ITEM == Entity.getEntityType(userItem)) {
+    		entityModel = MyWorkUtil.getEntityModelFromUserItem(userItem);
+    	} else {
+    		entityModel = userItem;
+    	}
         Entity entityType = Entity.getEntityType(entityModel);
 
         final EntityModelRow rowComposite = new EntityModelRow(parent, SWT.NONE);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * © 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * © Copyright 2017-2022 Micro Focus or one of its affiliates.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,14 +24,24 @@ import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkUtil;
 public class UserItemArrayEntityListData extends ArrayEntityListData {
 
     @Override
-    public boolean matchStringFilter(EntityModel entityModel, String queryString, Set<String> affectedFields) {
-        entityModel = MyWorkUtil.getEntityModelFromUserItem(entityModel);
+    public boolean matchStringFilter(EntityModel userItem, String queryString, Set<String> affectedFields) {
+    	EntityModel entityModel = userItem;
+    	
+    	if (Entity.USER_ITEM == Entity.getEntityType(entityModel)) {
+    		entityModel = MyWorkUtil.getEntityModelFromUserItem(entityModel);
+    	}
+    	
         return super.matchStringFilter(entityModel, queryString, affectedFields);
     }
 
     @Override
-    public boolean matchTypeFilter(EntityModel entityModel, Set<Entity> entityTypeFilter) {
-        entityModel = MyWorkUtil.getEntityModelFromUserItem(entityModel);
+    public boolean matchTypeFilter(EntityModel userItem, Set<Entity> entityTypeFilter) {
+    	EntityModel entityModel = userItem;
+    	
+    	if (Entity.USER_ITEM == Entity.getEntityType(entityModel)) {
+    		entityModel = MyWorkUtil.getEntityModelFromUserItem(entityModel);
+    	}
+    	
         return super.matchTypeFilter(entityModel, entityTypeFilter);
     }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * © 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * © Copyright 2017-2022 Micro Focus or one of its affiliates.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -55,28 +55,31 @@ public class OpenDetailTabEntityMouseListener implements EntityMouseListener {
             if (Entity.COMMENT == Entity.getEntityType(entityModel)) {
                 entityModel = (EntityModel) Util.getContainerItemForCommentModel(entityModel).getValue();
             }
-    		
-			Set<Entity> openInBrowserEntities = new LinkedHashSet<>(Arrays.asList(
-		            Entity.EPIC,
-		            Entity.FEATURE,
-		            Entity.AUTOMATED_TEST,
-		            Entity.AUTOMATED_TEST_RUN,
-		            Entity.BDD_SCENARIO));
-		    
-		    if(openInBrowserEntities.contains(Entity.getEntityType(entityModel))) {
-            	entityService.openInBrowser(entityModel);
+
+            Set<Entity> openInBrowserEntities = new LinkedHashSet<>(Arrays.asList(
+                    Entity.EPIC,
+                    Entity.FEATURE,
+                    Entity.AUTOMATED_TEST,
+                    Entity.AUTOMATED_TEST_RUN,
+                    Entity.BDD_SCENARIO,
+                    Entity.BDD_SPEC,
+                    Entity.GHERKIN_AUTOMATED_RUN,
+                    Entity.REQUIREMENT_FOLDER));
+
+            if (openInBrowserEntities.contains(Entity.getEntityType(entityModel))) {
+                entityService.openInBrowser(entityModel);
             } else {
-	            Long id = Long.parseLong(entityModel.getValue("id").getValue().toString());
-	            EntityModelEditorInput entityModelEditorInput = new EntityModelEditorInput(id, Entity.getEntityType(entityModel));
-	            try {
-	                logger.log(new Status(Status.INFO, Activator.PLUGIN_ID, Status.OK, entityModelEditorInput.toString(), null));                
-	                page.openEditor(entityModelEditorInput, EntityModelEditor.ID);                                      
-	            } catch (PartInitException ex) {
-	                logger.log(
-	                        new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR, "An exception has occured when opening the editor", ex));
-	            }
+                Long id = Long.parseLong(entityModel.getValue("id").getValue().toString());
+                EntityModelEditorInput entityModelEditorInput = new EntityModelEditorInput(id, Entity.getEntityType(entityModel));
+                try {
+                    logger.log(new Status(Status.INFO, Activator.PLUGIN_ID, Status.OK, entityModelEditorInput.toString(), null));
+                    page.openEditor(entityModelEditorInput, EntityModelEditor.ID);
+                } catch (PartInitException ex) {
+                    logger.log(
+                            new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR, "An exception has occured when opening the editor", ex));
+                }
             }
-            
+
         }
     }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * © 2017 EntIT Software LLC, a Micro Focus company, L.P.
+ * © Copyright 2017-2022 Micro Focus or one of its affiliates.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -44,6 +44,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.hpe.adm.nga.sdk.model.EntityModel;
+import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
 import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkService;
 import com.hpe.adm.octane.ideplugins.services.mywork.MyWorkUtil;
 import com.hpe.adm.octane.ideplugins.services.util.EntityUtil;
@@ -324,14 +325,20 @@ public class MyWorkView extends OctaneViewPart {
     }
 
     /**
-     * Check if the provided list of Entity.USER_ITEM contains the current
+     * Check if the provided list of EntityModels contains the current
      * active item
      * 
      * @param entityModels
      */
     public static boolean userItemsContainsActiveItem(Collection<EntityModel> entityModels) {
-        Collection<EntityModel> entities = MyWorkUtil.getEntityModelsFromUserItems(entityModels);
         EntityModelEditorInput activeItem = PluginPreferenceStorage.getActiveItem();
+        Collection<EntityModel> entities = entityModels.stream().map(entity -> {
+            if (Entity.USER_ITEM == Entity.getEntityType(entity)) {
+                return MyWorkUtil.getEntityModelFromUserItem(entity);
+            } 
+            
+            return entity;
+        }).collect(Collectors.toList());
 
         if (activeItem == null) {
             return false;
