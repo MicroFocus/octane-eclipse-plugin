@@ -2,7 +2,7 @@
 <feature
       id="octane.eclipse.feature"
       label="ALM Octane IDE Integration"
-      version="16.0.300.qualifier"
+      version="15.1.90.qualifier"
       provider-name="Micro Focus">
 
    <description url="https://software.microfocus.com/en-us/products/alm-octane/overview">
