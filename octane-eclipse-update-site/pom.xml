@@ -8,7 +8,7 @@
 		<relativePath>..</relativePath>
 		<groupId>com.hpe.adm.octane.ideplugins</groupId>
 		<artifactId>octane-eclipse-parent</artifactId>
-		<version>16.0.300-SNAPSHOT</version>
+		<version>16.0.400-SNAPSHOT</version>
 	</parent>
 	<artifactId>octane-eclispse-update-site</artifactId>
 	<packaging>eclipse-update-site</packaging>

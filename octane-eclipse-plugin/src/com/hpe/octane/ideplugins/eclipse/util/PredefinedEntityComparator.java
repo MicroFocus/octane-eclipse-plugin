@@ -31,6 +31,7 @@ public class PredefinedEntityComparator implements Comparator<Entity> {
             Entity.MANUAL_TEST,
             Entity.GHERKIN_TEST,
             Entity.AUTOMATED_TEST,
+            Entity.BDD_SCENARIO,
             Entity.TEST_SUITE,
             Entity.TEST_SUITE_RUN,
             Entity.MANUAL_TEST_RUN,
