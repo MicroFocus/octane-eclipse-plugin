@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.hpe.adm.octane.ideplugins</groupId>
 	<artifactId>octane-eclipse-parent</artifactId>
-	<version>16.0.400-SNAPSHOT</version>
+	<version>2022.0.0</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -17,17 +17,17 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<logback.version>1.0.1</logback.version>
+		<logback.version>1.2.9</logback.version>
 
 		<tycho-version>1.7.0</tycho-version>
-		<octane.common.version>1.7.1</octane.common.version>
-		<java.version>1.8</java.version>
+		<octane.common.version>1.7.2</octane.common.version>
+		<java.version>11</java.version>
 		<signhp.version>15.0</signhp.version>
 		<sign-hp-utility.version>1.0.5</sign-hp-utility.version>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.testTarget>1.8</maven.compiler.testTarget>
-		<maven.compiler.testSource>1.8</maven.compiler.testSource>
+		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.testTarget>11</maven.compiler.testTarget>
+		<maven.compiler.testSource>11</maven.compiler.testSource>
 	</properties>
 
 	<repositories>

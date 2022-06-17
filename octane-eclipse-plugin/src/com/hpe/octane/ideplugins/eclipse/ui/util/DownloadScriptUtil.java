@@ -61,11 +61,11 @@ public class DownloadScriptUtil {
                 EntityModel bddScenario = entityService.findEntity(Entity.BDD_SCENARIO, testId, Collections.singleton("bdd_spec"));
                 testName = Util.getUiDataFromModel(bddScenario.getValue("bdd_spec"));
                 String bddSpecId = Util.getUiDataFromModel(bddScenario.getValue("bdd_spec"), "id");
-                scriptFileName = testName + "_" + bddSpecId + ".feature";
+                scriptFileName = testName.replaceAll("[\\\\/:?*\"<>|]", "") + "_" + bddSpecId + ".feature";  //in windows, a filename cannot contain any of this char -> \/:*?<>|
             } else {
                 testName = entityModel.getValue("name").getValue().toString();
                 testName = removeHtmlTags(testName);
-                scriptFileName = testName + "_" + testId + ".feature";
+                scriptFileName = testName.replaceAll("[\\\\/:?*\"<>|]", "") + "_" + testId + ".feature";
             }
             
             File scriptFile = new File(parentFolder.getPath() + File.separator +
@@ -160,7 +160,7 @@ public class DownloadScriptUtil {
     }
 
     private File createTestScriptFile(String path, String fileName, String script) {
-        File f = new File(path + "/" + fileName.replaceAll("[\\\\/:?*\"<>|]", ""));
+        File f = new File(path + "/" + fileName);
         try {
             f.createNewFile();
             if (script != null) {
