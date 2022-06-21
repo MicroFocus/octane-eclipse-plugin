@@ -101,7 +101,7 @@ public class EntityListComposite extends Composite {
         entityListData.addDataChangedHandler(entityList -> {
             entityTypeSelectorComposite
                     .setEntityTypeCount(
-                            countEntitiesByType(entityListData.getEntityList()));
+                            countEntitiesByType(entityListData.getOriginalEntityList()));
         });
     }
 

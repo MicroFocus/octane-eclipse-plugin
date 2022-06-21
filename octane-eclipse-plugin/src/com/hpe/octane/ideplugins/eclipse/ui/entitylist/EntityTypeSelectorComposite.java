@@ -41,6 +41,7 @@ public class EntityTypeSelectorComposite extends Composite {
     private List<Runnable> selectionListeners = new ArrayList<>();
     private Label totalCountLbl;
     private Color backgroundColor = SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT);
+    private List<Entity> sortedEntityTypes;
 
     /**
      * Create the composite.
@@ -55,7 +56,7 @@ public class EntityTypeSelectorComposite extends Composite {
         rowLayout.spacing = 7;
         setLayout(rowLayout);
         
-        List<Entity> sortedEntityTypes = Arrays
+        sortedEntityTypes = Arrays
                 .stream(supportedEntityTypes)
                 .sorted(new PredefinedEntityComparator())
                 .collect(Collectors.toList());
@@ -91,7 +92,13 @@ public class EntityTypeSelectorComposite extends Composite {
                 checkBox.setText("0");
             }
         });
-        totalCountLbl.setText("Total: " + entityTypeCount.values().stream().mapToInt(i -> i.intValue()).sum());
+        
+        List<Integer> entityTypeCountValues = entityTypeCount.entrySet()
+                .stream()
+                .filter(e -> sortedEntityTypes.contains(e.getKey()))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+        totalCountLbl.setText("Total: " + entityTypeCountValues.stream().mapToInt(i -> i.intValue()).sum());
     }
 
     public Set<Entity> getCheckedEntityTypes() {
