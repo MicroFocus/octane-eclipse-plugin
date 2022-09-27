@@ -7,7 +7,11 @@
 	<classpathentry exported="true" kind="lib" path="lib/opencensus-contrib-http-util.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/octane-plugin-common.jar" sourcepath="/octane-plugin-common"/>
 	<classpathentry kind="lib" path="lib/slf4j-api.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry exported="true" kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="lib/aopalliance.jar"/>
@@ -15,13 +19,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-collections.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-lang.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/google-api-client-gson.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/google-api-client-jackson2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/google-api-client.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/google-http-client-gson.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/google-http-client-jackson2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/google-http-client.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/google-oauth-client.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gson.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/guava.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/guice.jar"/>

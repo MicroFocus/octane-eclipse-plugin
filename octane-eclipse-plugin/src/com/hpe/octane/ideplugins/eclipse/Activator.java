@@ -35,7 +35,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import com.hpe.adm.nga.sdk.authentication.Authentication;
+import com.hpe.adm.nga.sdk.authentication.JSONAuthentication;
 import com.hpe.adm.octane.ideplugins.services.connection.BasicConnectionSettingProvider;
 import com.hpe.adm.octane.ideplugins.services.connection.ConnectionSettings;
 import com.hpe.adm.octane.ideplugins.services.connection.HttpClientProvider;
@@ -154,7 +154,7 @@ public class Activator extends AbstractUIPlugin {
                 settingsProviderInstance.setConnectionSettings(new ConnectionSettings());
             } else {
 
-                Authentication authentication;
+                JSONAuthentication authentication;
 
                 if (Boolean.parseBoolean(isBrowserAuth)) {
                     authentication = new GrantTokenAuthentication();
