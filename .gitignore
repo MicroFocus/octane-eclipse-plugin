@@ -1,6 +1,7 @@
 /lib/*
 .settings
 .idea
+*iml
 *.project
 
 # Files generated if using the signhp profile

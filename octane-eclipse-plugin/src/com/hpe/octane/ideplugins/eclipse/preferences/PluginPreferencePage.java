@@ -428,7 +428,7 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
             UserAuthentication userAuthentication = (UserAuthentication) newConnectionSettings.getAuthentication();
 
             try {
-                validateUsernameAndPassword(userAuthentication.getUserName(), userAuthentication.getPassword());
+                validateUsernameAndPassword(userAuthentication.getAuthenticationId(), userAuthentication.getAuthenticationSecret());
             } catch (ServiceException e) {
                 setConnectionStatus(false, e.getMessage());
                 return null;

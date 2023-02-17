@@ -28,7 +28,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 
 import com.hpe.adm.octane.ideplugins.services.filtering.Entity;
 import com.hpe.octane.ideplugins.eclipse.ui.util.icon.EntityIconFactory;
@@ -41,6 +43,7 @@ public class EntityTypeSelectorComposite extends Composite {
     private List<Runnable> selectionListeners = new ArrayList<>();
     private Label totalCountLbl;
     private Color backgroundColor = SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT);
+    private List<Entity> sortedEntityTypes;
 
     /**
      * Create the composite.
@@ -55,7 +58,7 @@ public class EntityTypeSelectorComposite extends Composite {
         rowLayout.spacing = 7;
         setLayout(rowLayout);
         
-        List<Entity> sortedEntityTypes = Arrays
+        sortedEntityTypes = Arrays
                 .stream(supportedEntityTypes)
                 .sorted(new PredefinedEntityComparator())
                 .collect(Collectors.toList());
@@ -90,8 +93,30 @@ public class EntityTypeSelectorComposite extends Composite {
             } else {
                 checkBox.setText("0");
             }
+            
+            checkBox.addListener(SWT.Selection, new Listener() {
+
+				@Override
+				public void handleEvent(Event event) {
+					recomputeTotalItemsCount(entityTypeCount);
+				}
+            });
         });
-        totalCountLbl.setText("Total: " + entityTypeCount.values().stream().mapToInt(i -> i.intValue()).sum());
+
+        //initial count 
+		recomputeTotalItemsCount(entityTypeCount);
+    }
+    
+    private void recomputeTotalItemsCount(Map<Entity, Integer> entityTypeCount) {
+    	List<Integer> entityTypeCountValues = entityTypeCount.entrySet()
+                .stream()
+                .filter(e -> sortedEntityTypes.contains(e.getKey()) 
+                		&& checkBoxes.containsKey(e.getKey())
+                		&& checkBoxes.get(e.getKey()).getSelection())
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+    	
+        totalCountLbl.setText("Total: " + entityTypeCountValues.stream().mapToInt(i -> i.intValue()).sum());
     }
 
     public Set<Entity> getCheckedEntityTypes() {
