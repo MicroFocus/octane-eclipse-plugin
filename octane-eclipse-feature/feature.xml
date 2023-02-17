@@ -2,7 +2,7 @@
 <feature
       id="octane.eclipse.feature"
       label="ALM Octane IDE Integration"
-      version="2022.1.0"
+      version="2023.0.0"
       provider-name="Micro Focus">
 
    <description url="https://software.microfocus.com/en-us/products/alm-octane/overview">

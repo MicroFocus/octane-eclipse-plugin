@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ALM Octane IDE Plugin
 Bundle-SymbolicName: octane.eclipse.plugin;singleton:=true
-Bundle-Version: 2022.1.0
+Bundle-Version: 2023.0.0
 Bundle-Vendor: Micro Focus
 Bundle-Activator: com.hpe.octane.ideplugins.eclipse.Activator
 Require-Bundle: org.eclipse.core.runtime,
