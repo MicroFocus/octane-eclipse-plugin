@@ -63,7 +63,7 @@ public class WelcomeComposite extends Composite {
 
         Label lblCompanyLogo = new Label(this, SWT.NONE);
         lblCompanyLogo.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 2, 1));
-        lblCompanyLogo.setImage(ImageResources.MICROFOCUS_LOGO.getImage());
+        lblCompanyLogo.setImage(ImageResources.OPENTEXT_LOGO_LIGHT_THEME_128.getImage());
     }
 
     @Override
