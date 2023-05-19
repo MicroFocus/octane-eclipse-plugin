@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ALM Octane IDE Plugin
 Bundle-SymbolicName: octane.eclipse.plugin;singleton:=true
-Bundle-Version: 2023.0.0
-Bundle-Vendor: Micro Focus
+Bundle-Version: 2023.1.0
+Bundle-Vendor: Open Text
 Bundle-Activator: com.hpe.octane.ideplugins.eclipse.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.ui.widgets;bundle-version="1.1.0",
  org.eclipse.ui.forms;bundle-version="3.6.200",
  org.eclipse.core.filesystem;bundle-version="1.5.0",
- org.eclipse.ui.ide;bundle-version="3.11.0"
+ org.eclipse.ui.ide;bundle-version="3.11.0",
+ org.eclipse.e4.ui.css.swt.theme
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: javax.inject;version="1.0.0",
  org.slf4j;version="1.7.2"
