@@ -78,7 +78,7 @@ public class EntityCommentComposite extends StackLayoutComposite {
     public EntityCommentComposite(Composite parent, int style) {
         super(parent, style);
 
-        loadingComposite = new LoadingComposite(this, SWT.NONE);
+        loadingComposite = new LoadingComposite(this, SWT.NONE, 128);
         loadingComposite.setLoadingVerticalPosition(LoadingPosition.TOP);
 
         commentsComposite = new Composite(this, SWT.NONE);

@@ -154,7 +154,7 @@ public class SearchEditor extends EditorPart {
         	entityListComposite.setBackground(backgroundColor);
         }
         noSearchResultsComposite = new NoSearchResultsComposite(container, SWT.NONE);
-        loadingComposite = new LoadingComposite(container, SWT.NONE);
+        loadingComposite = new LoadingComposite(container, SWT.NONE, 128);
 
         entityListComposite.addEntityMouseListener(new OpenDetailTabEntityMouseListener());
         entityListComposite.setBackgroundMode(SWT.INHERIT_FORCE);
