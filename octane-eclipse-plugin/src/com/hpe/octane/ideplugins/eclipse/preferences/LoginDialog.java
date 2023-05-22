@@ -91,7 +91,7 @@ public class LoginDialog extends Dialog {
         StackLayoutComposite stackLayoutComposite = new StackLayoutComposite(container, SWT.BORDER);
         stackLayoutComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         
-        LoadingComposite loadingComposite = new LoadingComposite(stackLayoutComposite, SWT.NONE);
+        LoadingComposite loadingComposite = new LoadingComposite(stackLayoutComposite, SWT.NONE, 128);
 
         ScrolledComposite scrolledComposite = new ScrolledComposite(stackLayoutComposite, SWT.H_SCROLL | SWT.H_SCROLL);
         Browser.clearSessions();   

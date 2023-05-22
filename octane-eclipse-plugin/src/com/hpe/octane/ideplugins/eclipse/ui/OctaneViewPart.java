@@ -65,7 +65,7 @@ public abstract class OctaneViewPart extends ViewPart {
                     null).open();
         });
 
-        loadingComposite = new LoadingComposite(rootContainer, SWT.NONE);
+        loadingComposite = new LoadingComposite(rootContainer, SWT.NONE, 128);
         octaneViewControl = createOctanePartControl(rootContainer);
 
         Activator.addConnectionSettingsChangeHandler(() -> {

@@ -73,7 +73,7 @@ public class DescriptionComposite extends Composite {
         super(parent, style);
         setLayout(new FillLayout(SWT.HORIZONTAL));
         stackLayoutComposite = new StackLayoutComposite(this, SWT.NONE);
-        loadingComposite = new LoadingComposite(stackLayoutComposite, SWT.NONE);
+        loadingComposite = new LoadingComposite(stackLayoutComposite, SWT.NONE, 128);
         stackLayoutComposite.showControl(loadingComposite);
 
         browserDescHtml = factory.createBrowser(stackLayoutComposite, SWT.NONE);

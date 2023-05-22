@@ -72,12 +72,12 @@ public class LoadingComposite extends Composite {
      * @param parent
      * @param style
      */
-    public LoadingComposite(Composite parent, int style) {
+    public LoadingComposite(Composite parent, int style, int gifSize) {
         super(parent, style);
         
         this.parent = parent;
-        
-        setBackground(PlatformResourcesManager.getPlatformBackgroundColor());
+
+        setBackground(parent.getBackground());
         
         loader = new ImageLoader();
         
@@ -109,14 +109,14 @@ public class LoadingComposite extends Composite {
             @Override
             public void handleEvent(Event event) {
                 stopAnimation = false;
-                createAnimationThread();
+                createAnimationThread(gifSize);
             }
         });
         
-        createAnimationThread();
+        createAnimationThread(gifSize);
     }
     
-    private void createAnimationThread() {
+    private void createAnimationThread(int gifSize) {
         Display display = parent.getDisplay();
         GC shellGC = new GC(this);
         Color shellBackground = getBackground();
@@ -151,10 +151,10 @@ public class LoadingComposite extends Composite {
                             0,
                             imageData.width,
                             imageData.height,
-                            imageData.x,
-                            imageData.y,
-                            imageData.width,
-                            imageData.height);
+                            (imageData.width - gifSize) / 2,
+                            (imageData.height - gifSize) / 2,
+                            gifSize,
+                            gifSize);
 
                     /*
                      * Now loop through the images, creating and drawing each
@@ -183,10 +183,10 @@ public class LoadingComposite extends Composite {
                                         0,
                                         imageData.width,
                                         imageData.height,
-                                        imageData.x,
-                                        imageData.y,
-                                        imageData.width,
-                                        imageData.height);
+                                        (imageData.width - gifSize) / 2,
+                                        (imageData.height - gifSize) / 2,
+                                        gifSize,
+                                        gifSize);
                                 break;
                         }
 
@@ -200,10 +200,10 @@ public class LoadingComposite extends Composite {
                                 0,
                                 imageData.width,
                                 imageData.height,
-                                imageData.x,
-                                imageData.y,
-                                imageData.width,
-                                imageData.height);
+                                (imageData.width - gifSize) / 2,
+                                (imageData.height - gifSize) / 2,
+                                gifSize,
+                                gifSize);
 
                         /*
                          * Draw the off-screen image
