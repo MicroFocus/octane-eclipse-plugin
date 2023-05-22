@@ -284,7 +284,7 @@ public class EntityComboBox extends Composite {
 
     private void showLoading() {
         Arrays.stream(rootComposite.getChildren()).forEach(Control::dispose);
-        LoadingComposite loadingComposite = new LoadingComposite(rootComposite, SWT.NONE);
+        LoadingComposite loadingComposite = new LoadingComposite(rootComposite, SWT.NONE, 64);
         loadingComposite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
         rootComposite.setSize(rootComposite.getParent().getSize());
         rootComposite.layout();

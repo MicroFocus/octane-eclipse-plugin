@@ -96,7 +96,7 @@ public class EntityModelEditor extends EditorPart {
         rootComposite.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
         rootComposite.setBackground(PlatformResourcesManager.getPlatformBackgroundColor());
 
-        loadingComposite = new LoadingComposite(rootComposite, SWT.NONE);
+        loadingComposite = new LoadingComposite(rootComposite, SWT.NONE, 128);
         rootComposite.showControl(loadingComposite);
 
         entityComposite = new EntityComposite(rootComposite, SWT.NONE);
