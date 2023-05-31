@@ -118,7 +118,6 @@ public class LoadingComposite extends Composite {
     
     private void createAnimationThread(int gifSize) {
         Display display = parent.getDisplay();
-        GC shellGC = new GC(this);
         Color shellBackground = getBackground();
         
         animateThread = new Thread() {
@@ -235,9 +234,12 @@ public class LoadingComposite extends Composite {
                                         yPos = 0;
                                 }
 
+                                GC shellGC = new GC(LoadingComposite.this);
+
                                 shellGC.fillRectangle(0, 0, point.x, point.y);
                                 shellGC.drawImage(offScreenImage, xPos, yPos);
 
+                                shellGC.dispose();
                             }
                         });
 
