@@ -163,10 +163,17 @@ public enum ImageResources {
     private String getOctanePreloaderGifNameSuffix() {
     	IThemeEngine theme = (IThemeEngine) Display.getDefault().getData("org.eclipse.e4.ui.css.swt.theme");
     	
-    	if (theme.getActiveTheme().getLabel().equals("Dark")) {
-    		return "_dark-128.gif";
-    	} else {
-    		return "_light-128.gif";        		
-    	}
+    	//The loading gif makes the Eclipse crash on macOS or Linux
+    	//We'll force it to load a non-existing image, so it will always show "Loading..."
+    	String os = System.getProperty("os.name").toLowerCase();
+        if (os != null && os.indexOf("win") >= 0) {
+	    	if (theme.getActiveTheme().getLabel().equals("Dark")) {
+	    		return "_dark-128.gif";
+	    	} else {
+	    		return "_light-128.gif";        		
+	    	}
+        } else {
+        	return "";
+        }
     }
 }
