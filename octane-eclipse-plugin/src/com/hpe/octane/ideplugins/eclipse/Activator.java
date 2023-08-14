@@ -179,7 +179,7 @@ public class Activator extends AbstractUIPlugin {
                     authentication = new EncodedAuthentication(username) {
 
                         @Override
-                        public String getPassword() {
+                        public String getAuthenticationSecret() {
                             try {
                                 return securePrefs.get(PreferenceConstants.PASSWORD, "");
                             } catch (StorageException e) {
