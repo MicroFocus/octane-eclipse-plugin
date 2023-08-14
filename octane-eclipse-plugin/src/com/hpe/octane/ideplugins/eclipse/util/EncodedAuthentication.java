@@ -36,6 +36,6 @@ public abstract class EncodedAuthentication extends UserAuthentication{
        super(username, "");
     }
     
-    public abstract String getPassword();
+    public abstract String getAuthenticationSecret();
     
 }
