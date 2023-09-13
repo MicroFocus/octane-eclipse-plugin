@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ALM Octane IDE Plugin
 Bundle-SymbolicName: octane.eclipse.plugin;singleton:=true
-Bundle-Version: 2023.1.0
+Bundle-Version: 2023.1.1
 Bundle-Vendor: Open Text
 Bundle-Activator: com.hpe.octane.ideplugins.eclipse.Activator
 Require-Bundle: org.eclipse.core.runtime,

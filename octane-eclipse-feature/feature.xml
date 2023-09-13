@@ -2,7 +2,7 @@
 <feature
       id="octane.eclipse.feature"
       label="ALM Octane IDE Integration"
-      version="2023.1.0"
+      version="2023.1.1"
       provider-name="Open Text">
 
    <description url="https://software.microfocus.com/en-us/products/alm-octane/overview">
