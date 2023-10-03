@@ -8,7 +8,7 @@
 		<relativePath>..</relativePath>
 		<groupId>com.hpe.adm.octane.ideplugins</groupId>
 		<artifactId>octane-eclipse-parent</artifactId>
-		<version>2023.1.1</version>
+		<version>2023.1.2</version>
 	</parent>
 	<artifactId>octane.eclipse.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
