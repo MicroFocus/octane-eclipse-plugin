@@ -42,7 +42,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.resource.ImageResources;
 public class WelcomeComposite extends Composite {
 
     private static final String OCTANE_SETTINGS_TEXT = "To start, go to Settings and connect.";
-    private static final String WELCOME_TEXT = "Welcome to the ALM Octane plugin";
+    private static final String WELCOME_TEXT = "Welcome to the ValueEdge plugin";
 
     /**
      * Create the composite.

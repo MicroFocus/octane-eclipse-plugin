@@ -81,10 +81,10 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
     public static final String ID = "com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferencePage";
     public static final String CORRECT_URL_FORMAT_MESSAGE = "Example: (http|https)://{serverurl[:port]}/?p={sharedspaceId}/{workspaceId}";
     
-    private static final String userPassAuthInfoText = "Log into ALM Octane directly with your user name and password, in non-SSO environments. " + System.lineSeparator() +
+    private static final String userPassAuthInfoText = "Log into ValueEdge directly with your user name and password, in non-SSO environments. " + System.lineSeparator() +
             "This method saves your login credentials between sessions, so you don’t have to re-enter them.";
 
-    private static final String browserAuthInfoText = "Log into ALM Octane using a browser. " + System.lineSeparator() +
+    private static final String browserAuthInfoText = "Log into ValueEdge using a browser. " + System.lineSeparator() +
             "You can use this method for non-SSO, SSO, and federated environments. " + System.lineSeparator() +
             "Your login credentials are not saved between sessions, so you will have to re-enter them each time.";
 
@@ -353,7 +353,7 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         } catch (StorageException e) {
             logger.log(new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR,
-                    "An exception has occured when loading the Octane connection details", e));
+                    "An exception has occured when loading the ValueEdge connection details", e));
         }
     }
 
@@ -372,13 +372,13 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
             securePrefs.flush();
         } catch (StorageException | IOException e) {
             logger.log(new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR,
-                    "An exception has occured when saving the Octane connection details", e));
+                    "An exception has occured when saving the ValueEdge connection details", e));
         }
     }
 
     private void setHints(boolean forServerUrlField) {
         if (forServerUrlField) {
-            textServerUrl.setMessage("Copy paste your Octane URL from the browser here...");
+            textServerUrl.setMessage("Copy paste your ValueEdge URL from the browser here...");
         }
         textSharedSpace.setText("Retrieved from server URL");
         textWorkspace.setText(textSharedSpace.getText());
@@ -482,13 +482,13 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
             version = OctaneVersionService.getOctaneVersion(connectionSettings);
             version.discardBuildNumber();
             if (version.compareTo(OctaneVersion.DYNAMO) < 0) {
-                new InfoPopup("ALM Octane Settings",
-                        "Octane version not supported. This plugin works with Octane versions starting " + OctaneVersion.DYNAMO.getVersionString(),
+                new InfoPopup("ValueEdge Settings",
+                        "ValueEdge version not supported. This plugin works with ValueEdge versions starting " + OctaneVersion.DYNAMO.getVersionString(),
                         550, 100).open();
             }
             if (buttonBrowserAuth.getSelection() && version.compareTo(OctaneVersion.INTER_P2) < 0) {
-                new InfoPopup("ALM Octane Settings",
-                        "Login with browser is only supported starting from Octane server version: " + OctaneVersion.INTER_P2.getVersionString(),
+                new InfoPopup("ValueEdge Settings",
+                        "Login with browser is only supported starting from ValueEdge server version: " + OctaneVersion.INTER_P2.getVersionString(),
                         550, 100).open();
 
                 // Reset to user pass
@@ -500,12 +500,12 @@ public class PluginPreferencePage extends PreferencePage implements IWorkbenchPr
 
             StringBuilder message = new StringBuilder();
 
-            message.append("Failed to determine Octane server version, http call to ")
+            message.append("Failed to determine ValueEdge server version, http call to ")
                     .append(OctaneVersionService.getServerVersionUrl(connectionSettings))
                     .append(" failed. Assuming server version is higher or equal to: ")
                     .append(version.getVersionString());
 
-            new InfoPopup("ALM Octane Settings", message.toString(), 550, 100).open();
+            new InfoPopup("ValueEdge Settings", message.toString(), 550, 100).open();
         }
     }
 

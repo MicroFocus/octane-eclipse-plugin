@@ -58,7 +58,7 @@ public class SnakeEditor extends EditorPart {
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
         setSite(site);
         setInput(input);
-        setPartName("Octane Snake");
+        setPartName("ValueEdge Snake");
     }
 
     /**

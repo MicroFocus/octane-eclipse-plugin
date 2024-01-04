@@ -151,7 +151,7 @@ public class DescriptionComposite extends Composite {
                         errDialog.addButton("Close", () -> {
                             errDialog.close();
                         });
-                        errDialog.displayException(pictureException, "ALM Octane exception");   
+                        errDialog.displayException(pictureException, "ValueEdge exception");   
                     }
                 });
             }

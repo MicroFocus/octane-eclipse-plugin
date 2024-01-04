@@ -61,8 +61,6 @@ public enum ImageResources {
 	FIELDS_ON("fields-on.png"),
 	INFO("info.png"),
 	MYWORK("mywork.png"),
-	OCTANE_ICON_13X13("octane-icon-13x13.png"),
-	OCTANE_ICON_RED_13X13("octane-icon-red-13x13.png"),
 	OCTANE_LOGO("octane-logo.png"),
 	OCTANE_PRELOADER("octane_preloader"),
 	OCTANE_PRELOADER_DARK_128("octane_preloader_dark-128.gif"),

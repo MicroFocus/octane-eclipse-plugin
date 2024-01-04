@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Octane Eclipse Plugin"
+            name="ValueEdge Eclipse Plugin"
             id="octane-eclipse-plugin">
       </category>
       <view
@@ -83,7 +83,7 @@
             default="false"
             icon="icons/octane-icon-13x13.png"
             id="com.hpe.octane.ideplugins.eclipse.ui.snake.SnakeEditor"
-            name="Octane Snake">
+            name="ValueEdge Snake">
       </editor>
    </extension>
    <extension
@@ -104,7 +104,7 @@
       <page
             class="com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferencePage"
             id="com.hpe.octane.ideplugins.eclipse.preferences.PluginPreferencePage"
-            name="ALM Octane Settings">
+            name="ValueEdge Settings">
       </page>
    </extension>
    <extension
