@@ -89,7 +89,8 @@ public class CommitMessageUtil {
                 } else {
                     activeEntityModel = currentItem.toEntityModel();
                 }
-                String commitMessage = generateClientSideCommitMessage(activeEntityModel);
+                Boolean isTaskParent = false;
+                String commitMessage = generateClientSideCommitMessage(activeEntityModel, isTaskParent);
 
                 // Validate against server side patterns, since generation based
                 // on a regex with no params is not possible
@@ -158,17 +159,21 @@ public class CommitMessageUtil {
     /*
      * Task requires story field to be loaded
      */
-    private static String generateClientSideCommitMessage(EntityModel entityModel) {
+	private static String generateClientSideCommitMessage(EntityModel entityModel, Boolean isTaskParent) {
 
         StringBuilder messageBuilder = new StringBuilder();
 
         String entityId = String.valueOf(entityModel.getValue("id").getValue());
+        
+        String commitMessage = "my commit message";
 
         if (Entity.TASK == Entity.getEntityType(entityModel)) {
+        	
             // Tasks include parent commit message info
             EntityModel taskParent = ((ReferenceFieldModel) entityModel.getValue("story")).getValue();
+           
             messageBuilder
-                    .append(generateClientSideCommitMessage(taskParent));
+                    .append(generateClientSideCommitMessage(taskParent, true));
         }
 
         messageBuilder
@@ -176,6 +181,10 @@ public class CommitMessageUtil {
                 .append(" #")
                 .append(entityId)
                 .append(": ");
+        
+        if (!isTaskParent) {
+        	messageBuilder.append(commitMessage);
+        }
 
         return messageBuilder.toString();
     }
