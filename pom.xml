@@ -20,14 +20,14 @@
 		<logback.version>1.2.13</logback.version>
 
 		<tycho-version>2.7.5</tycho-version>
-		<octane.common.version>1.9.1-SNAPSHOT</octane.common.version>
-		<java.version>11</java.version>
+		<octane.common.version>1.9.2-SNAPSHOT</octane.common.version>
+		<java.version>17</java.version>
 		<signhp.version>15.0</signhp.version>
 		<sign-hp-utility.version>1.0.5</sign-hp-utility.version>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.testTarget>11</maven.compiler.testTarget>
-		<maven.compiler.testSource>11</maven.compiler.testSource>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.testTarget>${java.version}</maven.compiler.testTarget>
+		<maven.compiler.testSource>${java.version}</maven.compiler.testSource>
 	</properties>
 
 	<repositories>

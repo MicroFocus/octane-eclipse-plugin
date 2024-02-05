@@ -20,7 +20,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.filesystem;bundle-version="1.5.0",
  org.eclipse.ui.ide;bundle-version="3.11.0",
  org.eclipse.e4.ui.css.swt.theme
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: javax.inject;version="1.0.0",
  org.slf4j;version="1.7.2"
 Bundle-ActivationPolicy: lazy
