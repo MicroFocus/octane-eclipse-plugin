@@ -40,6 +40,8 @@ import org.eclipse.swt.widgets.Display;
 
 import com.hpe.octane.ideplugins.eclipse.Activator;
 
+import org.apache.commons.io.FilenameUtils;
+
 /**
  * Can be used as constants <br>
  * Fetch images for the plugin or for the test SWT shells used for debugging
@@ -116,7 +118,8 @@ public enum ImageResources {
     // Run this if you're lazy
     public static void main(String[] args) {
         String imgPath = System.getProperty("user.dir") + "/icons";
-        File dir = new File(imgPath);
+        String normalizedPath = FilenameUtils.normalize(imgPath);
+        File dir = new File(normalizedPath);
         File[] filesList = dir.listFiles();
 
         String enumValuesString = Arrays.stream(filesList)
