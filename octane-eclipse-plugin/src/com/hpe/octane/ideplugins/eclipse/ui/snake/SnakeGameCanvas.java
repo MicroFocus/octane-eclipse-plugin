@@ -28,6 +28,7 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.snake;
 
+import java.security.SecureRandom;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -138,7 +139,7 @@ public class SnakeGameCanvas extends Canvas {
     private static final int INIT_SPEED = 200;
     private int speed = INIT_SPEED;
 
-    private Random random = new Random();
+    private SecureRandom secureRandom = new SecureRandom();
 
     private Timer gameLoopTimer = new Timer();
     private TimerTask gameLoopTask;
@@ -348,7 +349,7 @@ public class SnakeGameCanvas extends Canvas {
         }
 
         // Pick a random element of the set
-        int index = ThreadLocalRandom.current().nextInt(0, possiblePositions.size());
+        int index = secureRandom.nextInt(possiblePositions.size());
         Iterator<SpritePos> iter = possiblePositions.iterator();
         for (int i = 0; i < index; i++) {
             iter.next();
@@ -519,9 +520,9 @@ public class SnakeGameCanvas extends Canvas {
         if (backgroundColor != null && !backgroundColor.isDisposed()) {
             backgroundColor.dispose();
         }
-        int red = random.nextInt(256);
-        int green = random.nextInt(256);
-        int blue = random.nextInt(256);
+        int red = secureRandom.nextInt(256);
+        int green = secureRandom.nextInt(256);
+        int blue = secureRandom.nextInt(256);
         backgroundColor = new Color(Display.getCurrent(), red, green, blue);
     }
 

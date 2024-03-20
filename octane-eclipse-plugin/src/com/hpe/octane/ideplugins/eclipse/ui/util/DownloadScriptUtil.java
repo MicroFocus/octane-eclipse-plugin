@@ -192,10 +192,9 @@ public class DownloadScriptUtil {
         try {
             f.createNewFile();
             if (script != null) {
-                Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8));
-                out.append(script);
-                out.flush();
-                out.close();
+               try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8))) {
+                   out.append(script);
+               }
             }
         } catch (IOException e) {
             Activator.getDefault().getLog().log(new Status(Status.ERROR, Activator.PLUGIN_ID,
