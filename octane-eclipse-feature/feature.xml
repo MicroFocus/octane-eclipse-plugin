@@ -2,7 +2,7 @@
 <feature
       id="octane.eclipse.feature"
       label="ValueEdge IDE Integration"
-      version="24.1.0"
+      version="24.2.0"
       provider-name="Open Text">
 
    <description url="https://software.microfocus.com/en-us/products/alm-octane/overview">
