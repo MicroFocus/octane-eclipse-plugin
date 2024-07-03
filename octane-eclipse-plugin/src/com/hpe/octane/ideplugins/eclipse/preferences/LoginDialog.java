@@ -51,7 +51,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.StackLayoutComposite;
 
 public class LoginDialog extends Dialog {
 
-    public  static final String DEFAULT_TITLE = "ValueEdge Plugin: Login";
+    public  static final String DEFAULT_TITLE = "OpenText™️ Core Software Delivery Platform Plugin: Login";
     private static final String LOGIN_TEXT = "If the page below does not display correctly, <a href=\"\">click here to use your system default browser.</a>";
 
     private String loginUrl;
@@ -68,7 +68,7 @@ public class LoginDialog extends Dialog {
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
         this.shell = shell;
-        shell.setText("ValueEdge Plugin: Login");
+        shell.setText("OpenText™️ Core Software Delivery Platform Plugin: Login");
     }
     
     public void setTitle(String title) {
