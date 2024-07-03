@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.hpe.adm.octane.ideplugins</groupId>
 	<artifactId>octane-eclipse-parent</artifactId>
-	<version>24.2.0</version>
+	<version>24.3.0</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -20,7 +20,7 @@
 		<logback.version>1.2.13</logback.version>
 
 		<tycho-version>2.7.5</tycho-version>
-		<octane.common.version>CE-24.2</octane.common.version>
+		<octane.common.version>CE-24.3</octane.common.version>
 		<java.version>17</java.version>
 		<signhp.version>15.0</signhp.version>
 		<sign-hp-utility.version>1.0.5</sign-hp-utility.version>
