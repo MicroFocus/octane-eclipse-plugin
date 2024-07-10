@@ -28,12 +28,10 @@
  ******************************************************************************/
 package com.hpe.octane.ideplugins.eclipse.ui.util;
 
-import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
@@ -44,7 +42,7 @@ import com.hpe.octane.ideplugins.eclipse.ui.util.resource.ImageResources;
 public class WelcomeComposite extends Composite {
 
     private static final String OCTANE_SETTINGS_TEXT = "To start, go to Settings and connect.";
-    private static final String WELCOME_TEXT = "Welcome to the OpenText™️ Core Software Delivery Platform plugin";
+    private static final String WELCOME_TEXT = "Welcome to the ValueEdge plugin";
 
     /**
      * Create the composite.
@@ -59,15 +57,10 @@ public class WelcomeComposite extends Composite {
         Label lblPlaceholder = new Label(this, SWT.NONE);
         lblPlaceholder.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 3, 1));
 
-        IThemeEngine theme = (IThemeEngine) Display.getDefault().getData("org.eclipse.e4.ui.css.swt.theme");
 
         Label lblProductLogo = new Label(this, SWT.NONE);
         lblProductLogo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 2, 1));
-        if (theme.getActiveTheme().getLabel().equals("Dark")) {
-            lblProductLogo.setImage(ImageResources.OCTANE_LOGO_DARK.getImage());
-        } else {
-            lblProductLogo.setImage(ImageResources.OCTANE_LOGO_LIGHT.getImage());
-        }
+        lblProductLogo.setImage(ImageResources.OCTANE_LOGO.getImage());
 
         Label lblWelcome = new Label(this, SWT.NONE);
         lblWelcome.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));

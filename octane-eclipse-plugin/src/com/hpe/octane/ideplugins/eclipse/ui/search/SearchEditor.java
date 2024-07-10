@@ -159,7 +159,7 @@ public class SearchEditor extends EditorPart {
         entityListComposite.addEntityMouseListener(new OpenDetailTabEntityMouseListener());
         entityListComposite.setBackgroundMode(SWT.INHERIT_FORCE);
         searchJob = new SearchJob(
-                "Searching OpenText™️ Core Software Delivery Platform for: \"" + searchEditorInput.getQuery() + "\"",
+                "Searching ValueEdge for: \"" + searchEditorInput.getQuery() + "\"",
                 searchEditorInput.getQuery(),
                 entityData,
                 searchEntityTypesCopy.toArray(new Entity[] {}));
