@@ -147,7 +147,7 @@ public class MyWorkView extends OctaneViewPart {
                             PluginPreferenceStorage.setActiveItem(null);
                             new InfoPopup(
                                     "Your Previously saved connection settings do not seem to work",
-                                    "Please go to settings and test your connection to ValueEdge",
+                                    "Please go to settings and test your connection to Core Software Delivery Platform",
                                     400,
                                     100,
                                     false,

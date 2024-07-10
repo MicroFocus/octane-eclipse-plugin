@@ -1,10 +1,10 @@
 # octane-eclipse-plugin
-## Eclipse IDE Integration for ValueEdge
+## Eclipse IDE Integration for Core Software Delivery Platform
 
 The plugin shares a common service layer with: https://github.com/MicroFocus/octane-intellij-plugin <br>
 Common: https://github.com/MicroFocus/octane-plugin-common <br>
 
-Connection to the server is done using the REST SDK for ValueEdge, see: <br>
+Connection to the server is done using the REST SDK for Core Software Delivery Platform, see: <br>
 * https://github.com/MicroFocus/ALMOctaneJavaRESTSDK
 
 ### How to build:
