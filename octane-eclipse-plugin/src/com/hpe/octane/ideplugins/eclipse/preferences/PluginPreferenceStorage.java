@@ -56,7 +56,7 @@ public class PluginPreferenceStorage {
     }
 
     public interface PreferenceConstants {
-        public static final String OCTANE_SERVER_URL = "valueEdgeServerUrl";
+        public static final String OCTANE_SERVER_URL = "octaneServerUrl";
         public static final String IS_BROWSER_AUTH = "isBrowserAuth";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
@@ -205,7 +205,7 @@ public class PluginPreferenceStorage {
             return SecurePreferencesFactory.getDefault().node(workspaceId);
         } catch (CoreException e) {
             Activator.getDefault().getLog().log(new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR,
-                    "An exception has occured when trying to access the ValueEdge connection details", e));
+                    "An exception has occured when trying to access the Core Software Delivery Platform connection details", e));
 
             String workspacePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
             return SecurePreferencesFactory.getDefault().node(workspacePath);

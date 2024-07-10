@@ -398,7 +398,7 @@ public class SnakeGameCanvas extends Canvas {
         // Now draw something on the board depending on the game state
         if (GameState.NOT_STARTED.equals(gameState)) {
             drawGameString(g, x1, y1, horizontalPosCount * spriteSize, verticalPosCount * spriteSize,
-                    createColor(COLOR_OCTANE_BLUE), "VALUEEDGE SNAKE", "Click to start, space/click to pause", "");
+                    createColor(COLOR_OCTANE_BLUE), "CORE SOFTWARE DELIVERY PLATFORM SNAKE", "Click to start, space/click to pause", "");
 
         } else if (GameState.PAUSED.equals(gameState)) {
             drawGameString(g, x1, y1, horizontalPosCount * spriteSize, verticalPosCount * spriteSize,
@@ -571,7 +571,7 @@ public class SnakeGameCanvas extends Canvas {
     }
 
     private void drawGameString(GC g, int x, int y, int width, int height, Color titleColor, String title, String subTitle, String subsubTitle) {
-        int titleFontSize = width * 5 / 100;
+        int titleFontSize = width * 3 / 100;
         int bottomFontSize = width * 2 / 100;
         titleFontSize = titleFontSize < 0 ? 0 : titleFontSize;
         bottomFontSize = bottomFontSize < 0 ? 0 : bottomFontSize;

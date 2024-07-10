@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="octane.eclipse.feature"
-      label="ValueEdge IDE Integration"
+      label="Core Software Delivery Platform IDE Integration"
       version="24.3.0"
       provider-name="Open Text">
 
    <description url="https://software.microfocus.com/en-us/products/alm-octane/overview">
-      Enables integration with ValueEdge
+      Enables integration with Core Software Delivery Platform
    </description>
 
    <copyright>
@@ -43,7 +43,7 @@
    </license>
 
    <url>
-      <update label="ValueEdge IDE Integration Update Site" url="http://microfocus.github.io/octane-eclipse-plugin/update-site/"/>
+      <update label="Core Software Delivery Platform IDE Integration Update Site" url="http://microfocus.github.io/octane-eclipse-plugin/update-site/"/>
    </url>
 
    <plugin

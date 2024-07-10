@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ValueEdge IDE Plugin
+Bundle-Name: Core Software Delivery Platform IDE Plugin
 Bundle-SymbolicName: octane.eclipse.plugin;singleton:=true
 Bundle-Version: 24.3.0
 Bundle-Vendor: Open Text

@@ -151,7 +151,7 @@ public class DescriptionComposite extends Composite {
                         errDialog.addButton("Close", () -> {
                             errDialog.close();
                         });
-                        errDialog.displayException(pictureException, "ValueEdge exception");   
+                        errDialog.displayException(pictureException, "Core Software Delivery Platform exception");   
                     }
                 });
             }

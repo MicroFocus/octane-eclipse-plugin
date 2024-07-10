@@ -195,7 +195,7 @@ public class Activator extends AbstractUIPlugin {
 
         } catch (Exception e) {
             getLog().log(new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR,
-                    "An exception has occured when loading the ValueEdge connection details", e));
+                    "An exception has occured when loading the Core Software Delivery Platform connection details", e));
         }
 
         settingsProviderInstance.addChangeHandler(() -> {
