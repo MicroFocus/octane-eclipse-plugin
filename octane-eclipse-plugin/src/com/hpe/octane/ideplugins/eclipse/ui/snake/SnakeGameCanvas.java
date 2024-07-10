@@ -571,7 +571,7 @@ public class SnakeGameCanvas extends Canvas {
     }
 
     private void drawGameString(GC g, int x, int y, int width, int height, Color titleColor, String title, String subTitle, String subsubTitle) {
-        int titleFontSize = width * 3 / 100;
+        int titleFontSize = width * 5 / 100;
         int bottomFontSize = width * 2 / 100;
         titleFontSize = titleFontSize < 0 ? 0 : titleFontSize;
         bottomFontSize = bottomFontSize < 0 ? 0 : bottomFontSize;
