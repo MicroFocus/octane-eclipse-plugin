@@ -2,7 +2,7 @@
 <feature
       id="octane.eclipse.feature"
       label="Core Software Delivery Platform IDE Integration"
-      version="24.3.0"
+      version="24.4.0"
       provider-name="Open Text">
 
    <description url="https://software.microfocus.com/en-us/products/alm-octane/overview">

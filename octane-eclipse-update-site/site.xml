@@ -3,7 +3,7 @@
    <description name="Core Software Delivery Platform IDE Integration Update Site" url="http://microfocus.github.io/octane-eclipse-plugin/update-site/">
       Install the latest verison of the Core Software Delivery Platform IDE Integration
    </description>
-   <feature url="features/octane.eclipse.feature_24.3.0.jar" id="octane.eclipse.feature" version="24.3.0">
+   <feature url="features/octane.eclipse.feature_24.4.0.jar" id="octane.eclipse.feature" version="24.4.0">
       <category name="alm.octane"/>
    </feature>
    <category-def name="alm.octane" label="Core Software Delivery Platform"/>
