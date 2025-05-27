@@ -10,7 +10,7 @@
 		<artifactId>octane-eclipse-parent</artifactId>
 		<version>24.4.0</version>
 	</parent>
-	<artifactId>octane.eclipse.plugin</artifactId>
+	<artifactId>com.hpe.adm.octane.ideplugins.octane.eclipse.plugin</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 	<profiles>
