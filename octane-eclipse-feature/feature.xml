@@ -47,7 +47,7 @@
    </url>
 
    <plugin
-         id="octane.eclipse.plugin"
+         id="com.hpe.adm.octane.ideplugins.octane.eclipse.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"
