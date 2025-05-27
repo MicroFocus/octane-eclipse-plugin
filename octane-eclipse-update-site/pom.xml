@@ -35,11 +35,15 @@
 				<version>${tycho-version}</version>
 				<executions>
 					<execution>
-						<id>assemble-repository</id>
+						<id>default-assemble-repository</id>
 						<phase>package</phase>
 						<goals>
 							<goal>assemble-repository</goal>
+							<goal>category-p2-metadata</goal>
 						</goals>
+						<configuration>
+							<categoryFile>category.xml</categoryFile>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
