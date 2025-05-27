@@ -51,7 +51,7 @@
 			<groupId>com.hpe.adm.octane.ideplugins</groupId>
 			<artifactId>octane.eclipse.plugin</artifactId>
 			<version>24.4.0</version>
-			<type>eclipse-feature</type>
+			<type>eclipse-plugin</type>
 		</dependency>
 	</dependencies>
 </project>
