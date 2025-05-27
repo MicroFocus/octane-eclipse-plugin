@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<feature
+<feature>
       id="octane.eclipse.feature"
       label="Core Software Delivery Platform IDE Integration"
       version="24.4.0"
@@ -50,7 +50,7 @@
          id="octane.eclipse.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="${version}"
          unpack="false"/>
 
 </feature>
