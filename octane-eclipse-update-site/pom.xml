@@ -67,7 +67,7 @@
 								</goals>
 								<configuration>
 									<categoryFile>${project.basedir}/category.xml</categoryFile>
-									<outputFolder>${project.build.directory}/signed-repository</outputFolder>
+									<outputFolder>${project.build.directory}/target/signed-repository</outputFolder>
 									<repository>
 										<features>
 											<feature>
