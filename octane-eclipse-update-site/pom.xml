@@ -35,6 +35,44 @@
 				<version>${tycho-version}</version>
 				<executions>
 					<execution>
+						<id>sign-jars</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>docker</executable>
+							<workingDirectory>${project.basedir}</workingDirectory>
+							<arguments>
+								<argument>run</argument>
+								<argument>-v</argument>
+								<argument>${project.basedir}:/opt/sign</argument>
+								<argument>-w</argument>
+								<argument>/opt/sign</argument>
+								<argument>-e</argument>
+								<argument>CODESEAL_GATEWAY=https://codeseal.otxlab.net</argument>
+								<argument>-e</argument>
+								<argument>CODESEAL_HTTP_PROXY_HOST=${env.CODESEAL_HTTP_PROXY_HOST}</argument>
+								<argument>-e</argument>
+								<argument>CODESEAL_HTTP_PROXY_PORT=${env.CODESEAL_HTTP_PROXY_PORT}</argument>
+								<argument>-e</argument>
+								<argument>CODESEAL_AUTH_TOKEN=${env.CODESEAL_AUTH_TOKEN}</argument>
+								<argument>-e</argument>
+								<argument>CODESEAL_CERT_ID=${env.CODESEAL_RELEASE_CERT}</argument>
+								<argument>-e</argument>
+								<argument>CODESEAL_P2M_RELEASE_VERSION=${project.version}</argument>
+								<argument>-e</argument>
+								<argument>CODESEAL_LOG_LEVEL=verbose</argument>
+								<argument>-e</argument>
+								<argument>CODESEAL_SIGN_FULL=true</argument>
+								<argument>artifactory.otxlab.net/comc-codeseal-docker-rel/codeseal-agent:${env.CODESEAL_VERSION}</argument>
+								<argument>codeseal</argument>
+								<argument>sign</argument>
+								<argument>/opt/sign/octane-eclipse-update-site/target/repository/plugins/octane.eclipse.plugin_${project.version}.jar</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
 						<id>assemble-repository</id>
 						<phase>package</phase>
 						<goals>
