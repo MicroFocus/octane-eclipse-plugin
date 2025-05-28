@@ -49,4 +49,31 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>generate-signed-repo</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-p2-repository-plugin</artifactId>
+						<version>${tycho-version}</version>
+						<executions>
+							<execution>
+								<id>assemble-signed-repository</id>
+								<goals>
+									<goal>assemble-repository</goal>
+								</goals>
+								<phase>verify</phase>
+								<configuration>
+									<basedir>${project.basedir}/signed-artifacts</basedir>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>
