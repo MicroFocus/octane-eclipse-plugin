@@ -60,30 +60,30 @@
 						<version>${tycho-version}</version>
 						<executions>
 							<execution>
-								<id>assemble-signed-repository</id>
+								<id>fix-signed-artifacts-metadata</id>
 								<phase>verify</phase>
 								<goals>
-									<goal>assemble-repository</goal>
+									<goal>fix-artifacts-metadata</goal>
 								</goals>
 								<configuration>
 									<categoryFile>${project.basedir}/category.xml</categoryFile>
-									<outputFolder>${project.build.directory}/signed-repository</outputFolder>
-									<repository>
-										<features>
-											<feature>
-												<id>octane.eclipse.feature</id>
-												<version>24.4.0</version>
-												<location>${project.basedir}/signed-artifacts/features/octane.eclipse.feature_24.4.0.jar</location>
-											</feature>
-										</features>
-										<bundles>
-											<bundle>
-												<id>octane.eclipse.plugin</id>
-												<version>24.4.0</version>
-												<location>${project.basedir}/signed-artifacts/plugins/octane.eclipse.plugin_24.4.0.jar</location>
-											</bundle>
-										</bundles>
-									</repository>
+<!--									<outputFolder>${project.build.directory}/signed-repository</outputFolder>-->
+<!--									<repository>-->
+<!--										<features>-->
+<!--											<feature>-->
+<!--												<id>octane.eclipse.feature</id>-->
+<!--												<version>24.4.0</version>-->
+<!--												<location>${project.basedir}/signed-artifacts/features/octane.eclipse.feature_24.4.0.jar</location>-->
+<!--											</feature>-->
+<!--										</features>-->
+<!--										<bundles>-->
+<!--											<bundle>-->
+<!--												<id>octane.eclipse.plugin</id>-->
+<!--												<version>24.4.0</version>-->
+<!--												<location>${project.basedir}/signed-artifacts/plugins/octane.eclipse.plugin_24.4.0.jar</location>-->
+<!--											</bundle>-->
+<!--										</bundles>-->
+<!--									</repository>-->
 								</configuration>
 							</execution>
 						</executions>
