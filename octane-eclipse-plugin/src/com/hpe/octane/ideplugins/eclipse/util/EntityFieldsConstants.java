@@ -118,7 +118,14 @@ public class EntityFieldsConstants {
         supportedEntitiesThatAllowDetailView.add(Entity.MANUAL_TEST);
         supportedEntitiesThatAllowDetailView.add(Entity.GHERKIN_TEST);
         supportedEntitiesThatAllowDetailView.add(Entity.MANUAL_TEST_RUN);
+        supportedEntitiesThatAllowDetailView.add(Entity.TEST_SUITE);
         supportedEntitiesThatAllowDetailView.add(Entity.TEST_SUITE_RUN);
         supportedEntitiesThatAllowDetailView.add(Entity.REQUIREMENT);
+        supportedEntitiesThatAllowDetailView.add(Entity.FEATURE);
+        supportedEntitiesThatAllowDetailView.add(Entity.UNIT);
+        supportedEntitiesThatAllowDetailView.add(Entity.MODEL);
+        supportedEntitiesThatAllowDetailView.add(Entity.MANUAL_ACTION);
+        supportedEntitiesThatAllowDetailView.add(Entity.AUTO_ACTION);
+        supportedEntitiesThatAllowDetailView.add(Entity.QUALITY_GATE);
     }
 }

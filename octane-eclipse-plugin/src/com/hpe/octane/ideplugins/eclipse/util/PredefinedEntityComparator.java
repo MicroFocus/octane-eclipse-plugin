@@ -52,6 +52,11 @@ public class PredefinedEntityComparator implements Comparator<Entity> {
             Entity.TEST_SUITE_RUN,
             Entity.MANUAL_TEST_RUN,
             Entity.COMMENT,
+            Entity.UNIT,
+            Entity.MODEL,
+            Entity.MANUAL_ACTION,
+            Entity.AUTO_ACTION,
+            Entity.QUALITY_GATE
     });
 
     @Override

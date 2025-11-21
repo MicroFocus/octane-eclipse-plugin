@@ -114,6 +114,98 @@ public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
                 fsEstimatedHours,
                 // subtitle
                 fsRelease));
+        
+        fieldSetterMap.put(Entity.FEATURE, asList(
+                // top
+                fsPhase,
+                fsStoryPoints,
+                fsOwner,
+                fsAuthor,
+                // bottom
+                fsInvestedHours,
+                fsRemainingHours,
+                fsEstimatedHours,
+                // subtitle
+                fsRelease));
+        
+        fieldSetterMap.put(Entity.TEST_SUITE, asList(
+                // top
+                fsPhase,
+                fsStoryPoints,
+                fsOwner,
+                fsAuthor,
+                // bottom
+                fsInvestedHours,
+                fsRemainingHours,
+                fsEstimatedHours,
+                // subtitle
+                fsRelease));
+        
+        fieldSetterMap.put(Entity.UNIT, asList(
+                // top
+                fsPhase,
+                fsStoryPoints,
+                fsOwner,
+                fsAuthor,
+                // bottom
+                fsInvestedHours,
+                fsRemainingHours,
+                fsEstimatedHours,
+                // subtitle
+                fsRelease));
+        
+        fieldSetterMap.put(Entity.MODEL, asList(
+                // top
+                fsPhase,
+                fsStoryPoints,
+                fsOwner,
+                fsAuthor,
+                // bottom
+                fsInvestedHours,
+                fsRemainingHours,
+                fsEstimatedHours,
+                // subtitle
+                fsRelease));
+        
+        fieldSetterMap.put(Entity.MANUAL_ACTION, asList(
+                // top
+                fsPhase,
+                fsStoryPoints,
+                fsOwner,
+                fsAuthor,
+                // bottom
+                fsInvestedHours,
+                fsRemainingHours,
+                fsEstimatedHours,
+                // subtitle
+                fsRelease));
+        
+        
+        fieldSetterMap.put(Entity.AUTO_ACTION, asList(
+                // top
+                fsPhase,
+                fsStoryPoints,
+                fsOwner,
+                fsAuthor,
+                // bottom
+                fsInvestedHours,
+                fsRemainingHours,
+                fsEstimatedHours,
+                // subtitle
+                fsRelease));
+        
+        fieldSetterMap.put(Entity.QUALITY_GATE, asList(
+                // top
+                fsPhase,
+                fsStoryPoints,
+                fsOwner,
+                fsAuthor,
+                // bottom
+                fsInvestedHours,
+                fsRemainingHours,
+                fsEstimatedHours,
+                // subtitle
+                fsRelease));
 
         fieldSetterMap.put(Entity.QUALITY_STORY, asList(
                 // top
