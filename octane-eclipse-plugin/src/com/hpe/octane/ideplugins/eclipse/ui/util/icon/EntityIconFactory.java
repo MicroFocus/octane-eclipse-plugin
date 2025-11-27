@@ -84,6 +84,9 @@ public class EntityIconFactory {
         entityColorMap.put(Entity.MANUAL_ACTION, new Color(Display.getCurrent(),189, 79, 216));
         entityColorMap.put(Entity.AUTO_ACTION, new Color(Display.getCurrent(),85, 195, 186));
         entityColorMap.put(Entity.QUALITY_GATE, new Color(Display.getCurrent(),68, 52, 193));
+        entityColorMap.put(Entity.MODEL_BASED_TEST, new Color(Display.getCurrent(),168, 230, 240));
+        entityColorMap.put(Entity.SUITE_RUN_SCHEDULER, new Color(Display.getCurrent(),255, 45, 191));
+        entityColorMap.put(Entity.SUITE_RUN_SCHEDULER_RUN, new Color(Display.getCurrent(),22, 150, 181));
     }
 
     private EntityIconFactory() {

@@ -127,5 +127,8 @@ public class EntityFieldsConstants {
         supportedEntitiesThatAllowDetailView.add(Entity.MANUAL_ACTION);
         supportedEntitiesThatAllowDetailView.add(Entity.AUTO_ACTION);
         supportedEntitiesThatAllowDetailView.add(Entity.QUALITY_GATE);
+        supportedEntitiesThatAllowDetailView.add(Entity.MODEL_BASED_TEST);
+        supportedEntitiesThatAllowDetailView.add(Entity.SUITE_RUN_SCHEDULER);
+        supportedEntitiesThatAllowDetailView.add(Entity.SUITE_RUN_SCHEDULER_RUN);
     }
 }

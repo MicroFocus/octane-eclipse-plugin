@@ -206,7 +206,45 @@ public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
                 fsEstimatedHours,
                 // subtitle
                 fsRelease));
-
+        
+        fieldSetterMap.put(Entity.MODEL_BASED_TEST, asList(
+                // top
+                fsPhase,
+                fsStoryPoints,
+                fsOwner,
+                fsAuthor,
+                // bottom
+                fsInvestedHours,
+                fsRemainingHours,
+                fsEstimatedHours,
+                // subtitle
+                fsRelease));
+        
+        fieldSetterMap.put(Entity.SUITE_RUN_SCHEDULER, asList(
+                // top
+                fsPhase,
+                fsStoryPoints,
+                fsOwner,
+                fsAuthor,
+                // bottom
+                fsInvestedHours,
+                fsRemainingHours,
+                fsEstimatedHours,
+                // subtitle
+                fsRelease));
+        
+        fieldSetterMap.put(Entity.SUITE_RUN_SCHEDULER_RUN, asList(
+                // top
+                fsPhase,
+                fsStoryPoints,
+                fsOwner,
+                fsAuthor,
+                // bottom
+                fsInvestedHours,
+                fsRemainingHours,
+                fsEstimatedHours,
+                // subtitle
+                fsRelease));
         fieldSetterMap.put(Entity.QUALITY_STORY, asList(
                 // top
                 fsPhase,
