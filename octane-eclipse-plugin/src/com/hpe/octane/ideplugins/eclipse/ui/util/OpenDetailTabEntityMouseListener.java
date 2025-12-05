@@ -74,10 +74,8 @@ public class OpenDetailTabEntityMouseListener implements EntityMouseListener {
 
             Set<Entity> openInBrowserEntities = new LinkedHashSet<>(Arrays.asList(
                     Entity.EPIC,
-                    Entity.FEATURE,
                     Entity.AUTOMATED_TEST,
                     Entity.AUTOMATED_TEST_RUN,
-                    Entity.BDD_SCENARIO,
                     Entity.BDD_SPEC,
                     Entity.GHERKIN_AUTOMATED_RUN,
                     Entity.REQUIREMENT_FOLDER));
