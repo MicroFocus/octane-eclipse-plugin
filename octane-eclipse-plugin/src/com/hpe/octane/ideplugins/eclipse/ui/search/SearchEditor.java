@@ -84,6 +84,7 @@ public class SearchEditor extends EditorPart {
             Entity.MANUAL_TEST,
             Entity.AUTOMATED_TEST,
             Entity.GHERKIN_TEST,
+            Entity.BDD_SCENARIO,
             Entity.MODEL_BASED_TEST,
             Entity.REQUIREMENT,
             Entity.FEATURE,

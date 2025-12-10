@@ -117,6 +117,7 @@ public class EntityFieldsConstants {
         supportedEntitiesThatAllowDetailView.add(Entity.QUALITY_STORY);
         supportedEntitiesThatAllowDetailView.add(Entity.MANUAL_TEST);
         supportedEntitiesThatAllowDetailView.add(Entity.GHERKIN_TEST);
+        supportedEntitiesThatAllowDetailView.add(Entity.BDD_SCENARIO);
         supportedEntitiesThatAllowDetailView.add(Entity.MANUAL_TEST_RUN);
         supportedEntitiesThatAllowDetailView.add(Entity.TEST_SUITE);
         supportedEntitiesThatAllowDetailView.add(Entity.TEST_SUITE_RUN);
