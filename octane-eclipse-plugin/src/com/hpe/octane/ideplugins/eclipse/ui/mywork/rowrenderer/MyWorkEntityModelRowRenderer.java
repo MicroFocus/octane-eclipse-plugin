@@ -38,6 +38,12 @@ import static com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants.FIELD
 import static com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants.FIELD_STORYPOINTS;
 import static com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants.FIELD_SUBTYPE;
 import static com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants.FIELD_TEST_TYPE;
+import static com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants.FIELD_PARENT;
+import static com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants.FIELD_STATUS;
+import static com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants.FIELD_RELEASE_PROCESS;
+import static com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants.FIELD_RELEASE;
+import static com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants.FIELD_TEAM;
+import static com.hpe.octane.ideplugins.eclipse.util.EntityFieldsConstants.FIELD_PRIORITY;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,6 +83,7 @@ public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
     static RowFieldSetter fsOwner = new GenericFieldSetter("owner", "Owner", DetailsPosition.TOP);
     static RowFieldSetter fsPhase = new GenericFieldSetter("phase", "Phase", DetailsPosition.TOP);
     static RowFieldSetter fsStatus = new GenericFieldSetter(EntityFieldsConstants.FIELD_TEST_RUN_NATIVE_STATUS, "Status", DetailsPosition.TOP);
+    static RowFieldSetter fsBasicStatus = new GenericFieldSetter(FIELD_STATUS, "Status", DetailsPosition.TOP);
 
     // Bottom
     static RowFieldSetter fsAutomationStatus = new GenericFieldSetter("automation_status", "Automation status", DetailsPosition.BOTTOM);
@@ -85,13 +92,20 @@ public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
     static RowFieldSetter fsInvestedHours = new GenericFieldSetter(FIELD_INVESTED_HOURS, "Invested hours", DetailsPosition.BOTTOM);
     static RowFieldSetter fsRemainingHours = new GenericFieldSetter(FIELD_REMAINING_HOURS, "Remaining hours", DetailsPosition.BOTTOM);
     static RowFieldSetter fsEstimatedHours = new GenericFieldSetter(FIELD_ESTIMATED_HOURS, "Estimated hours", DetailsPosition.BOTTOM);
+    
+    static RowFieldSetter fsParent = new GenericFieldSetter(FIELD_PARENT, "Quality Gate", DetailsPosition.BOTTOM);
+    static RowFieldSetter fsReleaseProcess = new GenericFieldSetter(FIELD_RELEASE_PROCESS, "Parent Process", DetailsPosition.BOTTOM);
+    static RowFieldSetter fsTeam =  new GenericFieldSetter(FIELD_TEAM, "team", DetailsPosition.BOTTOM);
+    
 
+    static RowFieldSetter fsPriority = new GenericFieldSetter(FIELD_PRIORITY, "Risk", DetailsPosition.TOP);
     static RowFieldSetter fsSeverity = new GenericFieldSetter("serverity", "Phase", DetailsPosition.TOP);
     static RowFieldSetter fsDetecedBy = new GenericFieldSetter(FIELD_DETECTEDBY, "Phase", DetailsPosition.TOP);
 
     // Subtile
     static RowFieldSetter fsEnvironment = new GenericFieldSetter(FIELD_ENVIROMENT, "[No environment]");
     static RowFieldSetter fsRelease = new GenericFieldSetter("release", "[No release]");
+    static RowFieldSetter fsReleaseBottom = new GenericFieldSetter(FIELD_RELEASE, "Release", DetailsPosition.BOTTOM);
     static RowFieldSetter fsTestType = new GenericFieldSetter(FIELD_TEST_TYPE, "");
 
     /**
@@ -122,129 +136,79 @@ public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
                 fsOwner,
                 fsAuthor,
                 // bottom
-                fsInvestedHours,
-                fsRemainingHours,
-                fsEstimatedHours,
-                // subtitle
-                fsRelease));
+                fsReleaseBottom,
+                fsTeam
+                ));
         
         fieldSetterMap.put(Entity.TEST_SUITE, asList(
                 // top
                 fsPhase,
-                fsStoryPoints,
                 fsOwner,
                 fsAuthor,
-                // bottom
-                fsInvestedHours,
-                fsRemainingHours,
-                fsEstimatedHours,
                 // subtitle
-                fsRelease));
+                fsTestType));
         
         fieldSetterMap.put(Entity.UNIT, asList(
                 // top
                 fsPhase,
-                fsStoryPoints,
                 fsOwner,
                 fsAuthor,
-                // bottom
-                fsInvestedHours,
-                fsRemainingHours,
-                fsEstimatedHours,
-                // subtitle
-                fsRelease));
+                fsPriority));
         
         fieldSetterMap.put(Entity.MODEL, asList(
                 // top
                 fsPhase,
-                fsStoryPoints,
                 fsOwner,
-                fsAuthor,
-                // bottom
-                fsInvestedHours,
-                fsRemainingHours,
-                fsEstimatedHours,
-                // subtitle
-                fsRelease));
+                fsAuthor));
         
         fieldSetterMap.put(Entity.MANUAL_ACTION, asList(
                 // top
+        		fsOwner,
                 fsPhase,
-                fsStoryPoints,
-                fsOwner,
-                fsAuthor,
+                fsParent,
                 // bottom
-                fsInvestedHours,
-                fsRemainingHours,
-                fsEstimatedHours,
-                // subtitle
-                fsRelease));
+                fsReleaseProcess));
         
         
         fieldSetterMap.put(Entity.AUTO_ACTION, asList(
                 // top
+        		fsOwner,
                 fsPhase,
-                fsStoryPoints,
-                fsOwner,
-                fsAuthor,
+                fsParent,
                 // bottom
-                fsInvestedHours,
-                fsRemainingHours,
-                fsEstimatedHours,
-                // subtitle
-                fsRelease));
+                fsReleaseProcess
+                ));
         
         fieldSetterMap.put(Entity.QUALITY_GATE, asList(
                 // top
-                fsPhase,
-                fsStoryPoints,
                 fsOwner,
-                fsAuthor,
+                fsPhase,
+                fsParent,
                 // bottom
-                fsInvestedHours,
-                fsRemainingHours,
-                fsEstimatedHours,
-                // subtitle
-                fsRelease));
+                fsReleaseProcess));
         
         fieldSetterMap.put(Entity.MODEL_BASED_TEST, asList(
                 // top
                 fsPhase,
-                fsStoryPoints,
                 fsOwner,
                 fsAuthor,
-                // bottom
-                fsInvestedHours,
-                fsRemainingHours,
-                fsEstimatedHours,
                 // subtitle
-                fsRelease));
+                fsTestType));
         
         fieldSetterMap.put(Entity.SUITE_RUN_SCHEDULER, asList(
                 // top
-                fsPhase,
-                fsStoryPoints,
-                fsOwner,
                 fsAuthor,
+                fsBasicStatus,
                 // bottom
-                fsInvestedHours,
-                fsRemainingHours,
-                fsEstimatedHours,
                 // subtitle
-                fsRelease));
+                fsName));
         
         fieldSetterMap.put(Entity.SUITE_RUN_SCHEDULER_RUN, asList(
                 // top
-                fsPhase,
-                fsStoryPoints,
-                fsOwner,
-                fsAuthor,
+                fsBasicStatus,
                 // bottom
-                fsInvestedHours,
-                fsRemainingHours,
-                fsEstimatedHours,
                 // subtitle
-                fsRelease));
+                fsName));
         fieldSetterMap.put(Entity.QUALITY_STORY, asList(
                 // top
                 fsPhase,
