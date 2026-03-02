@@ -41,7 +41,9 @@ public class EntityFieldsConstants {
 
     public static final String FIELD_DEFECT_TYPE = "defect_type";
     public static final String FIELD_DESCRIPTION = "description";
-    public static final String FIELD_FEATURE = "parent";
+    public static final String FIELD_PARENT = "parent";
+    public static final String FIELD_RELEASE_PROCESS = "release_process";
+    public static final String FIELD_STATUS = "status";
     public static final String FIELD_QAOWNER = "qa_owner";
     public static final String FIELD_OWNER = "owner";
     public static final String FIELD_BLOCKED = "blocked";
