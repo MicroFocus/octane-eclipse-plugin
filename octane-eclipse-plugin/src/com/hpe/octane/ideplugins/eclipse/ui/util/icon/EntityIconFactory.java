@@ -59,7 +59,7 @@ public class EntityIconFactory {
     
     private Color fontColor = new Color(Display.getCurrent(), 255, 255, 255);
     private static Image activeImg = ImageResources.ACTIVEITEM.getImage();
-    private static final int imageDataDepth = 32;
+    private static final int IMAGE_DATA_DEPTH = 32;
     
     private static EntityIconFactory instance;
 
@@ -115,7 +115,7 @@ public class EntityIconFactory {
         Display display = Display.getDefault();
 
         PaletteData palette = new PaletteData(0xFF0000, 0x00FF00, 0x0000FF);
-        ImageData data = new ImageData(iconSize, iconSize, imageDataDepth, palette);
+        ImageData data = new ImageData(iconSize, iconSize, IMAGE_DATA_DEPTH, palette);
         data.alphaData = new byte[iconSize * iconSize];
 
         Image img = new Image(display, data);
