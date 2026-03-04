@@ -38,6 +38,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
@@ -58,6 +59,7 @@ public class EntityIconFactory {
     
     private Color fontColor = new Color(Display.getCurrent(), 255, 255, 255);
     private static Image activeImg = ImageResources.ACTIVEITEM.getImage();
+    private static final int IMAGE_DATA_DEPTH = 32;
     
     private static EntityIconFactory instance;
 
@@ -105,24 +107,36 @@ public class EntityIconFactory {
         return instance;
     }
 
-    private ImageData loadImageData(Entity entity, int iconSize, int fontSize) {     
+    private ImageData loadImageData(Entity entity, int iconSize, int fontSize) {
 
-        Color color = entityColorMap.get(entity);
+    	Color color = entityColorMap.get(entity);
         String initials = entityLabelService.getEntityInitials(entity);
         
         Display display = Display.getDefault();
-        Image img = new Image(display, iconSize, iconSize);
+
+        PaletteData palette = new PaletteData(0xFF0000, 0x00FF00, 0x0000FF);
+        ImageData data = new ImageData(iconSize, iconSize, IMAGE_DATA_DEPTH, palette);
+        data.alphaData = new byte[iconSize * iconSize];
+
+        Image img = new Image(display, data);
+
         setUpGraphics(img, display, initials, color, iconSize, fontSize);
+
         ImageData imgData = img.getImageData();
         img.dispose();
         return imgData;
     }
     
     private void setUpGraphics(Image image, Display display, String initials, Color color, int iconSize, int fontSize) {
-        GC gc = new GC(image);
-        gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
-        gc.fillRectangle(0, 0, iconSize, iconSize); // fill the whole image with white
+    	GC gc = new GC(image);
+
         gc.setAntialias(SWT.ON);
+
+        gc.setAdvanced(true);
+        gc.setAlpha(0);
+        gc.fillRectangle(0, 0, iconSize, iconSize);
+
+        gc.setAlpha(255);
         gc.setBackground(color);
         gc.fillOval(0, 0, iconSize, iconSize); // fill an oval in the middle of the picture with the background color
            
