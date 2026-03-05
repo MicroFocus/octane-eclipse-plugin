@@ -95,7 +95,7 @@ public class MyWorkEntityModelRowRenderer implements EntityModelRenderer {
     
     static RowFieldSetter fsParent = new GenericFieldSetter(FIELD_PARENT, "Quality Gate", DetailsPosition.BOTTOM);
     static RowFieldSetter fsReleaseProcess = new GenericFieldSetter(FIELD_RELEASE_PROCESS, "Parent Process", DetailsPosition.BOTTOM);
-    static RowFieldSetter fsTeam =  new GenericFieldSetter(FIELD_TEAM, "team", DetailsPosition.BOTTOM);
+    static RowFieldSetter fsTeam =  new GenericFieldSetter(FIELD_TEAM, "Team", DetailsPosition.BOTTOM);
     
 
     static RowFieldSetter fsPriority = new GenericFieldSetter(FIELD_PRIORITY, "Risk", DetailsPosition.TOP);
