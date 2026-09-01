@@ -140,7 +140,7 @@
 											tycho-packaging-plugin
 										</artifactId>
 										<versionRange>
-											[0.26.0,)
+											[2.7.5,2.7.5]
 										</versionRange>
 										<goals>
 											<goal>
@@ -165,7 +165,7 @@
 											tycho-compiler-plugin
 										</artifactId>
 										<versionRange>
-											[0.26.0,)
+											[2.7.5,2.7.5]
 										</versionRange>
 										<goals>
 											<goal>compile</goal>
